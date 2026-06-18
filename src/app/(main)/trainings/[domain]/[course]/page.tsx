@@ -1,0 +1,304 @@
+import React from "react";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import PageHero from "@/components/shared/PageHero";
+import SyllabusAccordion from "@/components/courses/SyllabusAccordion";
+import { client } from "../../../../../../sanity/lib/client";
+import { courseBySlugQuery } from "../../../../../../sanity/lib/queries";
+import { Course } from "@/types";
+import { BRANCHES, BranchKey } from "@/lib/constants";
+import { Calendar, Clock, GraduationCap, CheckCircle, ArrowRight, User } from "lucide-react";
+
+// In-memory detailed course mocks for direct matching
+const DETAILED_MOCKS: Record<string, Partial<Course>> = {
+  "full-stack-web-development": {
+    learningOutcomes: [
+      "Build dynamic React applications with Next.js App Router.",
+      "Develop secure RESTful and GraphQL APIs with Node.js & Express.",
+      "Configure MongoDB database schemas and relational models via Mongoose.",
+      "Deploy full-stack applications with custom domains on Vercel and AWS.",
+    ],
+    schedule: "Mon, Wed, Fri (6:00 PM - 8:00 PM IST)",
+    eligibility: "Basic programming understanding (HTML/JS) recommended. Open to students and professionals.",
+    syllabus: [
+      {
+        _key: "mod-1",
+        title: "Frontend Foundation (Next.js & React)",
+        topics: ["JSX & Component state", "Next.js routing", "Tailwind CSS styling", "Context API & hooks"],
+      },
+      {
+        _key: "mod-2",
+        title: "Backend Development (Node.js & MongoDB)",
+        topics: ["REST API structures", "Mongoose connections", "Middleware & Validation", "Database modeling"],
+      },
+      {
+        _key: "mod-3",
+        title: "Advanced Integrations & Security",
+        topics: ["NextAuth.js v5 config", "Bcrypt hashing", "Resend email triggers", "Deployment checklist"],
+      },
+    ],
+    trainer: {
+      _id: "t-1",
+      name: "Dr. J. P. Haran",
+      slug: { _type: "slug", current: "dr-haran" },
+      specialization: ["Full-Stack Dev", "Cybersecurity"],
+      institutionTag: "Industry",
+    },
+  },
+  "vlsi": {
+    learningOutcomes: [
+      "Write RTL code using Verilog HDL.",
+      "Understand ASIC/FPGA design flow and tools.",
+      "Design verification testbenches using SystemVerilog.",
+      "Implement Universal Verification Methodology (UVM) standards.",
+    ],
+    schedule: "Tue, Thu, Sat (10:00 AM - 12:30 PM IST)",
+    eligibility: "Basic digital logic design understanding. Open to ECE/EE/EI graduates.",
+    syllabus: [
+      {
+        _key: "vl-1",
+        title: "Verilog HDL & Digital Design",
+        topics: ["Combinational logic design", "Sequential logic design", "Finite State Machines (FSM)", "ASIC design flow overview"],
+      },
+      {
+        _key: "vl-2",
+        title: "SystemVerilog for Verification",
+        topics: ["Object-Oriented Programming (OOP)", "Virtual interfaces", "Randomization & constraints", "Coverage metrics"],
+      },
+    ],
+    trainer: {
+      _id: "t-2",
+      name: "Prof. Rajesh Kumar",
+      slug: { _type: "slug", current: "prof-rajesh" },
+      specialization: ["VLSI Design", "FPGA Synthesis"],
+      institutionTag: "IIT",
+    },
+  },
+};
+
+interface PageProps {
+  params: Promise<{
+    domain: string;
+    course: string;
+  }>;
+}
+
+export const revalidate = 300; // 5-minute ISR
+
+export default async function CourseDetailPage({ params }: PageProps) {
+  const resolvedParams = await params;
+  const courseSlug = resolvedParams.course;
+
+  let course: Course | null = null;
+
+  try {
+    // Attempt Sanity fetch
+    course = await client.fetch<Course | null>(courseBySlugQuery, {
+      slug: courseSlug,
+    });
+  } catch (error) {
+    console.warn("Failed to fetch course details from Sanity, checking mocks:", error);
+  }
+
+  // Fallback generation logic if Sanity record doesn't exist
+  if (!course) {
+    // Locate in mock details
+    const branchKey = resolvedParams.domain.toUpperCase().replace(/-/g, "_") as BranchKey;
+    const title = courseSlug
+      .split("-")
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(" ");
+
+    const specificMock = DETAILED_MOCKS[courseSlug] || {};
+
+    course = {
+      _id: `mock-${courseSlug}`,
+      title: title,
+      slug: { _type: "slug", current: courseSlug },
+      branch: branchKey in BRANCHES ? branchKey : "CSE_IT",
+      domain: title,
+      description: `Get hands-on industrial certification in ${title}. This curriculum is designed in alignment with corporate standards and verified internship tracks.`,
+      duration: "10 Weeks",
+      trainingTracks: ["Students", "General"],
+      learningOutcomes: specificMock.learningOutcomes || [
+        `Understand core engineering science in ${title}.`,
+        "Work on live collaborative research projects.",
+        "Implement industry-standard optimization models.",
+      ],
+      syllabus: specificMock.syllabus || [
+        {
+          _key: "generic-1",
+          title: "Introduction & Essentials",
+          topics: ["Core conceptual model", "Development environment setup", "Basic syntax and architecture"],
+        },
+        {
+          _key: "generic-2",
+          title: "Practical Implementations",
+          topics: ["Case studies analysis", "Hands-on coding projects", "Optimization practices"],
+        },
+      ],
+      schedule: specificMock.schedule || "Mon, Wed (4:00 PM - 6:00 PM IST)",
+      eligibility: specificMock.eligibility || "Open to all engineering students and practitioners.",
+      trainer: specificMock.trainer || {
+        _id: "t-default",
+        name: "Techglaz Labs Faculty",
+        slug: { _type: "slug", current: "faculty" },
+        specialization: [title],
+        institutionTag: "Industry",
+      },
+    };
+  }
+
+  const branchLabel = BRANCHES[course.branch] || course.branch;
+  const breadcrumbs = [
+    { label: "Trainings", href: "/trainings" },
+    { label: branchLabel },
+    { label: course.title },
+  ];
+
+  const applyUrl = `/apply?branch=${course.branch}&course=${encodeURIComponent(course.title)}`;
+
+  return (
+    <div className="flex flex-col min-h-screen">
+      {/* Page Hero */}
+      <PageHero
+        title={course.title}
+        breadcrumbs={breadcrumbs}
+        subtitle={`${branchLabel} — Specialized Engineering Curriculum`}
+      />
+
+      <section className="py-16 bg-white dark:bg-slate-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 items-start">
+            
+            {/* Left Column: Details */}
+            <div className="lg:col-span-2 space-y-12">
+              
+              {/* About the Course */}
+              <div className="space-y-4">
+                <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                  <span className="w-1.5 h-6 bg-brand-blue-deep rounded-full" />
+                  Course Overview
+                </h2>
+                <p className="text-slate-600 dark:text-slate-450 leading-relaxed text-base">
+                  {course.description}
+                </p>
+              </div>
+
+              {/* Learning Outcomes */}
+              <div className="space-y-4">
+                <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                  <span className="w-1.5 h-6 bg-brand-blue-deep rounded-full" />
+                  What You Will Learn
+                </h2>
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {course.learningOutcomes?.map((outcome, idx) => (
+                    <li key={idx} className="flex gap-3 items-start bg-slate-50 dark:bg-slate-850/30 p-4 rounded-2xl border border-slate-100 dark:border-slate-800/50">
+                      <CheckCircle className="w-5 h-5 text-brand-blue-steel shrink-0 mt-0.5" />
+                      <span className="text-sm text-slate-650 dark:text-slate-400 font-semibold leading-relaxed">
+                        {outcome}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Syllabus Accordion */}
+              <div className="space-y-4">
+                <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                  <span className="w-1.5 h-6 bg-brand-blue-deep rounded-full" />
+                  Detailed Syllabus
+                </h2>
+                <SyllabusAccordion syllabus={course.syllabus || []} />
+              </div>
+
+            </div>
+
+            {/* Right Column: Sidebar Stats & Apply */}
+            <div className="space-y-8 lg:sticky lg:top-28">
+              
+              {/* Course Quick Facts */}
+              <div className="bg-slate-50 dark:bg-slate-850/30 border border-slate-100 dark:border-slate-800/80 rounded-3xl p-6 sm:p-8 space-y-6">
+                <h3 className="font-extrabold text-lg text-slate-900 dark:text-white">
+                  Quick Facts
+                </h3>
+
+                <div className="space-y-4.5 text-sm">
+                  <div className="flex gap-3.5 items-start">
+                    <Clock className="w-5 h-5 text-brand-blue-steel shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-bold text-slate-800 dark:text-slate-350">Duration</p>
+                      <p className="text-slate-500 mt-0.5">{course.duration}</p>
+                    </div>
+                  </div>
+
+                  {course.schedule && (
+                    <div className="flex gap-3.5 items-start border-t border-slate-200/40 dark:border-slate-800/30 pt-4">
+                      <Calendar className="w-5 h-5 text-brand-blue-steel shrink-0 mt-0.5" />
+                      <div>
+                        <p className="font-bold text-slate-800 dark:text-slate-350">Schedule</p>
+                        <p className="text-slate-500 mt-0.5">{course.schedule}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {course.eligibility && (
+                    <div className="flex gap-3.5 items-start border-t border-slate-200/40 dark:border-slate-800/30 pt-4">
+                      <GraduationCap className="w-5 h-5 text-brand-blue-steel shrink-0 mt-0.5" />
+                      <div>
+                        <p className="font-bold text-slate-800 dark:text-slate-350">Eligibility</p>
+                        <p className="text-slate-500 mt-0.5">{course.eligibility}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <Link
+                  href={applyUrl}
+                  className="btn-accent flex items-center justify-center gap-2 w-full py-3 shadow-md uppercase tracking-wider font-extrabold text-slate-900 mt-4"
+                >
+                  Apply For This Course
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+
+              {/* Assigned Trainer */}
+              {course.trainer && (
+                <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-3xl p-6 shadow-sm space-y-4">
+                  <h4 className="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-xs text-slate-400">
+                    Course Instructor
+                  </h4>
+                  <div className="flex items-center gap-3.5">
+                    <div className="w-12 h-12 rounded-xl bg-brand-blue-light dark:bg-slate-850 text-brand-blue-deep flex items-center justify-center shrink-0">
+                      <User className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h5 className="font-extrabold text-slate-850 dark:text-white">
+                        {course.trainer.name}
+                      </h5>
+                      <p className="text-xs font-bold text-slate-450 dark:text-slate-500 uppercase mt-0.5">
+                        {course.trainer.institutionTag} Expert
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-1 mt-2">
+                    {course.trainer.specialization.map((spec) => (
+                      <span
+                        key={spec}
+                        className="text-[9px] font-semibold text-slate-450 bg-slate-50 dark:bg-slate-850 px-2 py-0.5 rounded border border-slate-100 dark:border-slate-800"
+                      >
+                        {spec}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+            </div>
+
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}

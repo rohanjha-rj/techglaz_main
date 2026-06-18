@@ -1,0 +1,134 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-blue-deep: #1a3c6e;
+  --color-brand-blue-steel: #2e75b6;
+  --color-brand-blue-light: #e6f0fa;
+  --color-brand-accent: #f59e0b; /* Amber */
+  --color-brand-accent-hover: #d97706;
+
+  /* Custom intermediate slate shades used across components */
+  --color-slate-105: #f4f6f8;
+  --color-slate-150: #edf0f4;
+  --color-slate-250: #d5dce8;
+  --color-slate-305: #c8d4e2;
+  --color-slate-350: #b0bfd0;
+  --color-slate-450: #7d92aa;
+  --color-slate-455: #7a8fa7;
+  --color-slate-550: #5a6e84;
+  --color-slate-650: #3d5168;
+  --color-slate-750: #263548;
+  --color-slate-850: #192130;
+  --color-slate-955: #090d14;
+
+  /* Custom red shades */
+  --color-red-450: #f87171;
+  --color-red-650: #dc2626;
+
+  /* Custom indigo shades */
+  --color-indigo-650: #4338ca;
+
+  /* Custom emerald shades */
+  --color-emerald-650: #059669;
+
+  /* Custom green shades */
+  --color-green-450: #4ade80;
+  --color-green-650: #16a34a;
+  
+  --font-sans: var(--font-inter), Arial, Helvetica, sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
+
+  --animate-fade-in: fade-in 0.5s ease-out forwards;
+  --animate-slide-up: slide-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-float: float 3s ease-in-out infinite;
+  --animate-pulse-slow: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes slide-up {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  @keyframes pulse-slow {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.03); }
+  }
+}
+
+:root {
+  --background: #fafcff;
+  --foreground: #0f172a;
+  
+  --glass-bg: rgba(255, 255, 255, 0.75);
+  --glass-border: rgba(26, 60, 110, 0.08);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.04);
+}
+
+.dark {
+  --background: #0b0f19;
+  --foreground: #f1f5f9;
+  
+  --glass-bg: rgba(11, 15, 25, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(46, 117, 182, 0.2);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(46, 117, 182, 0.4);
+}
+
+/* Glassmorphism utility */
+.glassmorphism {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+/* Leaflet map styling overrides */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* Base custom interactive states */
+.btn-primary {
+  @apply bg-brand-blue-deep hover:bg-brand-blue-steel text-white font-medium px-6 py-2.5 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 cursor-pointer;
+}
+
+.btn-secondary {
+  @apply bg-white hover:bg-brand-blue-light text-brand-blue-deep border border-brand-blue-deep/20 font-medium px-6 py-2.5 rounded-lg transition-all duration-300 shadow-sm hover:shadow-md cursor-pointer;
+}
+
+.btn-accent {
+  @apply bg-brand-accent hover:bg-brand-accent-hover text-slate-900 font-semibold px-6 py-2.5 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 cursor-pointer;
+}
