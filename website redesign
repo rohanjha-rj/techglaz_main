@@ -1,0 +1,162 @@
+# Professional Homepage Redesign — Techglaz Labs
+
+Redesign the homepage to match a premium EdTech look inspired by the reference screenshot (Learnify-style dark navy hero with yellow accents, split-layout hero with imagery, image-rich course cards). **All existing content stays the same — only the visual design changes.** The company's actual logo images ([logo.png](file:///d:/techglaz_main/public/logo.png), [logo_name.png](file:///d:/techglaz_main/public/logo_name.png)) from `/public` will replace the current text-only logo.
+
+---
+
+## Reference Design Analysis (Screenshot)
+
+The reference shows a **Learnify** EdTech site with these design patterns:
+
+| Section | Design Pattern |
+|---------|---------------|
+| **Navbar** | Logo + nav links (Home, Courses, Features, Pricing, About) + Login / Sign Up buttons |
+| **Hero** | Dark navy background, split layout — left: headline + description + CTA buttons + student avatars row; right: hero illustration/image + floating "Your Progress 78%" card + "Current Lesson" card |
+| **Features Row** | Icon bar with 4 items: Expert Instructors, Learn at Your Pace, Certification, Community Support |
+| **Course Cards** | Image-topped cards with badges (Bestseller/Hot/New), course title, description, instructor avatar + name, rating stars, lesson count, price |
+| **CTA Banner** | Bottom banner "Start Your Learning Journey Today" with Get Started button |
+
+---
+
+## Color Theme — Adapted for Techglaz Labs
+
+Keeping the existing brand palette (**navy #1a3c6e / steel blue #2e75b6 / amber #f59e0b**) but enhancing it to match the reference's premium dark-navy + golden-yellow vibe:
+
+| Role | Current | New | Rationale |
+|------|---------|-----|-----------|
+| Hero BG | `#090d14` (near-black) | `#0c1524` (rich dark navy) | Matches reference deep navy hero |
+| Accent | `#f59e0b` (amber) | `#f59e0b` → keep, plus add `#fbbf24` glow variant | Yellow/gold CTA like reference |
+| Feature Bar BG | none | `#132035` (dark blue-gray) | Distinct bar below hero |
+| Card Overlay | white/glass | Keep white, add subtle brand-blue top-border accent | Adds premium feel |
+
+> [!NOTE]
+> The overall brand palette stays intact — we're enhancing the tone and adding depth, not changing the brand identity.
+
+---
+
+## Proposed Changes
+
+### Design System & Styles
+
+#### [MODIFY] [globals.css](file:///d:/techglaz_main/src/app/globals.css)
+- Add new color tokens: `--color-hero-bg: #0c1524`, `--color-feature-bar: #132035`, `--color-accent-glow: #fbbf24`
+- Add new `.btn-hero-primary` and `.btn-hero-secondary` button styles matching the reference (rounded-full pill buttons)
+- Add `.feature-icon-box` utility for the icon row items
+- Add new animation: `shimmer` for gradient text effects
+
+---
+
+### Logo Integration
+
+#### [MODIFY] [NavbarClient.tsx](file:///d:/techglaz_main/src/components/layout/NavbarClient.tsx)
+- Replace the text-based "T" icon + "TECHGLAZ / LABS" with `<Image src="/logo.png" />` (icon) + "Techglaz Labs" text or `<Image src="/logo_name.png" />`
+- Keep all existing navigation, auth, and mobile menu logic unchanged
+
+#### [MODIFY] [Footer.tsx](file:///d:/techglaz_main/src/components/layout/Footer.tsx)
+- Replace the text-based logo with `<Image src="/logo.png" />` + company name
+- Keep all footer content/links unchanged
+
+---
+
+### Hero Section
+
+#### [MODIFY] [HeroSection.tsx](file:///d:/techglaz_main/src/components/home/HeroSection.tsx)
+- Change from **centered single-column** to **split two-column layout**:
+  - **Left column**: Badge → Headline → Description → CTA buttons row → Student avatars/trust badges row
+  - **Right column**: Generated hero illustration + floating "Your Progress" card + "Current Lesson" card (animated, decorative)
+- Background: rich navy `#0c1524` with subtle gradient blobs
+- Headline style: "Build Real-World" (white) + "Engineering Expertise" (gradient yellow → amber)
+- Two CTA buttons: "Explore Courses →" (filled amber pill) + "How It Works →" (outlined white pill)
+- Bottom trust row: overlapping avatar circles + "500+ Students already learning and growing with Techglaz"
+- **Content stays identical** — same tagline, same description text, same CTAs
+
+#### [NEW] Hero Illustration
+- Use `generate_image` to create a professional SVG/illustration of a student working on a laptop in an engineering/tech environment
+- Save to `public/images/hero-student.png`
+
+#### [NEW] Floating UI Cards
+- Decorative animated cards on the right side of the hero (purely visual, not functional):
+  - "Your Progress 78%" with animated progress bar
+  - "Current Lesson: UI/UX Design Basics" with play button
+
+---
+
+### Stats/Features Row
+
+#### [MODIFY] [StatsBar.tsx](file:///d:/techglaz_main/src/components/home/StatsBar.tsx)
+- Restyle as a **horizontal feature bar** with dark background (`#132035`)
+- 4 items in a row with icon + title + description (like the reference: "Expert Instructors", "Learn at Your Pace", etc.)
+- Map existing stats to feature-style items:
+  - `Users` icon → "Expert Instructors" — "Learn from IIT, CDAC experts and professionals"
+  - `BookOpen` icon → "Learn at Your Pace" — "Study anytime, anywhere at your own speed"
+  - `Award` icon → "Certification" — "Earn certificates and boost your career"
+  - `GraduationCap` icon → "Community Support" — "Join a community of learners and grow together"
+- **Same animated counter values stay** — just wrapped in the new visual style
+
+---
+
+### Course Highlights
+
+#### [MODIFY] [CourseHighlights.tsx](file:///d:/techglaz_main/src/components/home/CourseHighlights.tsx)
+- Section title: "Popular Courses" with subtitle "Explore our most popular courses and start learning today"
+- Redesign cards to match reference: **image-topped card with badge → title → description → instructor row → rating → lesson count → price**
+- Add course card images using `generate_image` (4-6 images for different domains)
+- Add badges: "Bestseller", "Hot", "New" based on course index
+- Add mock instructor avatar + name row
+- Add star rating display
+- Add lesson count + price row at bottom
+- "View All Courses →" button below
+- **All course content (titles, descriptions, domains, durations) stays unchanged**
+
+#### [NEW] Course card images
+- Generate 6 images for: Web Dev, AI/ML, VLSI, IoT, Catia V5, Cybersecurity
+- Save to `public/images/courses/`
+
+---
+
+### Bottom CTA Banner
+
+#### [MODIFY] [PlacementHighlights.tsx](file:///d:/techglaz_main/src/components/home/PlacementHighlights.tsx)
+- Add a dark navy CTA banner at the bottom: "Start Your Learning Journey Today" + "Join 500+ learners and take the first step" + "Get Started for Free →" button + "No credit card required" label
+- Keep existing placement stats and company names above the banner
+- **Content stays identical**
+
+---
+
+### Image Generation Plan
+
+| Image | Prompt | Save Path |
+|-------|--------|-----------|
+| Hero Student | Professional illustration of a young Indian woman working on a laptop, engineering/tech workspace, warm yellow lighting, modern flat illustration style, clean background | `public/images/hero-student.png` |
+| Web Dev Course | Modern flat illustration of web development - code editor, browser, React logo, clean minimal style on blue gradient background | `public/images/courses/web-dev.png` |
+| AI/ML Course | Modern flat illustration of AI and machine learning - neural network, robot head, data charts, clean minimal on purple gradient | `public/images/courses/ai-ml.png` |
+| VLSI Course | Modern flat illustration of VLSI chip design - circuit board, microchip, processors, clean minimal on teal gradient | `public/images/courses/vlsi.png` |
+| IoT Course | Modern flat illustration of IoT - connected devices, sensors, smart home, clean minimal on green gradient | `public/images/courses/iot.png` |
+| Mechanical Course | Modern flat illustration of mechanical engineering - CAD design, 3D model, gears, clean minimal on orange gradient | `public/images/courses/mechanical.png` |
+| Cybersecurity | Modern flat illustration of cybersecurity - shield, lock, code, firewall, clean minimal on dark blue gradient | `public/images/courses/cybersecurity.png` |
+
+---
+
+## Verification Plan
+
+### Browser Testing
+1. Run `npm run dev` on the project
+2. Open `http://localhost:3000` in the browser
+3. Verify visually:
+   - Navbar shows actual company logo image (not text "T")
+   - Hero section has split layout with illustration on right
+   - Feature/stats bar shows horizontal icon row
+   - Course cards have images, badges, ratings
+   - Footer shows actual logo
+   - All animations work smoothly
+   - Responsive on mobile viewport sizes
+4. Click all navigation links to verify they still work
+5. Check that no console errors appear
+
+### Content Verification
+- Verify all existing text content is preserved (headlines, descriptions, course data, stats)
+- Verify all navigation links and routing are unchanged
+- Verify auth buttons (Login/Signup) are still present and functional
+
+> [!IMPORTANT]
+> This is a **design-only** change. No routing, auth, CMS, API, or business logic changes. All content stays the same.

@@ -8,25 +8,25 @@ import { DEFAULT_STATS } from "@/lib/constants";
 export default function StatsBar() {
   const stats = [
     {
-      icon: <Users className="w-8 h-8 text-brand-blue-steel" />,
+      icon: <Users className="w-6 h-6" />,
       label: "Students & Faculty Trained",
       value: DEFAULT_STATS.studentsTrained,
       suffix: "+",
     },
     {
-      icon: <Award className="w-8 h-8 text-brand-blue-steel" />,
+      icon: <Award className="w-6 h-6" />,
       label: "Placement Rate",
       value: DEFAULT_STATS.placementPercentage,
       suffix: "%",
     },
     {
-      icon: <BookOpen className="w-8 h-8 text-brand-blue-steel" />,
+      icon: <BookOpen className="w-6 h-6" />,
       label: "Active Courses",
       value: DEFAULT_STATS.activeCourses,
       suffix: "+",
     },
     {
-      icon: <GraduationCap className="w-8 h-8 text-brand-blue-steel" />,
+      icon: <GraduationCap className="w-6 h-6" />,
       label: "University & Corporate Partners",
       value: DEFAULT_STATS.partnerInstitutions,
       suffix: "+",
@@ -34,26 +34,28 @@ export default function StatsBar() {
   ];
 
   return (
-    <section className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 sm:-mt-16 mb-20">
-      <div className="glassmorphism rounded-3xl p-6 sm:p-10 border border-brand-blue-deep/10 shadow-xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 divide-y sm:divide-y-0 lg:divide-x divide-slate-200/50 dark:divide-slate-800/40">
-        {stats.map((stat, idx) => (
-          <div
-            key={idx}
-            className={`flex items-center gap-5 pt-6 sm:pt-0 sm:pb-0 first:pt-0 lg:px-6 lg:first:pl-0 lg:last:pr-0`}
-          >
-            <div className="w-14 h-14 rounded-2xl bg-brand-blue-light/60 dark:bg-slate-800/50 flex items-center justify-center shrink-0 shadow-inner">
-              {stat.icon}
+    <section className="relative z-20 w-full bg-[#132035] py-8 border-y border-brand-blue-deep/50 shadow-2xl">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {stats.map((stat, idx) => (
+            <div
+              key={idx}
+              className="flex items-center gap-4 py-2"
+            >
+              <div className="feature-icon-box shadow-md shadow-black/20 text-[#fbbf24]">
+                {stat.icon}
+              </div>
+              <div className="space-y-0.5">
+                <p className="text-xl font-black text-white leading-none">
+                  <AnimatedCounter end={stat.value} suffix={stat.suffix} />
+                </p>
+                <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wide">
+                  {stat.label}
+                </p>
+              </div>
             </div>
-            <div className="space-y-1">
-              <p className="text-3xl font-extrabold text-slate-900 dark:text-white leading-none">
-                <AnimatedCounter end={stat.value} suffix={stat.suffix} />
-              </p>
-              <p className="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400">
-                {stat.label}
-              </p>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );

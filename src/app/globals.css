@@ -6,6 +6,9 @@
   --color-brand-blue-light: #e6f0fa;
   --color-brand-accent: #f59e0b; /* Amber */
   --color-brand-accent-hover: #d97706;
+  --color-hero-bg: #0c1524;
+  --color-feature-bar: #132035;
+  --color-accent-glow: #fbbf24;
 
   /* Custom intermediate slate shades used across components */
   --color-slate-105: #f4f6f8;
@@ -42,6 +45,7 @@
   --animate-slide-up: slide-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   --animate-float: float 3s ease-in-out infinite;
   --animate-pulse-slow: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-shimmer: shimmer 2.5s infinite linear;
 
   @keyframes fade-in {
     from { opacity: 0; }
@@ -58,6 +62,10 @@
   @keyframes pulse-slow {
     0%, 100% { opacity: 1; transform: scale(1); }
     50% { opacity: 0.8; transform: scale(1.03); }
+  }
+  @keyframes shimmer {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
   }
 }
 
@@ -131,4 +139,16 @@ body {
 
 .btn-accent {
   @apply bg-brand-accent hover:bg-brand-accent-hover text-slate-900 font-semibold px-6 py-2.5 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 cursor-pointer;
+}
+
+.btn-hero-primary {
+  @apply bg-brand-accent hover:bg-brand-accent-hover text-slate-900 font-bold px-8 py-3.5 rounded-full transition-all duration-300 shadow-[0_4px_14px_0_rgba(245,158,11,0.39)] hover:shadow-[0_6px_20px_rgba(245,158,11,0.23)] hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 cursor-pointer;
+}
+
+.btn-hero-secondary {
+  @apply bg-transparent hover:bg-white/5 border-2 border-slate-500/50 hover:border-white text-white font-bold px-8 py-3.5 rounded-full transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 cursor-pointer;
+}
+
+.feature-icon-box {
+  @apply w-12 h-12 rounded-xl flex items-center justify-center bg-slate-800/50 text-brand-blue-steel shrink-0 shadow-inner;
 }

@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { ArrowRight, TrendingUp, Building, Award } from "lucide-react";
+import { ArrowRight, TrendingUp, Building, Award, CheckCircle2 } from "lucide-react";
 import SectionHeading from "../shared/SectionHeading";
 
 export default function PlacementHighlights() {
@@ -83,14 +83,44 @@ export default function PlacementHighlights() {
         </div>
 
         {/* CTA Banner */}
-        <div className="text-center mt-12">
+        <div className="text-center mt-12 mb-20 relative z-10">
           <Link
             href="/placements"
-            className="btn-primary inline-flex items-center gap-2 group px-8 py-3"
+            className="btn-secondary inline-flex items-center gap-2 font-bold px-8 py-3.5 group rounded-full"
           >
             Explore Placement Stories
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
+        </div>
+
+        {/* Start Your Learning Journey CTA */}
+        <div className="bg-[#0c1524] rounded-[2.5rem] p-10 md:p-14 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)]">
+          {/* Background graphics */}
+          <div className="absolute top-0 right-1/4 w-96 h-96 bg-brand-blue-steel/10 rounded-full blur-[100px]" />
+          <div className="absolute bottom-[-10%] right-[-5%] w-64 h-64 bg-brand-accent/10 rounded-full blur-[80px]" />
+          
+          <div className="relative z-10 text-center md:text-left max-w-xl">
+            <h2 className="text-3xl md:text-4xl font-extrabold text-white leading-tight mb-4 tracking-tight">
+              Start Your Learning Journey Today
+            </h2>
+            <p className="text-slate-400 text-base md:text-lg">
+              Join thousands of learners and take the first step towards your future in engineering and technology.
+            </p>
+          </div>
+          
+          <div className="relative z-10 flex flex-col items-center sm:items-start shrink-0">
+            <Link
+              href="/apply"
+              className="inline-flex items-center justify-center gap-3 bg-[#fbbf24] hover:bg-[#f59e0b] text-slate-900 font-extrabold text-lg px-10 py-5 rounded-full transition-all hover:scale-105 shadow-[0_10px_30px_-5px_rgba(251,191,36,0.3)]"
+            >
+              Get Started for Free
+              <ArrowRight className="w-6 h-6" />
+            </Link>
+            <div className="flex items-center gap-2 mt-4 text-slate-400 text-sm font-medium">
+              <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+              <span>No credit card required</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
