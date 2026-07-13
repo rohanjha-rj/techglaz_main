@@ -1,0 +1,87 @@
+# Professional SaaS Landing Page Redesign
+
+Redesign the landing page to look like a modern, lightweight SaaS product page — not an institute-specific page. Key goals: generate a hero image, use cyan-blue dominant theme (not purple), add a dynamic gallery in the "How It Transforms" section, add "Show More" for heavy content, and keep it lightweight.
+
+## Proposed Changes
+
+### Theme & Color Adjustments
+
+#### [MODIFY] [Landing.css](file:///d:/Institute/institute1/src/app/Landing.css)
+- Override `--human-secondary` from `var(--accent-secondary)` (purple `#8b5cf6`) → to a teal/emerald green `#06b6d4` so the landing page gradient stays in the cyan–teal family (no purple).
+- Update `--gradient-human` to `linear-gradient(135deg, #0ea5e9, #06b6d4)` — a clean blue-to-teal SaaS gradient.
+- Make nav background theme-aware using `var(--bg-primary)` with transparency instead of hardcoded `rgba(13, 14, 21, 0.8)`.
+- Same for footer background.
+
+---
+
+### Hero Section — SaaS Copy + Generated Image
+
+#### [MODIFY] [page.tsx](file:///d:/Institute/institute1/src/app/page.tsx)
+- **Rewrite hero copy** to be SaaS-generic: "The Smartest Way to Run Your Classroom" / "AI-powered hybrid classrooms for modern education".
+- **Add hero image** on the right side (split hero layout: text left, image right). We'll generate a clean, modern illustration using the `generate_image` tool — a dashboard mockup in cyan/teal tones, no purple.
+- **Badge** → keep it professional: "`✨ Trusted by 1000+ educators`" style.
+- **CTA** → "Get Started Free" and "Watch Demo".
+
+---
+
+### Gallery Section — Dynamic + Manual (Replaces Heavy Infographics)
+
+#### [NEW] [GallerySection.tsx](file:///d:/Institute/institute1/src/app/components/GallerySection.tsx)
+A client component that:
+1. Fetches gallery images dynamically from a `landing_gallery` Supabase table.
+2. Falls back to manual/hardcoded items (the existing `student benifit.png` and `faculty and hod.png`).
+3. Displays as a responsive grid (3 columns desktop, 2 tablet, 1 mobile).
+4. Shows only **3 items initially** with a "**Show More**" button to reveal the rest — keeps the page lightweight.
+5. Each card has a smooth border-radius, glass-card style, and hover zoom effect.
+
+#### [NEW] Migration for `landing_gallery` table
+A simple table: `id`, `image_url`, `title`, `description`, `sort_order`, `is_active`, `created_at`.
+So admin can add images from the admin panel later.
+
+> [!IMPORTANT]
+> The gallery DB migration creates a new `landing_gallery` table. This needs to be run on your Supabase instance. For now, the component will gracefully fallback to the existing manual images if the table doesn't exist yet.
+
+---
+
+### Features Section — Lightweight with Show More
+
+#### [MODIFY] [page.tsx](file:///d:/Institute/institute1/src/app/page.tsx)
+- Show only **4 keyword cards** initially, with a "Show More" toggle to reveal all 6.
+- This is done via a small client component wrapper.
+
+#### [NEW] [ShowMoreWrapper.tsx](file:///d:/Institute/institute1/src/app/components/ShowMoreWrapper.tsx)
+A lightweight client component: wraps children, shows first N items, has a simple "Show More" / "Show Less" text button.
+
+---
+
+### Footer & Nav — Theme-Aware
+
+#### [MODIFY] [Landing.css](file:///d:/Institute/institute1/src/app/Landing.css)
+- Replace hardcoded dark backgrounds in `.landing-nav` and `.landing-footer` with theme-variable-based values.
+- Ghost button border uses `var(--border-default)` instead of `rgba(255,255,255,0.1)`.
+
+---
+
+### Hero Image Generation
+
+Will use the `generate_image` tool with this prompt:
+> "A clean, flat-style SaaS dashboard mockup illustration showing a learning management system interface with analytics graphs, student cards, and a sidebar. Use a cyan (#0ea5e9) and teal (#06b6d4) color palette on a dark background. Minimalist, modern, premium feel. No text. No device frames."
+
+The generated image will be saved to `public/images/` and referenced in the hero section.
+
+---
+
+## Verification Plan
+
+### Manual Verification
+1. Run `npm run dev` (already running) and open `http://localhost:3000` in browser.
+2. Verify:
+   - Hero section shows split layout (text left, image right).
+   - Colors are cyan-teal, no purple anywhere on landing page.
+   - SVG grid background is visible behind hero.
+   - Gallery section shows 3 cards with "Show More" button.
+   - Clicking "Show More" reveals remaining items.
+   - Features section shows 4 items with "Show More".
+   - Footer and nav backgrounds are clean and theme-aligned.
+   - Page feels lightweight and professional (no heavy animations).
+3. Test on mobile viewport (375px) for responsive behavior.

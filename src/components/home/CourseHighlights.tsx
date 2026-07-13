@@ -7,6 +7,7 @@ import { client } from "../../../sanity/lib/client";
 import { allCoursesQuery } from "../../../sanity/lib/queries";
 import { Course } from "@/types";
 import { urlForImage } from "../../../sanity/lib/image";
+import { projectId } from "../../../sanity/env";
 import { BRANCHES } from "@/lib/constants";
 
 // Fallback mock courses for when Sanity is empty/not configured yet
@@ -83,9 +84,11 @@ export default async function CourseHighlights() {
   let courses: Course[] = [];
 
   try {
-    // Attempt to fetch from Sanity
-    const fetched = await client.fetch<Course[]>(allCoursesQuery);
-    courses = fetched ? fetched.filter(c => c.featured) : [];
+    // Attempt to fetch from Sanity only if project ID is configured
+    if (projectId !== "placeholder-id") {
+      const fetched = await client.fetch<Course[]>(allCoursesQuery);
+      courses = fetched ? fetched.filter(c => c.featured) : [];
+    }
   } catch (error) {
     console.warn("Failed to fetch courses from Sanity, using fallback mocks:", error);
   }
@@ -144,6 +147,7 @@ export default async function CourseHighlights() {
                     src={getImage(course.title)} 
                     alt={course.title}
                     fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                   {badge && (
@@ -179,7 +183,13 @@ export default async function CourseHighlights() {
                   <div className="flex items-center justify-between mb-4 pt-4 border-t border-slate-100 dark:border-slate-800/80 relative z-20 pointer-events-none">
                     <div className="flex items-center gap-2">
                       <div className="w-6 h-6 rounded-full bg-slate-200 overflow-hidden relative">
-                         <Image src={`https://i.pravatar.cc/100?img=${idx + 20}`} alt="Instructor" fill className="object-cover" />
+                         <Image 
+                           src={`https://i.pravatar.cc/100?img=${idx + 20}`} 
+                           alt="Instructor" 
+                           fill 
+                           sizes="24px"
+                           className="object-cover" 
+                         />
                       </div>
                       <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">{meta.name}</span>
                     </div>

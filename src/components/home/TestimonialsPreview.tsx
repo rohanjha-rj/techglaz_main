@@ -7,6 +7,7 @@ import SectionHeading from "../shared/SectionHeading";
 import { Testimonial } from "@/types";
 import { client } from "../../../sanity/lib/client";
 import { allTestimonialsQuery } from "../../../sanity/lib/queries";
+import { projectId } from "../../../sanity/env";
 
 const MOCK_TESTIMONIALS: Testimonial[] = [
   {
@@ -42,12 +43,14 @@ export default function TestimonialsPreview() {
   useEffect(() => {
     async function loadTestimonials() {
       try {
-        const fetched = await client.fetch<Testimonial[]>(allTestimonialsQuery);
-        if (fetched && fetched.length > 0) {
-          setTestimonials(fetched);
-        } else {
-          setTestimonials(MOCK_TESTIMONIALS);
+        if (projectId !== "placeholder-id") {
+          const fetched = await client.fetch<Testimonial[]>(allTestimonialsQuery);
+          if (fetched && fetched.length > 0) {
+            setTestimonials(fetched);
+            return;
+          }
         }
+        setTestimonials(MOCK_TESTIMONIALS);
       } catch (error) {
         console.warn("Failed to load testimonials from Sanity, using mock data:", error);
         setTestimonials(MOCK_TESTIMONIALS);

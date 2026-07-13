@@ -79,7 +79,7 @@ export default function NavbarClient({ session }: NavbarClientProps) {
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3 group">
               <div className="w-12 h-12 flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
-                <Image src="/logo.png" alt="Techglaz Labs" width={48} height={48} className="object-contain" />
+                <Image src="/logo.png" alt="Techglaz Labs" width={48} height={48} className="object-contain" style={{ width: 'auto', height: 'auto' }} />
               </div>
               <div className="flex flex-col justify-center">
                 <span className="text-[20px] font-black text-white tracking-widest leading-none uppercase drop-shadow-md">

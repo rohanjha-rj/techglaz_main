@@ -20,7 +20,8 @@ export default function Footer() {
                 alt="Techglaz Labs - Let's Create Your own Future" 
                 width={240} 
                 height={80} 
-                className="w-full h-auto object-contain"
+                className="w-full object-contain"
+                style={{ height: 'auto' }}
               />
             </Link>
             <p className="text-sm text-slate-400 leading-relaxed">

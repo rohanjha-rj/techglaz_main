@@ -109,7 +109,13 @@ export default function HeroSection() {
               <div className="flex -space-x-3">
                 {[1, 2, 3, 4].map((i) => (
                   <div key={i} className="w-10 h-10 rounded-full border-2 border-[#0c1524] bg-slate-800 flex items-center justify-center overflow-hidden relative">
-                     <Image src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="Student" fill className="object-cover" />
+                    <Image 
+                      src={`https://i.pravatar.cc/100?img=${i + 10}`} 
+                      alt="Student" 
+                      fill 
+                      sizes="40px"
+                      className="object-cover" 
+                    />
                   </div>
                 ))}
                 <div className="w-10 h-10 rounded-full border-2 border-[#0c1524] bg-[#fbbf24] flex items-center justify-center text-[#090d14] font-bold text-[10px] z-10 shadow-lg leading-none">
@@ -135,6 +141,7 @@ export default function HeroSection() {
                  src="/images/hero-student.png" 
                  alt="Techglaz Labs Student" 
                  fill 
+                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
                  className="object-contain drop-shadow-2xl" 
                  priority 
                />
