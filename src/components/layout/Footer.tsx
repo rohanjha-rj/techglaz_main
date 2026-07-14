@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Mail, Phone, MapPin, ArrowUpRight } from "lucide-react";
 import { FOOTER_LINKS, SOCIAL_LINKS } from "@/lib/constants";
 
@@ -13,18 +14,15 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Column 1: About & Branding */}
           <div className="space-y-6">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-blue-steel to-blue-400 flex items-center justify-center shadow-lg">
-                <span className="text-white font-extrabold text-lg">T</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-lg font-bold text-white tracking-tight leading-none">
-                  TECHGLAZ
-                </span>
-                <span className="text-xs font-semibold text-brand-blue-steel tracking-widest mt-0.5">
-                  LABS
-                </span>
-              </div>
+            <Link href="/" className="block max-w-[240px] hover:scale-105 transition-transform origin-left">
+              <Image 
+                src="/logo_name.png" 
+                alt="Techglaz Labs - Let's Create Your own Future" 
+                width={240} 
+                height={80} 
+                className="w-full object-contain"
+                style={{ height: 'auto' }}
+              />
             </Link>
             <p className="text-sm text-slate-400 leading-relaxed">
               Empowering students and faculty through high-end professional development, bridging academic curricula and state-of-the-art industry engineering domains.

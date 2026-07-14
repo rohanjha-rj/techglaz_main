@@ -7,6 +7,7 @@ import SectionHeading from "../shared/SectionHeading";
 import { Testimonial } from "@/types";
 import { client } from "../../../sanity/lib/client";
 import { allTestimonialsQuery } from "../../../sanity/lib/queries";
+import { projectId } from "../../../sanity/env";
 
 const MOCK_TESTIMONIALS: Testimonial[] = [
   {
@@ -42,12 +43,14 @@ export default function TestimonialsPreview() {
   useEffect(() => {
     async function loadTestimonials() {
       try {
-        const fetched = await client.fetch<Testimonial[]>(allTestimonialsQuery);
-        if (fetched && fetched.length > 0) {
-          setTestimonials(fetched);
-        } else {
-          setTestimonials(MOCK_TESTIMONIALS);
+        if (projectId !== "placeholder-id") {
+          const fetched = await client.fetch<Testimonial[]>(allTestimonialsQuery);
+          if (fetched && fetched.length > 0) {
+            setTestimonials(fetched);
+            return;
+          }
         }
+        setTestimonials(MOCK_TESTIMONIALS);
       } catch (error) {
         console.warn("Failed to load testimonials from Sanity, using mock data:", error);
         setTestimonials(MOCK_TESTIMONIALS);
@@ -76,9 +79,9 @@ export default function TestimonialsPreview() {
   if (testimonials.length === 0) return null;
 
   return (
-    <section className="py-20 bg-slate-900 text-white relative overflow-hidden">
+    <section className="py-20 bg-[#0c1524] text-white relative overflow-hidden border-t border-white/5">
       {/* Background patterns */}
-      <div className="absolute inset-0 opacity-10 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem]" />
+      <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:24px_24px]" />
       <div className="absolute top-1/2 left-0 w-80 h-80 rounded-full bg-brand-blue-deep/20 blur-3xl" />
       <div className="absolute bottom-0 right-0 w-80 h-80 rounded-full bg-brand-blue-steel/10 blur-3xl" />
 
@@ -101,7 +104,7 @@ export default function TestimonialsPreview() {
                   key={testimonial._id}
                   className="flex-[0_0_100%] min-w-0 px-4"
                 >
-                  <div className="glassmorphism dark:bg-slate-800/20 border-slate-700/30 p-8 sm:p-12 rounded-3xl relative text-center flex flex-col items-center">
+                  <div className="bg-slate-800/40 backdrop-blur-md border border-slate-700/50 p-8 sm:p-12 rounded-3xl relative text-center flex flex-col items-center shadow-xl hover:bg-slate-800/60 transition-colors">
                     {/* Quotes Graphic */}
                     <Quote className="w-12 h-12 text-brand-blue-steel opacity-30 absolute top-6 left-6" />
                     

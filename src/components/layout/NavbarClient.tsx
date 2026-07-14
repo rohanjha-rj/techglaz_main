@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, ChevronDown, User, LogOut, LayoutDashboard, Settings } from "lucide-react";
 import { NAV_LINKS } from "@/lib/constants";
@@ -69,22 +70,22 @@ export default function NavbarClient({ session }: NavbarClientProps) {
       <header
         className={`sticky top-0 z-40 w-full transition-all duration-300 ${
           isScrolled
-            ? "glassmorphism py-3 shadow-md"
+            ? "bg-slate-800/95 backdrop-blur-lg py-3 shadow-2xl border-b border-white/10"
             : "bg-transparent py-5"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
+        <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-20">
+          <div className="flex items-center justify-between w-full">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 group">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-blue-deep to-brand-blue-steel flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
-                <span className="text-white font-extrabold text-lg">T</span>
+            <Link href="/" className="flex items-center gap-3 group">
+              <div className="w-12 h-12 flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
+                <Image src="/logo.png" alt="Techglaz Labs" width={48} height={48} className="object-contain" style={{ width: 'auto', height: 'auto' }} />
               </div>
-              <div className="flex flex-col">
-                <span className="text-lg font-bold text-slate-900 dark:text-white tracking-tight leading-none">
-                  TECHGLAZ
+              <div className="flex flex-col justify-center">
+                <span className="text-[20px] font-black text-white tracking-widest leading-none uppercase drop-shadow-md">
+                  Techglaz
                 </span>
-                <span className="text-xs font-semibold text-brand-blue-steel tracking-widest mt-0.5">
+                <span className="text-[12px] font-bold text-brand-blue-steel tracking-[0.25em] mt-1">
                   LABS
                 </span>
               </div>
@@ -105,10 +106,10 @@ export default function NavbarClient({ session }: NavbarClientProps) {
                       onMouseLeave={handleMouseLeave}
                     >
                       <button
-                        className={`flex items-center gap-1.5 text-sm font-semibold transition-colors cursor-pointer ${
+                        className={`flex items-center gap-1.5 text-[15px] font-bold transition-colors cursor-pointer ${
                           isActive
-                            ? "text-brand-blue-deep dark:text-brand-blue-steel"
-                            : "text-slate-600 dark:text-slate-300 hover:text-brand-blue-deep dark:hover:text-brand-blue-steel"
+                            ? "text-[#fbbf24] drop-shadow-sm"
+                            : "text-slate-200 hover:text-[#fbbf24]"
                         }`}
                         aria-expanded={activeDropdown === link.label}
                       >
@@ -130,10 +131,10 @@ export default function NavbarClient({ session }: NavbarClientProps) {
                             <Link
                               key={child.label}
                               href={child.href}
-                              className={`block px-4 py-2.5 text-sm font-medium transition-colors ${
+                              className={`block px-4 py-2.5 text-[15px] font-semibold transition-colors ${
                                 isChildActive
                                   ? "bg-brand-blue-light/50 text-brand-blue-deep dark:bg-slate-800 dark:text-brand-blue-steel"
-                                  : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-brand-blue-deep dark:hover:text-brand-blue-steel"
+                                  : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-brand-blue-deep dark:hover:text-[#fbbf24]"
                               }`}
                             >
                               {child.label}
@@ -149,15 +150,15 @@ export default function NavbarClient({ session }: NavbarClientProps) {
                   <Link
                     key={link.label}
                     href={link.href}
-                    className={`text-sm font-semibold transition-colors relative ${
+                    className={`text-[15px] font-bold transition-colors relative pb-1 ${
                       isActive
-                        ? "text-brand-blue-deep dark:text-brand-blue-steel font-bold"
-                        : "text-slate-600 dark:text-slate-300 hover:text-brand-blue-deep dark:hover:text-brand-blue-steel"
+                        ? "text-[#fbbf24]"
+                        : "text-slate-200 hover:text-[#fbbf24]"
                     }`}
                   >
                     {link.label}
                     {isActive && (
-                      <span className="absolute -bottom-1.5 left-0 w-full h-0.5 bg-brand-blue-deep dark:bg-brand-blue-steel rounded-full" />
+                      <span className="absolute -bottom-1.5 left-0 w-full h-0.5 bg-[#fbbf24] rounded-full shadow-[0_0_8px_rgba(251,191,36,0.8)]" />
                     )}
                   </Link>
                 );
@@ -227,16 +228,16 @@ export default function NavbarClient({ session }: NavbarClientProps) {
                   )}
                 </div>
               ) : (
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-4">
                   <Link
                     href="/login"
-                    className="text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-brand-blue-deep dark:hover:text-brand-blue-steel transition-colors px-3 py-1.5"
+                    className="text-[15px] font-bold text-slate-200 hover:text-[#fbbf24] transition-colors px-2 py-1.5"
                   >
                     Login
                   </Link>
                   <Link
                     href="/signup"
-                    className="btn-primary py-2 px-4.5 text-sm rounded-lg"
+                    className="bg-[#0c1524] hover:bg-[#132035] border border-slate-700/50 text-white py-2.5 px-6 text-[15px] font-bold rounded-full transition-colors shadow-sm"
                   >
                     Sign Up
                   </Link>
@@ -246,7 +247,7 @@ export default function NavbarClient({ session }: NavbarClientProps) {
               {/* Primary CTA */}
               <Link
                 href="/apply"
-                className="btn-accent py-2 px-5 text-sm rounded-lg font-bold uppercase tracking-wider scale-95 hover:scale-100"
+                className="bg-[#fbbf24] hover:bg-[#f59e0b] text-slate-900 shadow-md py-2.5 px-7 text-[15px] rounded-full font-extrabold uppercase tracking-widest transition-transform hover:-translate-y-0.5"
               >
                 Apply Now
               </Link>
@@ -256,13 +257,13 @@ export default function NavbarClient({ session }: NavbarClientProps) {
             <div className="flex items-center gap-3 lg:hidden">
               <Link
                 href="/apply"
-                className="btn-accent py-1.5 px-3.5 text-xs rounded-lg font-bold uppercase tracking-wide"
+                className="bg-[#fbbf24] hover:bg-[#f59e0b] shadow-md text-slate-900 py-1.5 px-4 text-xs rounded-full font-extrabold uppercase tracking-widest"
               >
                 Apply
               </Link>
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
-                className="p-2 text-slate-600 hover:text-slate-800 dark:text-slate-300 dark:hover:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                className="p-2 text-slate-200 hover:text-white rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
                 aria-label="Open menu"
               >
                 <Menu className="w-6 h-6" />

@@ -1,11 +1,13 @@
 import React from "react";
 import Link from "next/link";
-import { ArrowRight, BookOpen, Clock, Tag } from "lucide-react";
+import Image from "next/image";
+import { ArrowRight, BookOpen, Clock, Tag, Star, Users } from "lucide-react";
 import SectionHeading from "../shared/SectionHeading";
 import { client } from "../../../sanity/lib/client";
 import { allCoursesQuery } from "../../../sanity/lib/queries";
 import { Course } from "@/types";
 import { urlForImage } from "../../../sanity/lib/image";
+import { projectId } from "../../../sanity/env";
 import { BRANCHES } from "@/lib/constants";
 
 // Fallback mock courses for when Sanity is empty/not configured yet
@@ -82,9 +84,11 @@ export default async function CourseHighlights() {
   let courses: Course[] = [];
 
   try {
-    // Attempt to fetch from Sanity
-    const fetched = await client.fetch<Course[]>(allCoursesQuery);
-    courses = fetched ? fetched.filter(c => c.featured) : [];
+    // Attempt to fetch from Sanity only if project ID is configured
+    if (projectId !== "placeholder-id") {
+      const fetched = await client.fetch<Course[]>(allCoursesQuery);
+      courses = fetched ? fetched.filter(c => c.featured) : [];
+    }
   } catch (error) {
     console.warn("Failed to fetch courses from Sanity, using fallback mocks:", error);
   }
@@ -108,57 +112,104 @@ export default async function CourseHighlights() {
 
         {/* Course Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {courses.map((course) => {
+          {courses.map((course, idx) => {
             const branchLabel = BRANCHES[course.branch] || course.branch;
             const courseSlug = `/trainings/${course.branch.toLowerCase().replace(/_/g, "-")}/${course.slug.current}`;
+            
+            // Generate mock metadata for design
+            const getImage = (title: string) => {
+              if (title.includes("Web")) return "/images/courses/web-dev.png";
+              if (title.includes("AI") || title.includes("Machine")) return "/images/courses/ai-ml.png";
+              if (title.includes("VLSI")) return "/images/courses/vlsi.png";
+              if (title.includes("IoT")) return "/images/courses/iot.png";
+              if (title.includes("Catia") || title.includes("Mechanical")) return "/images/courses/mechanical.png";
+              if (title.includes("Cybersecurity")) return "/images/courses/cybersecurity.png";
+              return "/images/courses/web-dev.png";
+            };
+            const MOCK_INSTRUCTORS = [
+              { name: "Rahul S.", rating: 4.8, students: "1.2k", price: "₹2,500" },
+              { name: "Priya M.", rating: 4.9, students: "3.1k", price: "₹3,200" },
+              { name: "Anil K.", rating: 4.7, students: "980", price: "₹1,800" },
+              { name: "Dr. Sharma", rating: 4.9, students: "1.5k", price: "₹4,100" },
+            ];
+            const meta = MOCK_INSTRUCTORS[idx % MOCK_INSTRUCTORS.length];
+            const badge = idx === 0 ? "Bestseller" : idx === 1 ? "Hot" : idx === 2 ? "New" : "";
+            const badgeColor = idx === 0 ? "bg-yellow-400 text-yellow-900" : idx === 1 ? "bg-red-500 text-white" : "bg-emerald-500 text-white";
 
             return (
               <div
                 key={course._id}
-                className="group relative flex flex-col justify-between bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-3xl p-6 sm:p-8 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1.5 focus-within:ring-2 focus-within:ring-brand-blue-steel"
+                className="group flex flex-col bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 focus-within:ring-2 focus-within:ring-brand-blue-steel"
               >
-                {/* Visual Glow Effect */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-brand-blue-deep/5 to-brand-blue-steel/0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none -z-10" />
+                {/* Image Header */}
+                <div className="relative h-48 w-full bg-slate-100 dark:bg-slate-800">
+                  <Image 
+                    src={getImage(course.title)} 
+                    alt={course.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  {badge && (
+                    <div className={`absolute top-4 left-4 px-2 py-1 ${badgeColor} text-[10px] font-bold uppercase tracking-wider rounded z-20`}>
+                      {badge}
+                    </div>
+                  )}
+                  {/* Subtle top border accent over the image */}
+                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-brand-blue-deep to-brand-blue-steel z-20" />
+                </div>
 
-                <div>
+                <div className="p-6 flex flex-col flex-grow">
                   {/* Category badges */}
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    <span className="text-[10px] font-bold tracking-wider uppercase bg-brand-blue-light/60 text-brand-blue-deep dark:bg-slate-800 dark:text-slate-350 px-2.5 py-1 rounded-full flex items-center gap-1">
-                      <Tag className="w-3 h-3" />
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    <span className="text-[10px] font-bold tracking-wider uppercase text-brand-blue-steel bg-brand-blue-light/50 px-2 py-0.5 rounded">
                       {branchLabel}
-                    </span>
-                    <span className="text-[10px] font-bold tracking-wider uppercase bg-indigo-50 text-indigo-600 dark:bg-slate-850 dark:text-indigo-400 px-2.5 py-1 rounded-full">
-                      {course.domain}
                     </span>
                   </div>
 
                   {/* Header Title */}
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-brand-blue-deep dark:group-hover:text-brand-blue-steel transition-colors mb-3">
-                    <Link href={courseSlug} className="focus:outline-none">
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-blue-steel transition-colors mb-2 line-clamp-1 relative z-10">
+                    <Link href={courseSlug} className="focus:outline-none before:absolute before:inset-0">
                       {course.title}
                     </Link>
                   </h3>
 
                   {/* Description */}
-                  <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-3 mb-6">
+                  <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2 mb-4 flex-grow z-10 relative">
                     {course.description}
                   </p>
-                </div>
 
-                {/* Card Footer */}
-                <div className="flex items-center justify-between pt-5 border-t border-slate-100 dark:border-slate-800/40">
-                  <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400">
-                    <Clock className="w-4 h-4 text-slate-400" />
-                    <span>{course.duration}</span>
+                  {/* Instructor & Rating Row */}
+                  <div className="flex items-center justify-between mb-4 pt-4 border-t border-slate-100 dark:border-slate-800/80 relative z-20 pointer-events-none">
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-full bg-slate-200 overflow-hidden relative">
+                         <Image 
+                           src={`https://i.pravatar.cc/100?img=${idx + 20}`} 
+                           alt="Instructor" 
+                           fill 
+                           sizes="24px"
+                           className="object-cover" 
+                         />
+                      </div>
+                      <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">{meta.name}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Star className="w-3.5 h-3.5 fill-[#fbbf24] text-[#fbbf24]" />
+                      <span className="text-xs font-bold text-slate-700 dark:text-slate-300">{meta.rating}</span>
+                      <span className="text-xs text-slate-400">({meta.students})</span>
+                    </div>
                   </div>
 
-                  <Link
-                    href={courseSlug}
-                    className="inline-flex items-center gap-1 text-sm font-bold text-brand-blue-deep dark:text-brand-blue-steel hover:gap-1.5 transition-all focus:outline-none"
-                  >
-                    <span>Syllabus & Details</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
+                  {/* Card Footer */}
+                  <div className="flex items-center justify-between relative z-20 pointer-events-none">
+                    <div className="flex items-center gap-1.5 text-xs font-medium text-slate-500 dark:text-slate-400">
+                      <Clock className="w-4 h-4 text-slate-400" />
+                      <span>{course.duration}</span>
+                    </div>
+                    <div className="font-bold text-lg text-slate-900 dark:text-white">
+                      {meta.price}
+                    </div>
+                  </div>
                 </div>
               </div>
             );
@@ -166,14 +217,14 @@ export default async function CourseHighlights() {
         </div>
 
         {/* View All Button */}
-        <div className="text-center mt-12">
+        <div className="text-center mt-12 relative z-10">
           <Link
             href="/trainings"
-            className="btn-secondary inline-flex items-center gap-2 font-bold px-8 py-3 group"
+            className="inline-flex items-center gap-2 bg-[#0c1524] hover:bg-[#132035] text-white font-bold px-8 py-3.5 rounded-full transition-colors shadow-lg group"
           >
-            <BookOpen className="w-5 h-5 shrink-0" />
+            <BookOpen className="w-5 h-5 shrink-0 text-[#fbbf24]" />
             View All Courses
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
       </div>
