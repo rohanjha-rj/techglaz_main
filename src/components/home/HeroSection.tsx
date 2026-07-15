@@ -19,25 +19,31 @@ export default function HeroSection() {
 
   return (
     <section className="relative min-h-screen flex flex-col justify-center items-center overflow-hidden pt-36 pb-24 bg-[#030712]">
-      {/* Background Image stretched to fit full screen */}
-      <div className="absolute inset-0 z-0 select-none pointer-events-none opacity-40">
+      {/* ===== FULL-SCREEN 3D GRADIENT MERGED IMAGE BACKGROUND ===== */}
+      <div className="absolute inset-0 z-0 select-none pointer-events-none">
         <Image
-          src="/images/hero-liquid-orb.png"
-          alt="Techglaz Hero Background"
+          src="/images/hero-merged-3d.png"
+          alt="Techglaz Hero 3D Background"
           fill
-          className="object-cover"
+          className="object-cover scale-110"
           priority
+          quality={90}
         />
-        {/* Darkening gradient overlays to keep textual contrast crisp */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#030712] via-[#030712]/45 to-[#030712]/80" />
+        {/* Multi-layer gradient overlays for 3D depth effect */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#030712]/70 via-transparent to-[#030712]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#030712]/60 via-transparent to-[#030712]/60" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#030712] via-[#030712]/30 to-transparent" />
+        {/* Radial vignette for cinematic 3D feel */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(3,7,18,0.85)_100%)]" />
       </div>
 
-      {/* Background radial soft glow matching the target image */}
-      <div className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-blue-500/10 blur-[130px] z-0 pointer-events-none animate-pulse-slow" />
-      <div className="absolute top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-amber-500/5 blur-[120px] z-0 pointer-events-none" style={{ animationDelay: "2s" }} />
+      {/* Animated 3D gradient orbs */}
+      <div className="absolute top-[30%] left-[20%] w-[600px] h-[600px] rounded-full bg-blue-600/8 blur-[140px] z-0 pointer-events-none animate-pulse-slow" />
+      <div className="absolute top-[50%] right-[15%] w-[500px] h-[500px] rounded-full bg-indigo-500/6 blur-[120px] z-0 pointer-events-none" style={{ animationDelay: "1.5s" }} />
+      <div className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-amber-500/5 blur-[130px] z-0 pointer-events-none animate-pulse-slow" style={{ animationDelay: "3s" }} />
 
-      {/* Subtle Starry/Dot pattern background */}
-      <div className="absolute inset-0 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:32px_32px] opacity-25 z-0 pointer-events-none" />
+      {/* Subtle dot grid pattern */}
+      <div className="absolute inset-0 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:32px_32px] opacity-15 z-0 pointer-events-none" />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full text-center flex flex-col items-center">
         {/* Animated Main Content Wrapper */}
@@ -53,7 +59,7 @@ export default function HeroSection() {
             className="inline-flex items-center gap-2 px-4.5 py-1.5 rounded-full bg-white/5 backdrop-blur-md text-slate-350 font-semibold text-xs tracking-wider uppercase border border-white/10"
           >
             <Sparkles className="w-3.5 h-3.5 text-brand-accent animate-spin-slow" />
-            <span>Bridging Academic Curricula & Industry Engineering</span>
+            <span>Bridging Academic Curricula &amp; Industry Engineering</span>
           </motion.div>
 
           {/* Centered Premium Headline */}
@@ -98,26 +104,18 @@ export default function HeroSection() {
           </motion.div>
         </motion.div>
 
-        {/* Central visual rising orb container */}
+        {/* Floating UI cards over the 3D gradient background */}
         <motion.div
           initial={{ opacity: 0, y: 100 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, ease: "easeOut", delay: 0.3 }}
           className="relative w-full max-w-xl sm:max-w-2xl aspect-[1.1] mx-auto mt-16 sm:mt-24 select-none pointer-events-none flex justify-center items-end"
         >
+          {/* Glow behind cards */}
           <div className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-blue-500/10 rounded-full blur-[90px] -z-10 animate-pulse-slow" />
-          
-          <Image
-            src="/images/hero-liquid-orb.png"
-            alt="Techglaz Labs Liquid Orb"
-            width={650}
-            height={650}
-            className="object-contain animate-float drop-shadow-3xl transform translate-y-10 sm:translate-y-16"
-            priority
-          />
 
-          {/* Left Floating Card: VLSI/Placements - glassmorphic matching the target page */}
-          <div className="absolute left-[-2%] sm:left-[-12%] bottom-[25%] sm:bottom-[35%] bg-slate-950/45 backdrop-blur-xl border border-white/10 p-5 rounded-2xl shadow-2xl w-48 sm:w-56 text-left pointer-events-auto hover:-translate-y-1 transition-transform duration-300">
+          {/* Left Floating Card: VLSI/Placements - glassmorphic */}
+          <div className="absolute left-[-2%] sm:left-[-12%] bottom-[50%] sm:bottom-[55%] bg-slate-950/45 backdrop-blur-xl border border-white/10 p-5 rounded-2xl shadow-2xl w-48 sm:w-56 text-left pointer-events-auto hover:-translate-y-1 transition-transform duration-300">
             <div className="flex justify-between items-start gap-4">
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">Specialization</span>
               <Link href="/trainings" className="w-6 h-6 rounded-full bg-white/10 hover:bg-white text-white hover:text-slate-950 flex items-center justify-center transition-colors cursor-pointer shrink-0">
@@ -125,7 +123,7 @@ export default function HeroSection() {
               </Link>
             </div>
             <h4 className="text-sm sm:text-base font-extrabold text-white mt-3 leading-snug">
-              VLSI & Embedded Systems
+              VLSI &amp; Embedded Systems
             </h4>
             <p className="text-[10px] sm:text-xs text-slate-400 font-semibold mt-2.5 flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
@@ -133,7 +131,8 @@ export default function HeroSection() {
             </p>
           </div>
 
-            <div className="absolute bottom-[12%] left-1 sm:left-2 z-20 flex w-60 items-center gap-3.5 rounded-[1.4rem] border border-white/10 bg-slate-900/85 p-4 shadow-2xl backdrop-blur-xl lg:-left-4">
+          {/* Bottom-left lesson card */}
+            <div className="absolute bottom-[25%] left-1 sm:left-2 z-20 flex w-60 items-center gap-3.5 rounded-[1.4rem] border border-white/10 bg-slate-900/85 p-4 shadow-2xl backdrop-blur-xl lg:-left-4">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-brand-blue-steel/20 bg-brand-blue-deep/60">
                 <Play className="ml-0.5 h-3.5 w-3.5 fill-[#fbbf24] text-[#fbbf24]" />
               </div>
@@ -144,7 +143,8 @@ export default function HeroSection() {
               </div>
             </div>
 
-            <div className="absolute bottom-4 right-6 flex gap-2 rounded-full border border-white/10 bg-white/10 p-2 backdrop-blur-md">
+          {/* Bottom-right icon pills */}
+            <div className="absolute bottom-[20%] right-6 flex gap-2 rounded-full border border-white/10 bg-white/10 p-2 backdrop-blur-md">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-blue-light/20 text-brand-blue-steel"><ShieldCheck className="h-5 w-5" /></div>
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-accent/20 text-brand-accent"><Cpu className="h-5 w-5" /></div>
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white"><Rocket className="h-5 w-5" /></div>
@@ -154,4 +154,5 @@ export default function HeroSection() {
       </section>
     );
   }
+
 

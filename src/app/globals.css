@@ -69,16 +69,6 @@
 }
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
-  --glass-bg: rgba(255, 255, 255, 0.74);
-  --glass-border: rgba(17, 24, 39, 0.08);
-  --glass-shadow: 0 12px 40px rgba(15, 23, 42, 0.06);
-  --shadow-premium: 0 16px 40px -18px rgba(15, 23, 42, 0.18), 0 8px 20px -10px rgba(15, 23, 42, 0.08);
-  --shadow-premium-hover: 0 30px 60px -24px rgba(15, 23, 42, 0.22), 0 14px 24px -10px rgba(15, 23, 42, 0.14);
-}
-
-.dark {
   --background: #050913;
   --foreground: #f8fafc;
   --glass-bg: rgba(8, 12, 20, 0.76);
@@ -95,18 +85,14 @@ html {
 body {
   background:
     radial-gradient(circle at top left, rgba(43, 120, 198, 0.12), transparent 28%),
-    linear-gradient(180deg, rgba(247, 250, 252, 0.96), rgba(248, 250, 252, 1));
+    linear-gradient(180deg, rgba(5, 9, 19, 1), rgba(7, 12, 20, 1));
   color: var(--foreground);
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   overflow-x: hidden;
   text-rendering: optimizeLegibility;
 }
 
-.dark body {
-  background:
-    radial-gradient(circle at top left, rgba(43, 120, 198, 0.12), transparent 28%),
-    linear-gradient(180deg, rgba(5, 9, 19, 1), rgba(7, 12, 20, 1));
-}
+
 
 ::selection {
   background: rgba(43, 120, 198, 0.22);
@@ -123,14 +109,10 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(43, 120, 198, 0.18);
+  background: rgba(43, 120, 198, 0.28);
   border: 2px solid transparent;
   background-clip: padding-box;
   border-radius: 9999px;
-}
-
-.dark ::-webkit-scrollbar-thumb {
-  background: rgba(43, 120, 198, 0.28);
 }
 
 ::-webkit-scrollbar-thumb:hover {

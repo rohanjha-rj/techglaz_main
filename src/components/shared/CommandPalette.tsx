@@ -2,9 +2,9 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Search, Monitor, Moon, Sun, ArrowRight, X, FileText, Settings, LayoutDashboard, Sparkles } from "lucide-react";
+import { Search, ArrowRight, X, FileText, Settings, LayoutDashboard, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useTheme } from "./ThemeProvider";
+
 
 interface CommandPaletteProps {
   isOpen?: boolean;
@@ -13,7 +13,6 @@ interface CommandPaletteProps {
 
 export default function CommandPalette({ isOpen: externalIsOpen, onClose: externalOnClose }: CommandPaletteProps) {
   const router = useRouter();
-  const { theme, toggleTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -67,17 +66,8 @@ export default function CommandPalette({ isOpen: externalIsOpen, onClose: extern
     { id: "about", title: "About Techglaz", category: "Navigation", href: "/about", icon: <Settings className="w-4 h-4" /> },
     { id: "contact", title: "Contact Us", category: "Navigation", href: "/contact", icon: <Settings className="w-4 h-4" /> },
     { id: "dashboard", title: "Trainee Dashboard", category: "Navigation", href: "/dashboard", icon: <LayoutDashboard className="w-4 h-4" /> },
-    {
-      id: "theme",
-      title: `Switch Theme (Current: ${theme})`,
-      category: "Action",
-      action: () => {
-        toggleTheme();
-        handleClose();
-      },
-      icon: theme === "light" ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />,
-    },
   ];
+
 
   const filteredItems = items.filter((item) =>
     item.title.toLowerCase().includes(query.toLowerCase()) ||
@@ -128,10 +118,10 @@ export default function CommandPalette({ isOpen: externalIsOpen, onClose: extern
             initial={{ opacity: 0, scale: 0.96, y: -8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: -8 }}
-            className="relative w-full max-w-lg mx-4 bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 rounded-3xl shadow-2xl overflow-hidden z-10 flex flex-col"
+            className="relative w-full max-w-lg mx-4 bg-slate-900 border border-slate-800/80 rounded-3xl shadow-2xl overflow-hidden z-10 flex flex-col"
           >
             {/* Input Header */}
-            <div className="flex items-center gap-3 px-4.5 border-b border-slate-100 dark:border-slate-850">
+            <div className="flex items-center gap-3 px-4.5 border-b border-slate-850">
               <Search className="w-5 h-5 text-slate-400 shrink-0" />
               <input
                 ref={inputRef}
@@ -143,11 +133,11 @@ export default function CommandPalette({ isOpen: externalIsOpen, onClose: extern
                   setSelectedIndex(0);
                 }}
                 onKeyDown={handleKeyDown}
-                className="w-full py-4 text-sm bg-transparent outline-none text-slate-800 dark:text-slate-100 placeholder-slate-400"
+                className="w-full py-4 text-sm bg-transparent outline-none text-slate-100 placeholder-slate-400"
               />
               <button
                 onClick={handleClose}
-                className="p-1 text-slate-400 hover:text-slate-650 dark:hover:text-slate-250 transition-colors"
+                className="p-1 text-slate-400 hover:text-slate-250 transition-colors"
                 aria-label="Close command palette"
               >
                 <X className="w-4 h-4" />
@@ -171,8 +161,8 @@ export default function CommandPalette({ isOpen: externalIsOpen, onClose: extern
                         onMouseEnter={() => setSelectedIndex(idx)}
                         className={`w-full flex items-center justify-between p-3 rounded-2xl text-left text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
                           isSelected
-                            ? "bg-brand-blue-light/50 text-brand-blue-deep dark:bg-slate-800 dark:text-[#fbbf24]"
-                            : "text-slate-650 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-850/50"
+                            ? "bg-slate-800 text-[#fbbf24]"
+                            : "text-slate-400 hover:bg-slate-850/50"
                         }`}
                       >
                         <div className="flex items-center gap-3">
@@ -180,7 +170,7 @@ export default function CommandPalette({ isOpen: externalIsOpen, onClose: extern
                             {item.icon}
                           </span>
                           <span>{item.title}</span>
-                          <span className="text-[10px] uppercase tracking-widest text-slate-400 font-bold px-1.5 py-0.5 rounded bg-slate-50 dark:bg-slate-850 dark:text-slate-500 border border-slate-200/20">
+                          <span className="text-[10px] uppercase tracking-widest text-slate-500 font-bold px-1.5 py-0.5 rounded bg-slate-850 border border-slate-200/20">
                             {item.category}
                           </span>
                         </div>
@@ -195,13 +185,13 @@ export default function CommandPalette({ isOpen: externalIsOpen, onClose: extern
             </div>
 
             {/* Help Footer */}
-            <div className="px-4.5 py-3 border-t border-slate-100 dark:border-slate-850 bg-slate-50 dark:bg-slate-950/40 text-[10px] text-slate-450 font-medium flex justify-between items-center">
+            <div className="px-4.5 py-3 border-t border-slate-850 bg-slate-950/40 text-[10px] text-slate-450 font-medium flex justify-between items-center">
               <div className="flex gap-4">
-                <span><kbd className="px-1 py-0.5 rounded border border-slate-200 bg-white dark:bg-slate-800 dark:border-slate-700 shadow-sm mr-1">↑↓</kbd> Navigate</span>
-                <span><kbd className="px-1 py-0.5 rounded border border-slate-200 bg-white dark:bg-slate-800 dark:border-slate-700 shadow-sm mr-1">Enter</kbd> Select</span>
+                <span><kbd className="px-1 py-0.5 rounded border border-slate-700 bg-slate-800 shadow-sm mr-1">↑↓</kbd> Navigate</span>
+                <span><kbd className="px-1 py-0.5 rounded border border-slate-700 bg-slate-800 shadow-sm mr-1">Enter</kbd> Select</span>
               </div>
               <div>
-                <span>Press <kbd className="px-1 py-0.5 rounded border border-slate-200 bg-white dark:bg-slate-800 dark:border-slate-700 shadow-sm">Esc</kbd> to close</span>
+                <span>Press <kbd className="px-1 py-0.5 rounded border border-slate-700 bg-slate-800 shadow-sm">Esc</kbd> to close</span>
               </div>
             </div>
           </motion.div>
