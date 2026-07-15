@@ -10,6 +10,17 @@
       "role": "student",
       "createdAt": "2026-07-15T12:32:53.181Z",
       "updatedAt": "2026-07-15T12:32:53.181Z"
+    },
+    {
+      "_id": "x3uojgd",
+      "id": "x3uojgd",
+      "fullName": "Test User2",
+      "email": "test2@example.com",
+      "phone": "9876543210",
+      "password": "$2b$12$MQsRujfPu2lrINsaGbE9Q.Ca44.bzmWasBYwp9YNJO4T4JAUiwE6i",
+      "role": "student",
+      "createdAt": "2026-07-15T13:16:16.562Z",
+      "updatedAt": "2026-07-15T13:16:16.562Z"
     }
   ],
   "applications": [
