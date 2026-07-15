@@ -30,6 +30,9 @@ export interface SyllabusModule {
   _key: string;
   title: string;
   topics: string[];
+  milestone?: string;
+  prerequisites?: string[];
+  projects?: string[];
 }
 
 export interface Course {

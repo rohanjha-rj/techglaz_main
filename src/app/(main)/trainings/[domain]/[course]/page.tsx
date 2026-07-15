@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import PageHero from "@/components/shared/PageHero";
-import SyllabusAccordion from "@/components/courses/SyllabusAccordion";
+import SyllabusTabs from "@/components/courses/SyllabusTabs";
 import { client } from "../../../../../../sanity/lib/client";
 import { courseBySlugQuery } from "../../../../../../sanity/lib/queries";
 import { Course } from "@/types";
@@ -25,16 +25,25 @@ const DETAILED_MOCKS: Record<string, Partial<Course>> = {
         _key: "mod-1",
         title: "Frontend Foundation (Next.js & React)",
         topics: ["JSX & Component state", "Next.js routing", "Tailwind CSS styling", "Context API & hooks"],
+        milestone: "Weeks 1-4",
+        prerequisites: ["HTML & CSS basics", "ES6+ JavaScript basics"],
+        projects: ["Personal Portfolio Website", "Responsive Task Dashboard"],
       },
       {
         _key: "mod-2",
         title: "Backend Development (Node.js & MongoDB)",
         topics: ["REST API structures", "Mongoose connections", "Middleware & Validation", "Database modeling"],
+        milestone: "Weeks 5-8",
+        prerequisites: ["Frontend Foundation", "Asynchronous JavaScript (Promises & async/await)"],
+        projects: ["RESTful Blog API with Express", "User Authentication Database Schema"],
       },
       {
         _key: "mod-3",
         title: "Advanced Integrations & Security",
         topics: ["NextAuth.js v5 config", "Bcrypt hashing", "Resend email triggers", "Deployment checklist"],
+        milestone: "Weeks 9-12",
+        prerequisites: ["Backend Development", "Basic client-server security"],
+        projects: ["SaaS Platform with NextAuth Login & Resend Invoicing"],
       },
     ],
     trainer: {
@@ -59,11 +68,25 @@ const DETAILED_MOCKS: Record<string, Partial<Course>> = {
         _key: "vl-1",
         title: "Verilog HDL & Digital Design",
         topics: ["Combinational logic design", "Sequential logic design", "Finite State Machines (FSM)", "ASIC design flow overview"],
+        milestone: "Weeks 1-8",
+        prerequisites: ["Basic Logic Gates", "Boolean Algebra"],
+        projects: ["FSM-based Traffic Light Controller", "16-bit RISC ALU Model in Verilog"],
       },
       {
         _key: "vl-2",
         title: "SystemVerilog for Verification",
         topics: ["Object-Oriented Programming (OOP)", "Virtual interfaces", "Randomization & constraints", "Coverage metrics"],
+        milestone: "Weeks 9-16",
+        prerequisites: ["Verilog HDL Design", "Object-Oriented Concepts"],
+        projects: ["Self-Checking Testbench for Dual-Port RAM", "SystemVerilog Verification Environment"],
+      },
+      {
+        _key: "vl-3",
+        title: "UVM & ASIC Protocol Verification",
+        topics: ["UVM Testbench Architecture", "UVM Agents, Drivers, Monitors", "Register Abstraction Layer (RAL)", "Protocol Verification (e.g. APB, AXI)"],
+        milestone: "Weeks 17-24",
+        prerequisites: ["SystemVerilog Verification"],
+        projects: ["Complete UVM-compliant Router Verification Suite", "ASIC Protocol Verification Tapeout"],
       },
     ],
     trainer: {
@@ -203,14 +226,8 @@ export default async function CourseDetailPage({ params }: PageProps) {
                 </ul>
               </div>
 
-              {/* Syllabus Accordion */}
-              <div className="space-y-4">
-                <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
-                  <span className="w-1.5 h-6 bg-brand-blue-deep rounded-full" />
-                  Detailed Syllabus
-                </h2>
-                <SyllabusAccordion syllabus={course.syllabus || []} />
-              </div>
+              {/* Syllabus Tabs Toggle (Roadmap vs List) */}
+              <SyllabusTabs syllabus={course.syllabus || []} />
 
             </div>
 

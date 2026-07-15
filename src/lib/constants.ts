@@ -88,6 +88,7 @@ export const NAV_LINKS = [
       { label: "Students", href: "/trainings?track=students" },
       { label: "General", href: "/trainings?track=general" },
       { label: "All Courses", href: "/trainings" },
+      { label: "Career Path Finder 🎯", href: "/career-path-finder" },
     ],
   },
   { label: "Trainers", href: "/trainers" },

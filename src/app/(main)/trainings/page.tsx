@@ -233,7 +233,7 @@ export default async function TrainingsPage({ searchParams }: PageProps) {
       </section>
 
       {/* Main Course Listing Grid grouped by Branch */}
-      <section className="py-16 bg-slate-50 dark:bg-slate-900/50">
+      <section className="py-16 bg-transparent">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20">
           
           {/* Check if no courses matched the filter */}

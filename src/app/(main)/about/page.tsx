@@ -130,7 +130,7 @@ export default async function AboutPage() {
       </section>
 
       {/* Founders Message Section */}
-      <section id="founders" className="py-20 bg-slate-50 dark:bg-slate-900/50 border-y border-slate-100 dark:border-slate-800/40">
+      <section id="founders" className="py-20 bg-transparent border-y border-slate-100 dark:border-slate-800/40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
             title="Founder's Message"
@@ -166,7 +166,7 @@ export default async function AboutPage() {
       </section>
 
       {/* Core Values */}
-      <section className="py-20 bg-white dark:bg-slate-900">
+      <section className="py-20 bg-transparent">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
             title="Our Core Values"
@@ -196,7 +196,7 @@ export default async function AboutPage() {
       </section>
 
       {/* Corporate Timeline */}
-      <section className="py-20 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-100 dark:border-slate-800/40">
+      <section className="py-20 bg-transparent border-t border-slate-100 dark:border-slate-800/40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
             title="Our Milestone Timeline"

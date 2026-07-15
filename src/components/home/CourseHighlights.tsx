@@ -106,6 +106,16 @@ export default async function CourseHighlights() {
         <SectionHeading title="Featured Training Tracks" subtitle="Explore Our Specialties" centered={true} />
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+    <section className="py-20 bg-transparent">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <SectionHeading
+          title="Featured Training Tracks"
+          subtitle="Explore Our Specialties"
+          centered={true}
+        />
+
+        {/* Course Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {courses.map((course, idx) => {
             const branchLabel = BRANCHES[course.branch] || course.branch;
             const courseSlug = `/trainings/${course.branch.toLowerCase().replace(/_/g, "-")}/${course.slug.current}`;
@@ -178,6 +188,15 @@ export default async function CourseHighlights() {
             <BookOpen className="h-4.5 w-4.5 shrink-0 text-[#fbbf24]" />
             <span>View All Courses</span>
             <ArrowRight className="h-4.5 w-4.5 transition-transform group-hover:translate-x-1" />
+        {/* View All Button */}
+        <div className="text-center mt-12 relative z-10">
+          <Link
+            href="/trainings"
+            className="inline-flex items-center gap-2 bg-slate-950 hover:bg-slate-900 dark:bg-slate-800 dark:hover:bg-slate-700 text-white font-bold px-8 py-3.5 rounded-full transition-colors shadow-lg group"
+          >
+            <BookOpen className="w-5 h-5 shrink-0 text-[#fbbf24]" />
+            View All Courses
+            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
       </div>

@@ -51,9 +51,6 @@ export default function NavbarClient({ session }: NavbarClientProps) {
       setIsScrolled(window.scrollY > 24);
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   useEffect(() => {
     setActiveDropdown(null);

@@ -27,7 +27,7 @@ export default function ContactPage() {
         subtitle="Reach out for training track assistance, campus MoU setup, or research consultancy queries."
       />
 
-      <section className="py-20 bg-slate-50 dark:bg-slate-900/50">
+      <section className="py-20 bg-transparent">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
             
