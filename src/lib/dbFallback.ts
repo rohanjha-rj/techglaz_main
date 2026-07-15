@@ -1,7 +1,9 @@
 import fs from "fs";
 import path from "path";
 
-const dbFilePath = path.join(process.cwd(), "src/lib/localDb.json");
+const dbFilePath = process.env.VERCEL
+  ? path.join("/tmp", "localDb.json")
+  : path.join(process.cwd(), "src/lib/localDb.json");
 
 interface LocalDbSchema {
   users: any[];
