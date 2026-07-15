@@ -14,7 +14,7 @@ export default function Footer() {
           <div className="grid gap-12 lg:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr] lg:gap-8">
             <div className="space-y-6">
               <Link href="/" className="block max-w-[220px] origin-left transition-transform hover:scale-[1.02]">
-                <Image src="/logo_name.png" alt="Techglaz Labs - Let's Create Your own Future" width={220} height={72} className="object-contain brightness-0 invert" style={{ width: "auto", height: "auto" }} />
+                <Image src="/logo_name.png" alt="Techglaz Labs - Let's Create Your own Future" width={1090} height={214} className="object-contain brightness-0 invert" style={{ width: "auto", height: "auto" }} />
               </Link>
               <p className="max-w-md text-sm leading-relaxed font-medium text-slate-400">
                 Empowering students and faculty through high-end professional development, bridging academic curricula and state-of-the-art industry engineering domains.

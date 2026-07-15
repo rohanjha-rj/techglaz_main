@@ -88,10 +88,10 @@ export default function NavbarClient({ session }: NavbarClientProps) {
                 <Image
                   src="/logo.png"
                   alt="Techglaz Labs Logo"
-                  width={40}
-                  height={40}
+                  width={187}
+                  height={221}
                   className="object-contain invert"
-                  style={{ width: "auto", height: "auto" }}
+                  style={{ width: "auto", height: "100%" }}
                 />
               </div>
               <div className="flex flex-col justify-center">

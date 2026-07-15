@@ -11,6 +11,15 @@ interface CommandPaletteProps {
   onClose?: () => void;
 }
 
+interface CommandItem {
+  id: string;
+  title: string;
+  category: string;
+  href?: string;
+  action?: () => void;
+  icon: React.ReactNode;
+}
+
 export default function CommandPalette({ isOpen: externalIsOpen, onClose: externalOnClose }: CommandPaletteProps) {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
@@ -57,7 +66,7 @@ export default function CommandPalette({ isOpen: externalIsOpen, onClose: extern
     }
   }, [isOpen]);
 
-  const items = [
+  const items: CommandItem[] = [
     { id: "home", title: "Home Page", category: "Navigation", href: "/", icon: <Sparkles className="w-4 h-4" /> },
     { id: "trainings", title: "Training Catalog", category: "Navigation", href: "/trainings", icon: <FileText className="w-4 h-4" /> },
     { id: "apply", title: "Trainee Enrollment Application", category: "Navigation", href: "/apply", icon: <FileText className="w-4 h-4" /> },
