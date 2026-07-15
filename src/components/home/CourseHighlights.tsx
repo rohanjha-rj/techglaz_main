@@ -7,7 +7,7 @@ import { client } from "../../../sanity/lib/client";
 import { allCoursesQuery } from "../../../sanity/lib/queries";
 import { Course } from "@/types";
 import { projectId } from "../../../sanity/env";
-import { BRANCHES } from "@/lib/constants";
+import { BRANCHES, BRANCH_KEYS_TO_SLUGS } from "@/lib/constants";
 
 // Fallback mock courses for when Sanity is empty/not configured yet
 const MOCK_COURSES: Course[] = [
@@ -109,7 +109,8 @@ export default async function CourseHighlights() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
           {courses.map((course, idx) => {
             const branchLabel = BRANCHES[course.branch] || course.branch;
-            const courseSlug = `/trainings/${course.branch.toLowerCase().replace(/_/g, "-")}/${course.slug.current}`;
+            const branchSlug = BRANCH_KEYS_TO_SLUGS[course.branch] || course.branch.toLowerCase().replace(/_/g, "-");
+            const courseSlug = `/trainings/${branchSlug}/${course.slug.current}`;
 
             const getImage = (title: string) => {
               if (title.includes("Web")) return "/images/courses/web-dev.png";

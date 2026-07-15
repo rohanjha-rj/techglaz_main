@@ -3,6 +3,7 @@
 // ============================================
 
 import mongoose, { Schema, type Document, type Model } from "mongoose";
+import { BRANCHES, TRAINING_TRACKS } from "@/lib/constants";
 
 export interface IApplication extends Document {
   userId?: mongoose.Types.ObjectId;
@@ -12,6 +13,7 @@ export interface IApplication extends Document {
   branch: string;
   course: string;
   trainingTrack: string;
+  duration: string;
   institution?: string;
   yearOrExperience?: string;
   message?: string;
@@ -48,7 +50,7 @@ const ApplicationSchema = new Schema<IApplication>(
     branch: {
       type: String,
       required: [true, "Engineering branch is required"],
-      enum: ["CSE_IT", "EE", "ECE", "ME", "CIVIL"],
+      enum: Object.keys(BRANCHES),
     },
     course: {
       type: String,
@@ -58,7 +60,12 @@ const ApplicationSchema = new Schema<IApplication>(
     trainingTrack: {
       type: String,
       required: [true, "Training track is required"],
-      enum: ["Teachers' School", "Teachers' College", "Students", "General"],
+      enum: TRAINING_TRACKS,
+    },
+    duration: {
+      type: String,
+      required: [true, "Program duration is required"],
+      enum: ["4 Weeks", "6 Weeks", "8 Weeks", "12 Weeks", "24 Weeks"],
     },
     institution: {
       type: String,

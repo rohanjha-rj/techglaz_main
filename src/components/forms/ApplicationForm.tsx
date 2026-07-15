@@ -11,16 +11,22 @@ import { AlertCircle, CheckCircle2, Loader2, Sparkles } from "lucide-react";
 // Indian mobile number regex
 const phoneRegex = /^[6-9]\d{9}$/;
 
+const branchKeys = Object.keys(BRANCHES) as [string, ...string[]];
+const trackKeys = TRAINING_TRACKS as unknown as [string, ...string[]];
+
 const applicationSchema = z.object({
   fullName: z.string().min(2, "Full name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
   phone: z.string().regex(phoneRegex, "Must be a valid 10-digit Indian mobile number"),
-  branch: z.enum(["CSE_IT", "EE", "ECE", "ME", "CIVIL"] as const, {
+  branch: z.enum(branchKeys, {
     message: "Please select an engineering branch",
   }),
   course: z.string().min(1, "Please select a course"),
-  trainingTrack: z.enum(["Teachers' School", "Teachers' College", "Students", "General"] as const, {
+  trainingTrack: z.enum(trackKeys, {
     message: "Please select a training track",
+  }),
+  duration: z.enum(["4 Weeks", "6 Weeks", "8 Weeks", "12 Weeks", "24 Weeks"] as const, {
+    message: "Please select a program duration",
   }),
   institution: z.string().optional(),
   yearOrExperience: z.string().optional(),
@@ -45,6 +51,7 @@ export default function ApplicationForm({ session }: ApplicationFormProps) {
   // Read prefilled values from URL params
   const paramBranch = searchParams.get("branch") as BranchKey | null;
   const paramCourse = searchParams.get("course");
+  const paramDuration = searchParams.get("duration");
 
   const {
     register,
@@ -61,6 +68,7 @@ export default function ApplicationForm({ session }: ApplicationFormProps) {
       branch: paramBranch && paramBranch in BRANCHES ? paramBranch : undefined,
       course: paramCourse || "",
       trainingTrack: undefined,
+      duration: (paramDuration && ["4 Weeks", "6 Weeks", "8 Weeks", "12 Weeks", "24 Weeks"].includes(paramDuration) ? paramDuration : "12 Weeks") as any,
       institution: "",
       yearOrExperience: "",
       message: "",
@@ -77,16 +85,19 @@ export default function ApplicationForm({ session }: ApplicationFormProps) {
     }
   }, [selectedBranch, setValue, paramCourse]);
 
-  // Set course if param exists initially
+  // Set course & duration if params exist initially
   useEffect(() => {
     if (paramBranch && paramCourse) {
       setValue("branch", paramBranch);
       // Wait a tick for branch state to propagate
       setTimeout(() => {
         setValue("course", paramCourse);
+        if (paramDuration) {
+          setValue("duration", paramDuration as any);
+        }
       }, 0);
     }
-  }, [paramBranch, paramCourse, setValue]);
+  }, [paramBranch, paramCourse, paramDuration, setValue]);
 
   const onSubmit = async (data: ApplicationFormValues) => {
     setIsPending(true);
@@ -157,7 +168,7 @@ export default function ApplicationForm({ session }: ApplicationFormProps) {
   }
 
   // Active courses based on selected branch
-  const availableCourses = selectedBranch ? COURSES_BY_BRANCH[selectedBranch] : [];
+  const availableCourses = selectedBranch ? COURSES_BY_BRANCH[selectedBranch as BranchKey] : [];
 
   return (
     <form
@@ -286,7 +297,26 @@ export default function ApplicationForm({ session }: ApplicationFormProps) {
               </option>
             ))}
           </select>
-          {errors.course && <p className="text-xs font-bold text-red-600 dark:text-red-450 mt-1">{errors.course.message}</p>}
+          {errors.course && <p className="text-xs font-bold text-red-650 mt-1">{errors.course.message}</p>}
+        </div>
+
+        {/* Program Duration Selection */}
+        <div className="space-y-1.5 col-span-2 sm:col-span-1">
+          <label htmlFor="duration" className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+            Program Duration *
+          </label>
+          <select
+            id="duration"
+            {...register("duration")}
+            className="w-full bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-blue-steel/40 transition-shadow"
+          >
+            <option value="4 Weeks">4 Weeks</option>
+            <option value="6 Weeks">6 Weeks</option>
+            <option value="8 Weeks">8 Weeks</option>
+            <option value="12 Weeks">12 Weeks</option>
+            <option value="24 Weeks">24 Weeks</option>
+          </select>
+          {errors.duration && <p className="text-xs font-bold text-red-650 mt-1">{errors.duration.message}</p>}
         </div>
 
         {/* Institution Name */}

@@ -34,11 +34,12 @@ if (!global.mongooseCache) {
   global.mongooseCache = cached;
 }
 
-async function dbConnect(): Promise<typeof mongoose> {
+async function dbConnect(): Promise<typeof mongoose | null> {
   if (!MONGODB_URI) {
-    throw new Error(
-      "Please define the MONGODB_URI environment variable inside .env.local"
+    console.warn(
+      "MONGODB_URI environment variable is not defined inside .env.local. Falling back to local JSON database."
     );
+    return null;
   }
 
   if (cached.conn) {

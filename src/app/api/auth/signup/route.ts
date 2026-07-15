@@ -7,6 +7,7 @@ import bcrypt from "bcryptjs";
 import { z } from "zod";
 import dbConnect from "@/lib/mongodb";
 import User from "@/models/User";
+import { dbFallback } from "@/lib/dbFallback";
 
 const signUpSchema = z.object({
   fullName: z.string().min(2, "Name must be at least 2 characters"),
@@ -39,10 +40,14 @@ export async function POST(request: Request) {
 
     const { fullName, email, phone, password, role } = result.data;
 
-    await dbConnect();
+    let existingUser = null;
+    if (dbFallback.isFallback) {
+      existingUser = await dbFallback.findUserByEmail(email);
+    } else {
+      await dbConnect();
+      existingUser = await User.findOne({ email: email.toLowerCase() });
+    }
 
-    // Check if user already exists
-    const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
       return NextResponse.json(
         { error: "An account with this email already exists" },
@@ -54,13 +59,24 @@ export async function POST(request: Request) {
     const hashedPassword = await bcrypt.hash(password, 12);
 
     // Create user
-    const user = await User.create({
-      fullName,
-      email: email.toLowerCase(),
-      phone: phone || undefined,
-      password: hashedPassword,
-      role,
-    });
+    let user: any = null;
+    if (dbFallback.isFallback) {
+      user = await dbFallback.createUser({
+        fullName,
+        email: email.toLowerCase(),
+        phone: phone || undefined,
+        password: hashedPassword,
+        role,
+      });
+    } else {
+      user = await User.create({
+        fullName,
+        email: email.toLowerCase(),
+        phone: phone || undefined,
+        password: hashedPassword,
+        role,
+      });
+    }
 
     return NextResponse.json(
       {

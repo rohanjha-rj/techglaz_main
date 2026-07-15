@@ -9,6 +9,7 @@ import bcrypt from "bcryptjs";
 import dbConnect from "@/lib/mongodb";
 import User from "@/models/User";
 import { authConfig } from "./auth.config";
+import { dbFallback } from "./dbFallback";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
@@ -31,11 +32,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           throw new Error("Email and password are required");
         }
 
-        await dbConnect();
+        let user: any = null;
 
-        const user = await User.findOne({
-          email: (credentials.email as string).toLowerCase(),
-        }).select("+password");
+        if (dbFallback.isFallback) {
+          user = await dbFallback.findUserByEmail(credentials.email as string);
+        } else {
+          await dbConnect();
+          user = await User.findOne({
+            email: (credentials.email as string).toLowerCase(),
+          }).select("+password");
+        }
 
         if (!user || !user.password) {
           throw new Error("Invalid email or password");
@@ -71,29 +77,51 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.phone = (user as any).phone;
       }
 
-      // For OAuth sign-ins, create/update user in MongoDB
+      // For OAuth sign-ins, create/update user in DB
       if (account?.provider === "google" && user) {
-        await dbConnect();
-        const existingUser = await User.findOne({ email: user.email });
-
-        if (!existingUser) {
-          const newUser = await User.create({
-            email: user.email || "",
-            fullName: user.name || "Google User",
-            image: user.image || undefined,
-            emailVerified: new Date(),
-            role: "student" as const,
-          });
-          token.id = newUser._id.toString();
-          token.role = "student";
+        if (dbFallback.isFallback) {
+          const existingUser = await dbFallback.findUserByEmail(user.email || "");
+          if (!existingUser) {
+            const newUser = await dbFallback.createUser({
+              email: user.email || "",
+              fullName: user.name || "Google User",
+              image: user.image || undefined,
+              emailVerified: new Date().toISOString(),
+              role: "student",
+            });
+            token.id = newUser.id;
+            token.role = "student";
+          } else {
+            token.id = existingUser.id;
+            token.role = existingUser.role;
+            token.phone = existingUser.phone;
+            if (user.image && user.image !== existingUser.image) {
+              await dbFallback.updateUserImage(user.email || "", user.image);
+            }
+          }
         } else {
-          token.id = existingUser._id.toString();
-          token.role = existingUser.role;
-          token.phone = existingUser.phone;
-          // Update image if changed
-          if (user.image && user.image !== existingUser.image) {
-            existingUser.image = user.image;
-            await existingUser.save();
+          await dbConnect();
+          const existingUser = await User.findOne({ email: user.email });
+
+          if (!existingUser) {
+            const newUser = await User.create({
+              email: user.email || "",
+              fullName: user.name || "Google User",
+              image: user.image || undefined,
+              emailVerified: new Date(),
+              role: "student" as const,
+            });
+            token.id = newUser._id.toString();
+            token.role = "student";
+          } else {
+            token.id = existingUser._id.toString();
+            token.role = existingUser.role;
+            token.phone = existingUser.phone;
+            // Update image if changed
+            if (user.image && user.image !== existingUser.image) {
+              existingUser.image = user.image;
+              await existingUser.save();
+            }
           }
         }
       }

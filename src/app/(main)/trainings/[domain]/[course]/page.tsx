@@ -3,10 +3,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import PageHero from "@/components/shared/PageHero";
 import SyllabusTabs from "@/components/courses/SyllabusTabs";
+import CourseQuickFacts from "@/components/courses/CourseQuickFacts";
 import { client } from "../../../../../../sanity/lib/client";
 import { courseBySlugQuery } from "../../../../../../sanity/lib/queries";
 import { Course } from "@/types";
-import { BRANCHES, BranchKey } from "@/lib/constants";
+import { BRANCHES, BranchKey, BRANCH_SLUGS, BRANCH_KEYS_TO_SLUGS } from "@/lib/constants";
 import { Calendar, Clock, GraduationCap, CheckCircle, ArrowRight, User } from "lucide-react";
 
 // In-memory detailed course mocks for direct matching
@@ -126,7 +127,7 @@ export default async function CourseDetailPage({ params }: PageProps) {
   // Fallback generation logic if Sanity record doesn't exist
   if (!course) {
     // Locate in mock details
-    const branchKey = resolvedParams.domain.toUpperCase().replace(/-/g, "_") as BranchKey;
+    const branchKey = BRANCH_SLUGS[resolvedParams.domain] || "CSE_IT";
     const title = courseSlug
       .split("-")
       .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
@@ -138,7 +139,7 @@ export default async function CourseDetailPage({ params }: PageProps) {
       _id: `mock-${courseSlug}`,
       title: title,
       slug: { _type: "slug", current: courseSlug },
-      branch: branchKey in BRANCHES ? branchKey : "CSE_IT",
+      branch: branchKey,
       domain: title,
       description: `Get hands-on industrial certification in ${title}. This curriculum is designed in alignment with corporate standards and verified internship tracks.`,
       duration: "10 Weeks",
@@ -173,9 +174,11 @@ export default async function CourseDetailPage({ params }: PageProps) {
   }
 
   const branchLabel = BRANCHES[course.branch] || course.branch;
+  const branchSlug = BRANCH_KEYS_TO_SLUGS[course.branch] || course.branch.toLowerCase().replace(/_/g, "-");
+  
   const breadcrumbs = [
     { label: "Trainings", href: "/trainings" },
-    { label: branchLabel },
+    { label: branchLabel, href: `/trainings/${branchSlug}` },
     { label: course.title },
   ];
 
@@ -233,51 +236,7 @@ export default async function CourseDetailPage({ params }: PageProps) {
 
             {/* Right Column: Sidebar Stats & Apply */}
             <div className="space-y-8 lg:sticky lg:top-28">
-              
-              {/* Course Quick Facts */}
-              <div className="bg-slate-50 dark:bg-slate-850/30 border border-slate-100 dark:border-slate-800/80 rounded-3xl p-6 sm:p-8 space-y-6">
-                <h3 className="font-extrabold text-lg text-slate-900 dark:text-white">
-                  Quick Facts
-                </h3>
-
-                <div className="space-y-4.5 text-sm">
-                  <div className="flex gap-3.5 items-start">
-                    <Clock className="w-5 h-5 text-brand-blue-steel shrink-0 mt-0.5" />
-                    <div>
-                      <p className="font-bold text-slate-800 dark:text-slate-350">Duration</p>
-                      <p className="text-slate-500 mt-0.5">{course.duration}</p>
-                    </div>
-                  </div>
-
-                  {course.schedule && (
-                    <div className="flex gap-3.5 items-start border-t border-slate-200/40 dark:border-slate-800/30 pt-4">
-                      <Calendar className="w-5 h-5 text-brand-blue-steel shrink-0 mt-0.5" />
-                      <div>
-                        <p className="font-bold text-slate-800 dark:text-slate-350">Schedule</p>
-                        <p className="text-slate-500 mt-0.5">{course.schedule}</p>
-                      </div>
-                    </div>
-                  )}
-
-                  {course.eligibility && (
-                    <div className="flex gap-3.5 items-start border-t border-slate-200/40 dark:border-slate-800/30 pt-4">
-                      <GraduationCap className="w-5 h-5 text-brand-blue-steel shrink-0 mt-0.5" />
-                      <div>
-                        <p className="font-bold text-slate-800 dark:text-slate-350">Eligibility</p>
-                        <p className="text-slate-500 mt-0.5">{course.eligibility}</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                <Link
-                  href={applyUrl}
-                  className="btn-accent flex items-center justify-center gap-2 w-full py-3 shadow-md uppercase tracking-wider font-extrabold text-slate-900 mt-4"
-                >
-                  Apply For This Course
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              </div>
+              <CourseQuickFacts course={course} branchLabel={branchLabel} />
 
               {/* Assigned Trainer */}
               {course.trainer && (

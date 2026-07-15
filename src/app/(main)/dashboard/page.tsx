@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import dbConnect from "@/lib/mongodb";
 import Application from "@/models/Application";
+import { dbFallback } from "@/lib/dbFallback";
 import PageHero from "@/components/shared/PageHero";
 import SectionHeading from "@/components/shared/SectionHeading";
 import { getStatusColor, formatStatus, formatDate } from "@/lib/utils";
@@ -25,16 +26,20 @@ export default async function DashboardPage() {
     redirect("/login?callbackUrl=/dashboard");
   }
 
-  // 2. Fetch user's applications from MongoDB
+  // 2. Fetch user's applications from DB
   let applications: any[] = [];
   try {
-    await dbConnect();
-    applications = await Application.find({
-      $or: [
-        { userId: session.user.id },
-        { email: session.user.email?.toLowerCase() }
-      ]
-    }).sort({ createdAt: -1 });
+    if (dbFallback.isFallback) {
+      applications = await dbFallback.findApplications(session.user.id || "", session.user.email || "");
+    } else {
+      await dbConnect();
+      applications = await Application.find({
+        $or: [
+          { userId: session.user.id },
+          { email: session.user.email?.toLowerCase() }
+        ]
+      }).sort({ createdAt: -1 });
+    }
   } catch (error) {
     console.error("Dashboard DB fetch error:", error);
   }

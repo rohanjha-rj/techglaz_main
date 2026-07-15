@@ -7,6 +7,7 @@ import { z } from "zod";
 import dbConnect from "@/lib/mongodb";
 import ContactSubmission from "@/models/ContactSubmission";
 import { sendContactNotification } from "@/lib/resend";
+import { dbFallback } from "@/lib/dbFallback";
 
 const contactSchema = z.object({
   name: z.string().min(2),
@@ -31,17 +32,28 @@ export async function POST(req: Request) {
 
     const { name, email, phone, subject, message } = parsed.data;
 
-    // 2. Connect to Database
-    await dbConnect();
+    let contact = null;
+    if (dbFallback.isFallback) {
+      contact = await dbFallback.createContact({
+        name,
+        email: email.toLowerCase(),
+        phone: phone || undefined,
+        subject,
+        message,
+      });
+    } else {
+      // 2. Connect to Database
+      await dbConnect();
 
-    // 3. Create document in MongoDB
-    const contact = await ContactSubmission.create({
-      name,
-      email: email.toLowerCase(),
-      phone: phone || undefined,
-      subject,
-      message,
-    });
+      // 3. Create document in MongoDB
+      contact = await ContactSubmission.create({
+        name,
+        email: email.toLowerCase(),
+        phone: phone || undefined,
+        subject,
+        message,
+      });
+    }
 
     // 4. Trigger Resend notification in the background
     sendContactNotification({

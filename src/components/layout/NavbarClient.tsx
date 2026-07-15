@@ -106,8 +106,13 @@ export default function NavbarClient({ session }: NavbarClientProps) {
 
             <nav className="hidden items-center gap-6 lg:flex">
               {NAV_LINKS.map((link) => {
-                const hasChildren = link.children && link.children.length > 0;
-                const isActive = pathname === link.href || (pathname.startsWith(link.href) && link.href !== "/");
+                const hasChildren = !!link.children && link.children.length > 0;
+                const hasActiveChild = hasChildren && link.children?.some(
+                  (child) => pathname === child.href || (child.href !== "#" && pathname.startsWith(child.href))
+                );
+                const isActive = pathname === link.href || 
+                  (pathname.startsWith(link.href) && link.href !== "/" && link.href !== "#") || 
+                  !!hasActiveChild;
 
                 if (hasChildren) {
                   return (

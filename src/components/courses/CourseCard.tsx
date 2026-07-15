@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { ArrowRight, Clock, BookOpen, ChevronRight, Tag } from "lucide-react";
 import { Course } from "@/types";
-import { BRANCHES } from "@/lib/constants";
+import { BRANCHES, BRANCH_KEYS_TO_SLUGS } from "@/lib/constants";
 
 interface CourseCardProps {
   course: Course;
@@ -10,7 +10,8 @@ interface CourseCardProps {
 
 export default function CourseCard({ course }: CourseCardProps) {
   const branchLabel = BRANCHES[course.branch] || course.branch;
-  const courseSlug = `/trainings/${course.branch.toLowerCase().replace(/_/g, "-")}/${course.slug.current}`;
+  const branchSlug = BRANCH_KEYS_TO_SLUGS[course.branch] || course.branch.toLowerCase().replace(/_/g, "-");
+  const courseSlug = `/trainings/${branchSlug}/${course.slug.current}`;
 
   return (
     <div className="group bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-3xl p-6 flex flex-col justify-between hover:shadow-xl transition-all duration-300 hover:-translate-y-1 focus-within:ring-2 focus-within:ring-brand-blue-steel/40">

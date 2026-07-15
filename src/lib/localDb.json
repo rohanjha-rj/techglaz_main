@@ -1,0 +1,24 @@
+{
+  "users": [],
+  "applications": [
+    {
+      "_id": "kwfc9aq",
+      "id": "kwfc9aq",
+      "fullName": "sg",
+      "email": "abc@gmail.com",
+      "phone": "9876543210",
+      "branch": "CIVIL",
+      "course": "STAAD.Pro Structural Analysis",
+      "trainingTrack": "Student (College)",
+      "duration": "6 Weeks",
+      "institution": "ssss",
+      "yearOrExperience": "sss",
+      "message": "aa",
+      "referralSource": "Event / Workshop",
+      "referenceNumber": "TGL-20260715-C2FQA",
+      "status": "pending",
+      "createdAt": "2026-07-15T12:13:46.955Z",
+      "updatedAt": "2026-07-15T12:13:46.955Z"
+    }
+  ]
+}
