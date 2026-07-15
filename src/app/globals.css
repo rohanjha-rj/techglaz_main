@@ -1,43 +1,35 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-blue-deep: #1a3c6e;
-  --color-brand-blue-steel: #2e75b6;
-  --color-brand-blue-light: #e6f0fa;
-  --color-brand-accent: #f59e0b; /* Amber */
-  --color-brand-accent-hover: #d97706;
-  --color-hero-bg: #0c1524;
+  --color-brand-blue-deep: #123a63;
+  --color-brand-blue-steel: #2b78c6;
+  --color-brand-blue-light: #eaf3ff;
+  --color-brand-accent: #f5b84f;
+  --color-brand-accent-hover: #e09c1f;
+  --color-hero-bg: #07111f;
   --color-feature-bar: #132035;
   --color-accent-glow: #fbbf24;
 
-  /* Custom intermediate slate shades used across components */
-  --color-slate-105: #f4f6f8;
-  --color-slate-150: #edf0f4;
-  --color-slate-250: #d5dce8;
-  --color-slate-305: #c8d4e2;
-  --color-slate-350: #b0bfd0;
-  --color-slate-450: #7d92aa;
-  --color-slate-455: #7a8fa7;
-  --color-slate-550: #5a6e84;
-  --color-slate-650: #3d5168;
-  --color-slate-750: #263548;
-  --color-slate-850: #192130;
-  --color-slate-955: #090d14;
+  --color-slate-105: #f5f7fb;
+  --color-slate-150: #eef2f7;
+  --color-slate-250: #d7e0eb;
+  --color-slate-305: #c6d2e1;
+  --color-slate-350: #aebed0;
+  --color-slate-450: #7d8fa6;
+  --color-slate-455: #798ea8;
+  --color-slate-550: #5b6d86;
+  --color-slate-650: #43566c;
+  --color-slate-750: #273549;
+  --color-slate-850: #182334;
+  --color-slate-955: #070b12;
 
-  /* Custom red shades */
   --color-red-450: #f87171;
   --color-red-650: #dc2626;
-
-  /* Custom indigo shades */
   --color-indigo-650: #4338ca;
-
-  /* Custom emerald shades */
   --color-emerald-650: #059669;
-
-  /* Custom green shades */
   --color-green-450: #4ade80;
   --color-green-650: #16a34a;
-  
+
   --font-sans: var(--font-inter), Arial, Helvetica, sans-serif;
   --font-mono: var(--font-geist-mono), monospace;
 
@@ -70,33 +62,53 @@
 }
 
 :root {
-  --background: #fafcff;
+  --background: #f8fafc;
   --foreground: #0f172a;
-  
-  --glass-bg: rgba(255, 255, 255, 0.75);
-  --glass-border: rgba(26, 60, 110, 0.08);
-  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.04);
+  --glass-bg: rgba(255, 255, 255, 0.74);
+  --glass-border: rgba(17, 24, 39, 0.08);
+  --glass-shadow: 0 12px 40px rgba(15, 23, 42, 0.06);
+  --shadow-premium: 0 16px 40px -18px rgba(15, 23, 42, 0.18), 0 8px 20px -10px rgba(15, 23, 42, 0.08);
+  --shadow-premium-hover: 0 30px 60px -24px rgba(15, 23, 42, 0.22), 0 14px 24px -10px rgba(15, 23, 42, 0.14);
 }
 
 .dark {
-  --background: #0b0f19;
-  --foreground: #f1f5f9;
-  
-  --glass-bg: rgba(11, 15, 25, 0.8);
+  --background: #050913;
+  --foreground: #f8fafc;
+  --glass-bg: rgba(8, 12, 20, 0.76);
   --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --glass-shadow: 0 16px 48px rgba(2, 8, 23, 0.42);
+  --shadow-premium: 0 16px 40px -18px rgba(2, 8, 23, 0.44), 0 8px 18px -10px rgba(2, 8, 23, 0.3);
+  --shadow-premium-hover: 0 32px 70px -24px rgba(2, 8, 23, 0.62), 0 16px 30px -10px rgba(2, 8, 23, 0.38);
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background-color: var(--background);
+  background:
+    radial-gradient(circle at top left, rgba(43, 120, 198, 0.12), transparent 28%),
+    linear-gradient(180deg, rgba(247, 250, 252, 0.96), rgba(248, 250, 252, 1));
   color: var(--foreground);
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   overflow-x: hidden;
+  text-rendering: optimizeLegibility;
 }
 
-/* Custom Scrollbar */
+.dark body {
+  background:
+    radial-gradient(circle at top left, rgba(43, 120, 198, 0.12), transparent 28%),
+    linear-gradient(180deg, rgba(5, 9, 19, 1), rgba(7, 12, 20, 1));
+}
+
+::selection {
+  background: rgba(43, 120, 198, 0.22);
+  color: inherit;
+}
+
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
@@ -104,51 +116,138 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(46, 117, 182, 0.2);
+  background: rgba(43, 120, 198, 0.18);
+  border: 2px solid transparent;
+  background-clip: padding-box;
   border-radius: 9999px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(46, 117, 182, 0.4);
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(43, 120, 198, 0.28);
 }
 
-/* Glassmorphism utility */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(43, 120, 198, 0.42);
+}
+
 .glassmorphism {
   background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow);
 }
 
-/* Leaflet map styling overrides */
+.shadow-premium {
+  box-shadow: var(--shadow-premium);
+}
+
+.hover-shadow-premium:hover {
+  box-shadow: var(--shadow-premium-hover);
+}
+
+.section-shell {
+  @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+}
+
+.section-surface {
+  @apply rounded-[2rem] border border-slate-200/70 bg-white/80 backdrop-blur-xl dark:border-slate-800/70 dark:bg-slate-900/70;
+  box-shadow: var(--shadow-premium);
+}
+
+.soft-card {
+  @apply rounded-[1.75rem] border border-slate-200/70 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 dark:border-slate-800/70 dark:bg-slate-900/70;
+  box-shadow: 0 12px 35px -18px rgba(15, 23, 42, 0.2);
+}
+
+.soft-card:hover {
+  box-shadow: var(--shadow-premium);
+}
+
+.mesh-grid {
+  background-image: radial-gradient(rgba(148, 163, 184, 0.16) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+.btn-primary {
+  @apply bg-brand-blue-deep hover:bg-brand-blue-steel text-white font-semibold px-6 py-3 rounded-2xl transition-all duration-300 shadow-[0_12px_30px_-12px_rgba(18,58,99,0.35)] hover:-translate-y-0.5 active:translate-y-0 cursor-pointer flex items-center justify-center gap-2;
+}
+
+.btn-secondary {
+  @apply bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700/80 text-slate-800 dark:text-slate-100 font-semibold px-6 py-3 rounded-2xl transition-all duration-300 shadow-sm hover:shadow-md cursor-pointer flex items-center justify-center gap-2;
+}
+
+.btn-outline {
+  @apply bg-transparent hover:bg-brand-blue-light/40 border border-brand-blue-steel/30 text-brand-blue-deep dark:text-brand-blue-steel font-semibold px-6 py-3 rounded-2xl transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer flex items-center justify-center gap-2;
+}
+
+.btn-ghost {
+  @apply bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-350 font-semibold px-4 py-2.5 rounded-2xl transition-all duration-200 cursor-pointer flex items-center justify-center gap-2;
+}
+
+.btn-accent {
+  @apply bg-brand-accent hover:bg-brand-accent-hover text-slate-900 font-bold px-6 py-3 rounded-2xl transition-all duration-300 shadow-[0_12px_30px_-12px_rgba(245,184,79,0.4)] hover:-translate-y-0.5 active:translate-y-0 cursor-pointer flex items-center justify-center gap-2;
+}
+
+.btn-hero-primary {
+  @apply bg-brand-accent hover:bg-brand-accent-hover text-slate-900 font-extrabold px-8 py-4 rounded-full transition-all duration-300 shadow-[0_16px_40px_-12px_rgba(245,184,79,0.45)] hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2.5 cursor-pointer;
+}
+
+.btn-hero-secondary {
+  @apply bg-white/6 hover:bg-white/10 border border-slate-700/60 hover:border-slate-500 text-white font-bold px-8 py-4 rounded-full transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2.5 cursor-pointer backdrop-blur-md;
+}
+
+.feature-icon-box {
+  @apply w-12 h-12 rounded-2xl flex items-center justify-center bg-slate-850 text-brand-blue-steel shrink-0 shadow-inner border border-slate-800/40;
+}
+
 .leaflet-container {
   width: 100%;
   height: 100%;
   z-index: 1;
 }
 
-/* Base custom interactive states */
-.btn-primary {
-  @apply bg-brand-blue-deep hover:bg-brand-blue-steel text-white font-medium px-6 py-2.5 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 cursor-pointer;
+.floating-label-group {
+  position: relative;
 }
 
-.btn-secondary {
-  @apply bg-white hover:bg-brand-blue-light text-brand-blue-deep border border-brand-blue-deep/20 font-medium px-6 py-2.5 rounded-lg transition-all duration-300 shadow-sm hover:shadow-md cursor-pointer;
+.floating-label-group input,
+.floating-label-group select,
+.floating-label-group textarea {
+  padding-top: 1.5rem;
+  padding-bottom: 0.5rem;
 }
 
-.btn-accent {
-  @apply bg-brand-accent hover:bg-brand-accent-hover text-slate-900 font-semibold px-6 py-2.5 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 cursor-pointer;
+.floating-label-group label {
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  transform-origin: 0 0;
+  transition: transform 0.2s ease-out, color 0.2s ease-out;
+  pointer-events: none;
+  font-weight: 600;
+  color: #64748b;
+  font-size: 0.875rem;
 }
 
-.btn-hero-primary {
-  @apply bg-brand-accent hover:bg-brand-accent-hover text-slate-900 font-bold px-8 py-3.5 rounded-full transition-all duration-300 shadow-[0_4px_14px_0_rgba(245,158,11,0.39)] hover:shadow-[0_6px_20px_rgba(245,158,11,0.23)] hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 cursor-pointer;
+.floating-label-group input:focus ~ label,
+.floating-label-group input:not(:placeholder-shown) ~ label,
+.floating-label-group select:focus ~ label,
+.floating-label-group select:not([value=""]) ~ label,
+.floating-label-group select:valid ~ label,
+.floating-label-group textarea:focus ~ label,
+.floating-label-group textarea:not(:placeholder-shown) ~ label {
+  transform: translateY(-0.6rem) scale(0.78);
+  color: #2e75b6;
 }
 
-.btn-hero-secondary {
-  @apply bg-transparent hover:bg-white/5 border-2 border-slate-500/50 hover:border-white text-white font-bold px-8 py-3.5 rounded-full transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 cursor-pointer;
+.dark .floating-label-group input:focus ~ label,
+.dark .floating-label-group input:not(:placeholder-shown) ~ label,
+.dark .floating-label-group select:focus ~ label,
+.dark .floating-label-group select:not([value=""]) ~ label,
+.dark .floating-label-group select:valid ~ label,
+.dark .floating-label-group textarea:focus ~ label,
+.dark .floating-label-group textarea:not(:placeholder-shown) ~ label {
+  color: #2e75b6;
 }
 
-.feature-icon-box {
-  @apply w-12 h-12 rounded-xl flex items-center justify-center bg-slate-800/50 text-brand-blue-steel shrink-0 shadow-inner;
-}

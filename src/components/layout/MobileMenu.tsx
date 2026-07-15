@@ -26,77 +26,43 @@ export default function MobileMenu({ isOpen, onClose, session }: MobileMenuProps
 
   return (
     <div className="fixed inset-0 z-50 lg:hidden">
-      {/* Backdrop */}
-      <div
-        className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity duration-300"
-        onClick={onClose}
-      />
+      <div className="fixed inset-0 bg-slate-950/50 backdrop-blur-sm" onClick={onClose} />
 
-      {/* Drawer */}
-      <div className="fixed top-0 right-0 bottom-0 w-full max-w-sm bg-white dark:bg-slate-900 shadow-2xl p-6 flex flex-col justify-between overflow-y-auto transform transition-transform duration-300 ease-in-out">
+      <div className="fixed right-0 top-0 bottom-0 flex w-full max-w-xs flex-col justify-between overflow-y-auto border-l border-slate-200/70 bg-white/95 p-6 shadow-2xl backdrop-blur-2xl dark:border-slate-800/70 dark:bg-slate-900/95">
         <div>
-          {/* Header */}
-          <div className="flex items-center justify-between pb-6 border-b border-slate-100 dark:border-slate-800">
+          <div className="flex items-center justify-between border-b border-slate-200/70 pb-5 dark:border-slate-850">
             <Link href="/" onClick={onClose} className="flex items-center gap-2">
-              <span className="text-xl font-bold bg-gradient-to-r from-brand-blue-deep to-brand-blue-steel bg-clip-text text-transparent">
-                Techglaz Labs
-              </span>
+              <span className="bg-gradient-to-r from-brand-blue-deep to-brand-blue-steel bg-clip-text text-lg font-black text-transparent">Techglaz Labs</span>
             </Link>
-            <button
-              onClick={onClose}
-              className="p-2 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-              aria-label="Close menu"
-            >
-              <X className="w-6 h-6" />
+            <button onClick={onClose} className="rounded-xl p-2 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-800/80 dark:hover:text-slate-200" aria-label="Close menu">
+              <X className="h-5 w-5" />
             </button>
           </div>
 
-          {/* Navigation Links */}
-          <nav className="mt-8 space-y-4">
+          <nav className="mt-6 space-y-3.5">
             {NAV_LINKS.map((link) => {
               const hasChildren = link.children && link.children.length > 0;
               const isExpanded = !!expandedLinks[link.label];
 
               return (
-                <div key={link.label} className="border-b border-slate-50/50 dark:border-slate-800/50 pb-3 last:border-0 last:pb-0">
+                <div key={link.label} className="border-b border-slate-100 pb-2.5 last:border-0 last:pb-0 dark:border-slate-850">
                   {hasChildren ? (
                     <div>
-                      <button
-                        onClick={() => toggleExpand(link.label)}
-                        className="flex items-center justify-between w-full text-left font-medium text-slate-700 dark:text-slate-300 hover:text-brand-blue-deep dark:hover:text-brand-blue-steel py-1 transition-colors"
-                      >
+                      <button onClick={() => toggleExpand(link.label)} className="flex w-full items-center justify-between py-1 text-left font-bold text-slate-700 transition-colors hover:text-brand-blue-deep dark:text-slate-350 dark:hover:text-[#fbbf24]">
                         <span>{link.label}</span>
-                        {isExpanded ? (
-                          <ChevronUp className="w-5 h-5 text-slate-400" />
-                        ) : (
-                          <ChevronDown className="w-5 h-5 text-slate-400" />
-                        )}
+                        {isExpanded ? <ChevronUp className="h-4 w-4 text-slate-400" /> : <ChevronDown className="h-4 w-4 text-slate-400" />}
                       </button>
 
-                      {/* Sub-menu */}
-                      <div
-                        className={`pl-4 mt-2 space-y-2.5 overflow-hidden transition-all duration-300 ${
-                          isExpanded ? "max-h-60 opacity-100" : "max-h-0 opacity-0 pointer-events-none"
-                        }`}
-                      >
+                      <div className={`mt-1.5 space-y-2 overflow-hidden pl-4 transition-all duration-300 ${isExpanded ? "max-h-60 opacity-100" : "max-h-0 opacity-0 pointer-events-none"}`}>
                         {link.children?.map((child) => (
-                          <Link
-                            key={child.label}
-                            href={child.href}
-                            onClick={onClose}
-                            className="block text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-brand-blue-deep dark:hover:text-brand-blue-steel py-0.5 transition-colors"
-                          >
+                          <Link key={child.label} href={child.href} onClick={onClose} className="block py-0.5 text-xs font-semibold text-slate-500 transition-colors hover:text-brand-blue-deep dark:text-slate-450 dark:hover:text-[#fbbf24] sm:text-sm">
                             {child.label}
                           </Link>
                         ))}
                       </div>
                     </div>
                   ) : (
-                    <Link
-                      href={link.href}
-                      onClick={onClose}
-                      className="block font-medium text-slate-700 dark:text-slate-300 hover:text-brand-blue-deep dark:hover:text-brand-blue-steel py-1 transition-colors"
-                    >
+                    <Link href={link.href} onClick={onClose} className="block py-1 font-bold text-slate-700 transition-colors hover:text-brand-blue-deep dark:text-slate-350 dark:hover:text-[#fbbf24]">
                       {link.label}
                     </Link>
                   )}
@@ -106,81 +72,47 @@ export default function MobileMenu({ isOpen, onClose, session }: MobileMenuProps
           </nav>
         </div>
 
-        {/* Action Buttons / Auth */}
-        <div className="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 space-y-4">
+        <div className="mt-8 space-y-3.5 border-t border-slate-200/70 pt-5 dark:border-slate-850">
           {session ? (
             <>
-              {/* User Profile Summary */}
               <div className="flex items-center gap-3 px-1">
                 {session.user?.image ? (
-                  <img
-                    src={session.user.image}
-                    alt={session.user.name || "User"}
-                    className="w-10 h-10 rounded-full object-cover border border-brand-blue-deep/10"
-                  />
+                  <img src={session.user.image} alt={session.user.name || "User"} className="h-9 w-9 rounded-full border border-brand-blue-deep/10 object-cover" />
                 ) : (
-                  <div className="w-10 h-10 rounded-full bg-brand-blue-light dark:bg-slate-800 flex items-center justify-center text-brand-blue-deep dark:text-brand-blue-steel font-bold border border-brand-blue-deep/10">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full border border-brand-blue-deep/10 bg-brand-blue-light text-sm font-bold text-brand-blue-deep dark:bg-slate-800 dark:text-brand-blue-steel">
                     {session.user?.name?.charAt(0).toUpperCase() || "U"}
                   </div>
                 )}
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-slate-800 dark:text-slate-200 truncate">
-                    {session.user?.name}
-                  </p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
-                    {session.user?.email}
-                  </p>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-xs font-bold leading-none text-slate-850 dark:text-slate-200 sm:text-sm">{session.user?.name}</p>
+                  <p className="mt-1 truncate text-[11px] text-slate-500 dark:text-slate-450">{session.user?.role || "student"}</p>
                 </div>
               </div>
 
-              {/* Action buttons when logged in */}
-              <Link
-                href="/dashboard"
-                onClick={onClose}
-                className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-lg bg-brand-blue-light hover:bg-brand-blue-light/80 text-brand-blue-deep dark:bg-slate-800 dark:hover:bg-slate-800/80 dark:text-slate-200 font-semibold text-sm transition-all shadow-sm"
-              >
-                <LayoutDashboard className="w-4 h-4" />
+              <Link href="/dashboard" onClick={onClose} className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-blue-light px-4 py-2.5 text-xs font-bold text-brand-blue-deep shadow-sm transition-all hover:bg-brand-blue-light/80 dark:bg-slate-850 dark:text-slate-200 dark:hover:bg-slate-800/80 sm:text-sm">
+                <LayoutDashboard className="h-4 w-4" />
                 Go to Dashboard
               </Link>
 
-              <button
-                onClick={() => {
-                  signOut({ callbackUrl: "/" });
-                  onClose();
-                }}
-                className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-lg border border-red-200 hover:bg-red-50 text-red-600 dark:border-red-900/30 dark:hover:bg-red-950/20 dark:text-red-400 font-semibold text-sm transition-all"
-              >
-                <LogOut className="w-4 h-4" />
+              <button onClick={() => { signOut({ callbackUrl: "/" }); onClose(); }} className="flex w-full items-center justify-center gap-2 rounded-xl border border-red-200 px-4 py-2.5 text-xs font-bold text-red-600 transition-all hover:bg-red-50 dark:border-red-950/20 dark:text-red-400 dark:hover:bg-red-950/30 sm:text-sm">
+                <LogOut className="h-4 w-4" />
                 Logout
               </button>
             </>
           ) : (
             <>
-              <Link
-                href="/login"
-                onClick={onClose}
-                className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-lg border border-slate-200 hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold text-sm transition-all cursor-pointer"
-              >
-                <LogIn className="w-4 h-4" />
+              <Link href="/login" onClick={onClose} className="flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 py-2.5 text-xs font-bold text-slate-700 transition-all hover:bg-slate-50 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-850 sm:text-sm">
+                <LogIn className="h-4 w-4" />
                 Login
               </Link>
-              <Link
-                href="/signup"
-                onClick={onClose}
-                className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-lg bg-brand-blue-deep hover:bg-brand-blue-steel text-white font-semibold text-sm transition-all shadow-md cursor-pointer"
-              >
-                <UserPlus className="w-4 h-4" />
+              <Link href="/signup" onClick={onClose} className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-xs font-bold text-white shadow-md transition-all hover:bg-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700/80 sm:text-sm">
+                <UserPlus className="h-4 w-4" />
                 Sign Up
               </Link>
             </>
           )}
 
-          {/* Quick Apply CTA */}
-          <Link
-            href="/apply"
-            onClick={onClose}
-            className="flex items-center justify-center w-full py-3 px-4 rounded-lg bg-brand-accent hover:bg-brand-accent-hover text-slate-900 font-bold text-sm transition-all shadow-md uppercase tracking-wider cursor-pointer"
-          >
+          <Link href="/apply" onClick={onClose} className="flex w-full items-center justify-center rounded-xl bg-brand-accent px-4 py-3 text-xs font-extrabold uppercase tracking-[0.2em] text-slate-900 shadow-md transition-all hover:bg-brand-accent-hover">
             Apply Now
           </Link>
         </div>
@@ -188,3 +120,4 @@ export default function MobileMenu({ isOpen, onClose, session }: MobileMenuProps
     </div>
   );
 }
+

@@ -79,66 +79,39 @@ export default function TestimonialsPreview() {
   if (testimonials.length === 0) return null;
 
   return (
-    <section className="py-20 bg-[#0c1524] text-white relative overflow-hidden border-t border-white/5">
-      {/* Background patterns */}
-      <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:24px_24px]" />
-      <div className="absolute top-1/2 left-0 w-80 h-80 rounded-full bg-brand-blue-deep/20 blur-3xl" />
-      <div className="absolute bottom-0 right-0 w-80 h-80 rounded-full bg-brand-blue-steel/10 blur-3xl" />
+    <section className="relative overflow-hidden border-t border-slate-900 bg-slate-950 py-20 text-white transition-colors duration-200">
+      <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:24px_24px]" />
+      <div className="absolute left-0 top-1/2 h-80 w-80 rounded-full bg-brand-blue-deep/15 blur-3xl" />
+      <div className="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-brand-blue-steel/10 blur-3xl" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <SectionHeading
-          title="What Our Trainees Say"
-          subtitle="Testimonials"
-          centered={true}
-          inverse={true}
-        />
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <SectionHeading title="What Our Trainees Say" subtitle="Testimonials" centered={true} inverse={true} />
 
-        {/* Carousel Container */}
-        <div className="relative max-w-4xl mx-auto mt-12">
-          
-          {/* Viewport */}
+        <div className="relative mx-auto mt-12 max-w-4xl">
           <div className="overflow-hidden" ref={emblaRef}>
             <div className="flex">
               {testimonials.map((testimonial) => (
-                <div
-                  key={testimonial._id}
-                  className="flex-[0_0_100%] min-w-0 px-4"
-                >
-                  <div className="bg-slate-800/40 backdrop-blur-md border border-slate-700/50 p-8 sm:p-12 rounded-3xl relative text-center flex flex-col items-center shadow-xl hover:bg-slate-800/60 transition-colors">
-                    {/* Quotes Graphic */}
-                    <Quote className="w-12 h-12 text-brand-blue-steel opacity-30 absolute top-6 left-6" />
-                    
-                    {/* Stars */}
-                    <div className="flex gap-1.5 justify-center mb-6">
+                <div key={testimonial._id} className="min-w-0 flex-[0_0_100%] px-2 sm:px-4">
+                  <div className="relative flex flex-col items-center rounded-[2rem] border border-slate-800/80 bg-slate-900/50 p-8 text-center shadow-[0_24px_70px_-35px_rgba(2,8,23,0.75)] backdrop-blur-xl transition-colors hover:bg-slate-900/70 sm:p-12">
+                    <Quote className="absolute left-6 top-6 h-12 w-12 text-[#fbbf24] opacity-15" />
+
+                    <div className="mb-6 flex justify-center gap-1.5">
                       {Array.from({ length: 5 }).map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`w-5 h-5 ${
-                            i < testimonial.rating
-                              ? "fill-brand-accent text-brand-accent"
-                              : "text-slate-650"
-                          }`}
-                        />
+                        <Star key={i} className={`h-4 w-4 ${i < testimonial.rating ? "fill-[#fbbf24] text-[#fbbf24]" : "text-slate-700"}`} />
                       ))}
                     </div>
 
-                    {/* Testimonial body */}
-                    <p className="text-base sm:text-lg lg:text-xl font-medium leading-relaxed text-slate-200 mb-8 max-w-2xl italic">
-                      "{testimonial.quote}"
+                    <p className="mb-8 max-w-2xl text-sm font-medium leading-relaxed text-slate-200 italic sm:text-base lg:text-lg">
+                      “{testimonial.quote}”
                     </p>
 
-                    {/* Trainee profile */}
                     <div className="flex items-center justify-center gap-3">
-                      <div className="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center border border-slate-700">
-                        <User className="w-6 h-6 text-slate-400" />
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-700 bg-slate-800 font-black text-sm text-[#fbbf24]">
+                        {testimonial.studentName.charAt(0).toUpperCase()}
                       </div>
                       <div className="text-left">
-                        <h4 className="font-bold text-white leading-tight">
-                          {testimonial.studentName}
-                        </h4>
-                        <p className="text-xs text-slate-400 font-semibold mt-0.5">
-                          {testimonial.course} ({testimonial.year})
-                        </p>
+                        <h4 className="text-sm font-bold leading-tight text-white">{testimonial.studentName}</h4>
+                        <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">{testimonial.course} ({testimonial.year})</p>
                       </div>
                     </div>
                   </div>
@@ -147,24 +120,16 @@ export default function TestimonialsPreview() {
             </div>
           </div>
 
-          {/* Navigation Controls */}
-          <button
-            onClick={scrollPrev}
-            className="absolute left-[-20px] sm:left-[-50px] top-1/2 -translate-y-1/2 w-10 h-10 rounded-full border border-slate-750 hover:bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer hidden sm:flex"
-            aria-label="Previous slide"
-          >
-            <ChevronLeft className="w-6 h-6" />
+          <button onClick={scrollPrev} className="absolute left-[-10px] top-1/2 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-800 bg-slate-900/80 text-slate-400 transition-colors hover:border-slate-700 hover:bg-slate-800 hover:text-white sm:flex" aria-label="Previous slide">
+            <ChevronLeft className="h-5 w-5" />
           </button>
-          
-          <button
-            onClick={scrollNext}
-            className="absolute right-[-20px] sm:right-[-50px] top-1/2 -translate-y-1/2 w-10 h-10 rounded-full border border-slate-750 hover:bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer hidden sm:flex"
-            aria-label="Next slide"
-          >
-            <ChevronRight className="w-6 h-6" />
+
+          <button onClick={scrollNext} className="absolute right-[-10px] top-1/2 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-800 bg-slate-900/80 text-slate-400 transition-colors hover:border-slate-700 hover:bg-slate-800 hover:text-white sm:flex" aria-label="Next slide">
+            <ChevronRight className="h-5 w-5" />
           </button>
         </div>
       </div>
     </section>
   );
 }
+

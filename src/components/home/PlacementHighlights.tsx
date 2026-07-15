@@ -5,119 +5,63 @@ import SectionHeading from "../shared/SectionHeading";
 
 export default function PlacementHighlights() {
   const stats = [
-    {
-      icon: <Award className="w-6 h-6 text-brand-blue-steel" />,
-      label: "Highest CTC Offered",
-      value: "14.2 LPA",
-    },
-    {
-      icon: <TrendingUp className="w-6 h-6 text-brand-blue-steel" />,
-      label: "Average CTC Package",
-      value: "6.5 LPA",
-    },
-    {
-      icon: <Building className="w-6 h-6 text-brand-blue-steel" />,
-      label: "Corporate Partners",
-      value: "45+",
-    },
+    { icon: <Award className="h-6 w-6 text-brand-blue-steel" />, label: "Highest CTC Offered", value: "14.2 LPA" },
+    { icon: <TrendingUp className="h-6 w-6 text-brand-blue-steel" />, label: "Average CTC Package", value: "6.5 LPA" },
+    { icon: <Building className="h-6 w-6 text-brand-blue-steel" />, label: "Corporate Partners", value: "45+" },
   ];
 
-  const companies = [
-    "TCS",
-    "CDAC",
-    "Tech Mahindra",
-    "Cognizant",
-    "Wipro",
-    "Capgemini",
-    "Infosys",
-    "L&T Infotech",
-  ];
+  const companies = ["TCS", "CDAC", "Tech Mahindra", "Cognizant", "Wipro", "Capgemini", "Infosys", "L&T Infotech"];
 
   return (
-    <section className="py-20 bg-white dark:bg-slate-900">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionHeading
-          title="Industry Placement Records"
-          subtitle="Our Placements"
-          centered={true}
-        />
+    <section className="bg-white py-20 transition-colors duration-200 dark:bg-[#080c14]">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <SectionHeading title="Industry Placement Records" subtitle="Our Placements" centered={true} />
 
-        {/* Highlight Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 mb-16">
+        <div className="mt-12 mb-16 grid gap-8 md:grid-cols-3">
           {stats.map((stat, idx) => (
-            <div
-              key={idx}
-              className="bg-slate-50 dark:bg-slate-850/50 border border-slate-100 dark:border-slate-800/80 rounded-2xl p-6 flex items-center gap-5 hover:shadow-md transition-shadow"
-            >
-              <div className="w-12 h-12 rounded-xl bg-white dark:bg-slate-800 flex items-center justify-center shrink-0 shadow-sm border border-slate-105 dark:border-slate-750">
-                {stat.icon}
-              </div>
-              <div className="space-y-0.5">
-                <p className="text-2xl font-black text-slate-900 dark:text-white leading-none">
-                  {stat.value}
-                </p>
-                <p className="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400">
-                  {stat.label}
-                </p>
+            <div key={idx} className="flex items-center gap-5 rounded-[2rem] border border-slate-200/70 bg-slate-50 p-6.5 shadow-[0_16px_40px_-18px_rgba(15,23,42,0.18),0_8px_20px_-10px_rgba(15,23,42,0.08)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_30px_60px_-24px_rgba(15,23,42,0.22),0_14px_24px_-10px_rgba(15,23,42,0.14)] dark:border-slate-800/80 dark:bg-slate-900/50">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-slate-200/50 bg-white text-[#fbbf24] shadow-sm dark:border-slate-750 dark:bg-slate-850">{stat.icon}</div>
+              <div className="space-y-1">
+                <p className="text-2xl font-black leading-none text-slate-900 dark:text-white sm:text-3xl">{stat.value}</p>
+                <p className="text-xs font-bold text-slate-500 dark:text-slate-450 sm:text-sm">{stat.label}</p>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Company Logos Ticker */}
-        <div className="bg-slate-50 dark:bg-slate-850/30 rounded-3xl p-8 border border-slate-100 dark:border-slate-800/40 relative overflow-hidden">
-          <p className="text-center text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-6">
-            Where Our Alumni Work
-          </p>
-
-          <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-6 md:gap-x-16 opacity-75">
+        <div className="relative overflow-hidden rounded-[2rem] border border-slate-200/60 bg-slate-50 p-8 sm:p-10 dark:border-slate-850 dark:bg-slate-900/30">
+          <p className="mb-8 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-slate-450 dark:text-slate-500 sm:text-xs">Where Our Alumni Work</p>
+          <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-6 opacity-75 md:gap-x-16">
             {companies.map((company) => (
-              <span
-                key={company}
-                className="text-base sm:text-lg lg:text-xl font-extrabold text-slate-400 dark:text-slate-650 hover:text-slate-650 dark:hover:text-slate-400 transition-colors tracking-tight select-none"
-              >
-                {company}
-              </span>
+              <span key={company} className="select-none text-base font-black tracking-tight text-slate-400 transition-colors hover:text-brand-blue-steel dark:text-slate-650 dark:hover:text-slate-350 sm:text-lg lg:text-xl">{company}</span>
             ))}
           </div>
         </div>
 
-        {/* CTA Banner */}
-        <div className="text-center mt-12 mb-20 relative z-10">
-          <Link
-            href="/placements"
-            className="btn-secondary inline-flex items-center gap-2 font-bold px-8 py-3.5 group rounded-full"
-          >
-            Explore Placement Stories
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+        <div className="relative z-10 mt-12 mb-20 text-center">
+          <Link href="/placements" className="btn-secondary inline-flex items-center gap-2 rounded-full border border-slate-200/60 px-8 py-3.5 font-bold group dark:border-slate-800">
+            <span>Explore Placement Stories</span>
+            <ArrowRight className="h-4.5 w-4.5 transition-transform group-hover:translate-x-1" />
           </Link>
         </div>
 
-        {/* Start Your Learning Journey CTA */}
-        <div className="bg-[#0c1524] rounded-[2.5rem] p-10 md:p-14 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)]">
-          {/* Background graphics */}
-          <div className="absolute top-0 right-1/4 w-96 h-96 bg-brand-blue-steel/10 rounded-full blur-[100px]" />
-          <div className="absolute bottom-[-10%] right-[-5%] w-64 h-64 bg-brand-accent/10 rounded-full blur-[80px]" />
-          
-          <div className="relative z-10 text-center md:text-left max-w-xl">
-            <h2 className="text-3xl md:text-4xl font-extrabold text-white leading-tight mb-4 tracking-tight">
-              Start Your Learning Journey Today
-            </h2>
-            <p className="text-slate-400 text-base md:text-lg">
-              Join thousands of learners and take the first step towards your future in engineering and technology.
-            </p>
+        <div className="relative flex flex-col items-center justify-between gap-8 overflow-hidden rounded-[2.5rem] border border-slate-850 bg-[#050a14] p-10 shadow-2xl md:flex-row md:p-14">
+          <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:20px_20px]" />
+          <div className="absolute right-1/4 top-0 h-96 w-96 rounded-full bg-brand-blue-steel/10 blur-[100px]" />
+          <div className="absolute bottom-[-10%] right-[-5%] h-64 w-64 rounded-full bg-brand-accent/10 blur-[80px]" />
+
+          <div className="relative z-10 max-w-xl space-y-4 text-center md:text-left">
+            <h2 className="text-3xl font-black leading-tight tracking-tight text-white md:text-4xl">Start Your Learning Journey Today</h2>
+            <p className="text-sm font-semibold leading-relaxed text-slate-400 sm:text-base">Join thousands of learners and take the first step towards your future in engineering and technology.</p>
           </div>
-          
-          <div className="relative z-10 flex flex-col items-center sm:items-start shrink-0">
-            <Link
-              href="/apply"
-              className="inline-flex items-center justify-center gap-3 bg-[#fbbf24] hover:bg-[#f59e0b] text-slate-900 font-extrabold text-lg px-10 py-5 rounded-full transition-all hover:scale-105 shadow-[0_10px_30px_-5px_rgba(251,191,36,0.3)]"
-            >
-              Get Started for Free
-              <ArrowRight className="w-6 h-6" />
+
+          <div className="relative z-10 flex shrink-0 flex-col items-center md:items-start">
+            <Link href="/apply" className="inline-flex items-center justify-center gap-3 rounded-full bg-brand-accent px-8 py-4.5 text-base font-black text-slate-900 shadow-[0_10px_30px_-5px_rgba(245,158,11,0.25)] transition-all hover:scale-[1.02] hover:bg-brand-accent-hover hover:shadow-[0_10px_35px_-5px_rgba(245,158,11,0.4)]">
+              <span>Get Started for Free</span>
+              <ArrowRight className="h-5 w-5 shrink-0" />
             </Link>
-            <div className="flex items-center gap-2 mt-4 text-slate-400 text-sm font-medium">
-              <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+            <div className="mt-4 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-slate-500">
+              <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-500" />
               <span>No credit card required</span>
             </div>
           </div>
