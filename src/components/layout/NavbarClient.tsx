@@ -16,6 +16,7 @@ interface NavbarClientProps {
 
 export default function NavbarClient({ session }: NavbarClientProps) {
   const pathname = usePathname();
+  const isHomePage = pathname === "/";
   const { theme, toggleTheme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -76,24 +77,32 @@ export default function NavbarClient({ session }: NavbarClientProps) {
         className={`sticky top-0 z-40 w-full transition-all duration-300 ${
           isScrolled
             ? "border-b border-slate-200/70 bg-white/80 py-2.5 shadow-[0_8px_30px_-20px_rgba(15,23,42,0.24)] backdrop-blur-2xl dark:border-slate-800/70 dark:bg-slate-950/80"
-            : "bg-transparent py-4"
+            : isHomePage
+              ? "bg-transparent py-4"
+              : "bg-white/60 py-4 backdrop-blur-sm dark:bg-slate-950/60"
         }`}
       >
         <div className="mx-auto w-full max-w-[1920px] px-4 sm:px-8 lg:px-12 xl:px-20">
           <div className="flex w-full items-center justify-between rounded-full border border-transparent px-2 py-2 transition-all duration-300">
             <Link href="/" className="flex shrink-0 items-center gap-3 group">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200/70 bg-white/70 shadow-sm transition-transform duration-300 group-hover:scale-105 dark:border-slate-800/70 dark:bg-slate-900/70">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full transition-transform duration-300 group-hover:scale-105 overflow-hidden">
                 <Image
                   src="/logo.png"
                   alt="Techglaz Labs Logo"
                   width={40}
                   height={40}
-                  className="object-contain"
+                  className="object-contain dark:invert"
                   style={{ width: "auto", height: "auto" }}
                 />
               </div>
               <div className="flex flex-col justify-center">
-                <span className="text-[17px] font-black uppercase tracking-[0.22em] text-slate-900 leading-none dark:text-white">
+                <span className={`text-[17px] font-black uppercase tracking-[0.22em] leading-none transition-colors duration-300 ${
+                  isScrolled
+                    ? "text-slate-900 dark:text-white"
+                    : isHomePage
+                      ? "text-white"
+                      : "text-slate-900 dark:text-white"
+                }`}>
                   Techglaz
                 </span>
                 <span className="mt-1.5 text-[10px] font-bold uppercase tracking-[0.3em] text-brand-blue-steel leading-none">
@@ -118,8 +127,12 @@ export default function NavbarClient({ session }: NavbarClientProps) {
                       <button
                         className={`flex items-center gap-1 text-sm font-semibold transition-colors cursor-pointer ${
                           isActive
-                            ? "text-brand-blue-deep dark:text-[#fbbf24]"
-                            : "text-slate-650 hover:text-brand-blue-deep dark:text-slate-350 dark:hover:text-[#fbbf24]"
+                            ? isScrolled || !isHomePage ? "text-brand-blue-deep dark:text-[#fbbf24]" : "text-[#fbbf24]"
+                            : isScrolled || !isHomePage
+                              ? "text-slate-650 hover:text-brand-blue-deep dark:text-slate-350 dark:hover:text-[#fbbf24]"
+                              : isHomePage
+                                ? "text-slate-300 hover:text-white dark:text-slate-350 dark:hover:text-[#fbbf24]"
+                                : "text-slate-650 hover:text-brand-blue-deep dark:text-slate-350 dark:hover:text-[#fbbf24]"
                         }`}
                         aria-expanded={activeDropdown === link.label}
                       >
@@ -159,12 +172,18 @@ export default function NavbarClient({ session }: NavbarClientProps) {
                     href={link.href}
                     className={`relative pb-1 text-sm font-semibold transition-colors ${
                       isActive
-                        ? "text-brand-blue-deep dark:text-[#fbbf24]"
-                        : "text-slate-650 hover:text-brand-blue-deep dark:text-slate-350 dark:hover:text-[#fbbf24]"
+                        ? isScrolled || !isHomePage ? "text-brand-blue-deep dark:text-[#fbbf24]" : "text-[#fbbf24]"
+                        : isScrolled || !isHomePage
+                          ? "text-slate-650 hover:text-brand-blue-deep dark:text-slate-350 dark:hover:text-[#fbbf24]"
+                          : isHomePage
+                            ? "text-slate-300 hover:text-white dark:text-slate-350 dark:hover:text-[#fbbf24]"
+                            : "text-slate-650 hover:text-brand-blue-deep dark:text-slate-350 dark:hover:text-[#fbbf24]"
                     }`}
                   >
                     {link.label}
-                    {isActive && <span className="absolute -bottom-1 left-0 h-0.5 w-full rounded-full bg-brand-blue-deep shadow-[0_0_8px_rgba(43,120,198,0.28)] dark:bg-[#fbbf24]" />}
+                    {isActive && <span className={`absolute -bottom-1 left-0 h-0.5 w-full rounded-full shadow-[0_0_8px_rgba(43,120,198,0.28)] ${
+                      isScrolled || !isHomePage ? "bg-brand-blue-deep dark:bg-[#fbbf24]" : "bg-[#fbbf24]"
+                    }`} />}
                   </Link>
                 );
               })}
@@ -173,17 +192,29 @@ export default function NavbarClient({ session }: NavbarClientProps) {
             <div className="hidden items-center gap-3 lg:flex">
               <button
                 onClick={openCommandPalette}
-                className="flex items-center gap-2 rounded-full border border-slate-200/70 bg-slate-50/70 px-3 py-1.5 text-xs font-semibold text-slate-500 transition-colors hover:text-slate-700 dark:border-slate-800/80 dark:bg-slate-900/70 dark:text-slate-400 dark:hover:text-slate-200"
+                className={`flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors ${
+                  isScrolled || !isHomePage
+                    ? "border-slate-200/70 bg-slate-50/70 text-slate-500 hover:text-slate-700 dark:border-slate-800/80 dark:bg-slate-900/70 dark:text-slate-400 dark:hover:text-slate-200"
+                    : "border-white/15 bg-white/10 text-slate-300 hover:text-white backdrop-blur-sm dark:border-slate-800/80 dark:bg-slate-900/70 dark:text-slate-400 dark:hover:text-slate-200"
+                }`}
                 title="Open Search Overlay (Ctrl+K)"
               >
                 <Search className="h-3.5 w-3.5" />
                 <span>Search</span>
-                <kbd className="rounded border border-slate-200 bg-white px-1.5 py-0.5 text-[9px] shadow-sm dark:border-slate-700 dark:bg-slate-800">Ctrl K</kbd>
+                <kbd className={`rounded border px-1.5 py-0.5 text-[9px] shadow-sm ${
+                  isScrolled || !isHomePage
+                    ? "border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800"
+                    : "border-white/20 bg-white/10 dark:border-slate-700 dark:bg-slate-800"
+                }`}>Ctrl K</kbd>
               </button>
 
               <button
                 onClick={toggleTheme}
-                className="rounded-full border border-slate-200/70 bg-white/70 p-2 text-slate-500 transition-all hover:text-brand-blue-steel dark:border-slate-800/80 dark:bg-slate-900/70 dark:text-slate-400 dark:hover:text-[#fbbf24]"
+                className={`rounded-full border p-2 transition-all ${
+                  isScrolled || !isHomePage
+                    ? "border-slate-200/70 bg-white/70 text-slate-500 hover:text-brand-blue-steel dark:border-slate-800/80 dark:bg-slate-900/70 dark:text-slate-400 dark:hover:text-[#fbbf24]"
+                    : "border-white/15 bg-white/10 text-slate-300 hover:text-white backdrop-blur-sm dark:border-slate-800/80 dark:bg-slate-900/70 dark:text-slate-400 dark:hover:text-[#fbbf24]"
+                }`}
                 aria-label="Toggle theme mode"
               >
                 {theme === "light" ? <Moon className="h-4.5 w-4.5" /> : <Sun className="h-4.5 w-4.5" />}
@@ -231,8 +262,16 @@ export default function NavbarClient({ session }: NavbarClientProps) {
                 </div>
               ) : (
                 <div className="flex items-center gap-3">
-                  <Link href="/login" className="px-2 py-1.5 text-sm font-semibold text-slate-650 transition-colors hover:text-brand-blue-deep dark:text-slate-300 dark:hover:text-[#fbbf24]">Login</Link>
-                  <Link href="/signup" className="rounded-full border border-slate-200/70 bg-slate-900 px-4.5 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-slate-800 dark:border-slate-700/50 dark:bg-slate-800 dark:hover:bg-slate-700/80">Sign Up</Link>
+                  <Link href="/login" className={`px-2 py-1.5 text-sm font-semibold transition-colors ${
+                    isScrolled || !isHomePage
+                      ? "text-slate-650 hover:text-brand-blue-deep dark:text-slate-300 dark:hover:text-[#fbbf24]"
+                      : "text-slate-300 hover:text-white dark:text-slate-300 dark:hover:text-[#fbbf24]"
+                  }`}>Login</Link>
+                  <Link href="/signup" className={`rounded-full px-4.5 py-2 text-sm font-semibold text-white shadow-sm transition-colors ${
+                    isScrolled || !isHomePage
+                      ? "border border-slate-200/70 bg-slate-900 hover:bg-slate-800 dark:border-slate-700/50 dark:bg-slate-800 dark:hover:bg-slate-700/80"
+                      : "bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 dark:border-slate-700/50 dark:bg-slate-800 dark:hover:bg-slate-700/80"
+                  }`}>Sign Up</Link>
                 </div>
               )}
 
