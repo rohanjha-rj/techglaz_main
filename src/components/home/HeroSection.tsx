@@ -4,31 +4,18 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { ArrowRight, Sparkles, Play, ShieldCheck, Cpu, Rocket } from "lucide-react";
 import { ArrowRight, Sparkles, ArrowUpRight } from "lucide-react";
 
 export default function HeroSection() {
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.1,
-      },
-    },
+    visible: { opacity: 1, transition: { staggerChildren: 0.14, delayChildren: 0.08 } },
   };
 
   const itemVariants: any = {
-    hidden: { y: 30, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 15,
-      },
-    },
+    hidden: { y: 24, opacity: 0 },
+    visible: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 90, damping: 18 } },
   };
 
   return (
@@ -147,27 +134,26 @@ export default function HeroSection() {
             </p>
           </div>
 
-          {/* Right Floating Card: Placement metrics - matching target style */}
-          <div className="absolute right-[-2%] sm:right-[-12%] bottom-[12%] sm:bottom-[20%] bg-slate-950/45 backdrop-blur-xl border border-white/10 p-5 rounded-2xl shadow-2xl w-52 sm:w-60 text-left pointer-events-auto hover:-translate-y-1 transition-transform duration-300">
-            <div className="flex justify-between items-start gap-4">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">Placement Records</span>
-              <Link href="/placements" className="w-6 h-6 rounded-full bg-white/10 hover:bg-white text-white hover:text-slate-950 flex items-center justify-center transition-colors cursor-pointer shrink-0">
-                <ArrowUpRight className="w-3.5 h-3.5" />
-              </Link>
+            <div className="absolute bottom-[12%] left-1 sm:left-2 z-20 flex w-60 items-center gap-3.5 rounded-[1.4rem] border border-white/10 bg-slate-900/85 p-4 shadow-2xl backdrop-blur-xl lg:-left-4">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-brand-blue-steel/20 bg-brand-blue-deep/60">
+                <Play className="ml-0.5 h-3.5 w-3.5 fill-[#fbbf24] text-[#fbbf24]" />
+              </div>
+              <div>
+                <p className="mb-0.5 text-[9px] font-bold uppercase tracking-[0.18em] text-slate-500">Current Lesson</p>
+                <p className="text-xs font-bold leading-tight text-white">VLSI Design Basics</p>
+                <p className="mt-1 text-[10px] font-semibold text-slate-500">Lesson 4 of 12 • 50m left</p>
+              </div>
             </div>
-            <div className="mt-3 flex items-baseline gap-1">
-              <h4 className="text-2xl sm:text-3xl font-black text-white leading-none">
-                95%
-              </h4>
-              <span className="text-[10px] sm:text-xs font-bold text-brand-accent">Success Rate</span>
+
+            <div className="absolute bottom-4 right-6 flex gap-2 rounded-full border border-white/10 bg-white/10 p-2 backdrop-blur-md">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-blue-light/20 text-brand-blue-steel"><ShieldCheck className="h-5 w-5" /></div>
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-accent/20 text-brand-accent"><Cpu className="h-5 w-5" /></div>
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white"><Rocket className="h-5 w-5" /></div>
             </div>
-            {/* Simple progress bar matching target style */}
-            <div className="w-full h-1 bg-white/10 rounded-full mt-3 overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-blue-400 to-[#fbbf24] w-[95%] rounded-full" />
-            </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
       </div>
     </section>
   );
 }
+

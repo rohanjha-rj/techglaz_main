@@ -1,12 +1,11 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, BookOpen, Clock, Tag, Star, Users } from "lucide-react";
+import { ArrowRight, BookOpen, Clock, Star } from "lucide-react";
 import SectionHeading from "../shared/SectionHeading";
 import { client } from "../../../sanity/lib/client";
 import { allCoursesQuery } from "../../../sanity/lib/queries";
 import { Course } from "@/types";
-import { urlForImage } from "../../../sanity/lib/image";
 import { projectId } from "../../../sanity/env";
 import { BRANCHES } from "@/lib/constants";
 
@@ -102,6 +101,11 @@ export default async function CourseHighlights() {
   courses = courses.slice(0, 6);
 
   return (
+    <section className="border-t border-slate-200/60 bg-slate-50/80 py-20 transition-colors duration-200 dark:border-slate-900/70 dark:bg-[#070b12]">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <SectionHeading title="Featured Training Tracks" subtitle="Explore Our Specialties" centered={true} />
+
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
     <section className="py-20 bg-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading
@@ -115,8 +119,7 @@ export default async function CourseHighlights() {
           {courses.map((course, idx) => {
             const branchLabel = BRANCHES[course.branch] || course.branch;
             const courseSlug = `/trainings/${course.branch.toLowerCase().replace(/_/g, "-")}/${course.slug.current}`;
-            
-            // Generate mock metadata for design
+
             const getImage = (title: string) => {
               if (title.includes("Web")) return "/images/courses/web-dev.png";
               if (title.includes("AI") || title.includes("Machine")) return "/images/courses/ai-ml.png";
@@ -126,6 +129,7 @@ export default async function CourseHighlights() {
               if (title.includes("Cybersecurity")) return "/images/courses/cybersecurity.png";
               return "/images/courses/web-dev.png";
             };
+
             const MOCK_INSTRUCTORS = [
               { name: "Rahul S.", rating: 4.8, students: "1.2k", price: "₹2,500" },
               { name: "Priya M.", rating: 4.9, students: "3.1k", price: "₹3,200" },
@@ -134,81 +138,44 @@ export default async function CourseHighlights() {
             ];
             const meta = MOCK_INSTRUCTORS[idx % MOCK_INSTRUCTORS.length];
             const badge = idx === 0 ? "Bestseller" : idx === 1 ? "Hot" : idx === 2 ? "New" : "";
-            const badgeColor = idx === 0 ? "bg-yellow-400 text-yellow-900" : idx === 1 ? "bg-red-500 text-white" : "bg-emerald-500 text-white";
+            const badgeColor = idx === 0 ? "bg-yellow-400 text-yellow-950 font-bold" : idx === 1 ? "bg-red-500 text-white font-semibold" : "bg-emerald-500 text-white font-semibold";
 
             return (
-              <div
-                key={course._id}
-                className="group flex flex-col bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 focus-within:ring-2 focus-within:ring-brand-blue-steel"
-              >
-                {/* Image Header */}
-                <div className="relative h-48 w-full bg-slate-100 dark:bg-slate-800">
-                  <Image 
-                    src={getImage(course.title)} 
-                    alt={course.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  {badge && (
-                    <div className={`absolute top-4 left-4 px-2 py-1 ${badgeColor} text-[10px] font-bold uppercase tracking-wider rounded z-20`}>
-                      {badge}
-                    </div>
-                  )}
-                  {/* Subtle top border accent over the image */}
-                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-brand-blue-deep to-brand-blue-steel z-20" />
+              <div key={course._id} className="group flex flex-col overflow-hidden rounded-[2rem] border border-slate-200/70 bg-white shadow-[0_16px_40px_-18px_rgba(15,23,42,0.18),0_8px_20px_-10px_rgba(15,23,42,0.08)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_30px_60px_-24px_rgba(15,23,42,0.22),0_14px_24px_-10px_rgba(15,23,42,0.14)] focus-within:ring-2 focus-within:ring-brand-blue-steel/40 dark:border-slate-800/80 dark:bg-slate-900/80">
+                <div className="relative h-48 w-full overflow-hidden bg-slate-100 dark:bg-slate-850">
+                  <Image src={getImage(course.title)} alt={course.title} fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" className="object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+                  {badge && <div className={`absolute left-4 top-4 z-20 rounded-xl px-3 py-1 text-[10px] uppercase tracking-[0.2em] shadow-sm ${badgeColor}`}>{badge}</div>}
+                  <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-brand-blue-deep to-brand-blue-steel opacity-0 transition-opacity group-hover:opacity-100" />
                 </div>
 
-                <div className="p-6 flex flex-col flex-grow">
-                  {/* Category badges */}
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    <span className="text-[10px] font-bold tracking-wider uppercase text-brand-blue-steel bg-brand-blue-light/50 px-2 py-0.5 rounded">
-                      {branchLabel}
-                    </span>
+                <div className="flex flex-grow flex-col p-6">
+                  <div className="mb-3.5 flex flex-wrap gap-2">
+                    <span className="rounded-full border border-brand-blue-steel/10 bg-brand-blue-light/70 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-brand-blue-steel dark:border-slate-700/50 dark:bg-slate-800/80 dark:text-slate-350">{branchLabel}</span>
                   </div>
 
-                  {/* Header Title */}
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-blue-steel transition-colors mb-2 line-clamp-1 relative z-10">
-                    <Link href={courseSlug} className="focus:outline-none before:absolute before:inset-0">
-                      {course.title}
-                    </Link>
+                  <h3 className="relative z-10 mb-2.5 line-clamp-1 text-base font-bold text-slate-900 transition-colors group-hover:text-brand-blue-steel dark:text-white">
+                    <Link href={courseSlug} className="before:absolute before:inset-0 focus:outline-none">{course.title}</Link>
                   </h3>
 
-                  {/* Description */}
-                  <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2 mb-4 flex-grow z-10 relative">
-                    {course.description}
-                  </p>
+                  <p className="relative z-10 mb-5 flex-grow text-sm leading-relaxed text-slate-500 dark:text-slate-450">{course.description}</p>
 
-                  {/* Instructor & Rating Row */}
-                  <div className="flex items-center justify-between mb-4 pt-4 border-t border-slate-100 dark:border-slate-800/80 relative z-20 pointer-events-none">
-                    <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full bg-slate-200 overflow-hidden relative">
-                         <Image 
-                           src={`https://i.pravatar.cc/100?img=${idx + 20}`} 
-                           alt="Instructor" 
-                           fill 
-                           sizes="24px"
-                           className="object-cover" 
-                         />
+                  <div className="relative z-20 mb-4 flex items-center justify-between border-t border-slate-100 pt-4 dark:border-slate-850">
+                    <div className="flex items-center gap-2.5">
+                      <div className="relative h-7 w-7 overflow-hidden rounded-full border border-slate-200/50 bg-slate-200">
+                        <Image src={`https://i.pravatar.cc/100?img=${idx + 20}`} alt="Instructor Avatar" fill sizes="24px" className="object-cover" />
                       </div>
-                      <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">{meta.name}</span>
+                      <span className="text-xs font-bold text-slate-700 dark:text-slate-300">{meta.name}</span>
                     </div>
                     <div className="flex items-center gap-1">
-                      <Star className="w-3.5 h-3.5 fill-[#fbbf24] text-[#fbbf24]" />
-                      <span className="text-xs font-bold text-slate-700 dark:text-slate-300">{meta.rating}</span>
-                      <span className="text-xs text-slate-400">({meta.students})</span>
+                      <Star className="h-3.5 w-3.5 fill-[#fbbf24] text-[#fbbf24]" />
+                      <span className="text-xs font-black text-slate-750 dark:text-slate-200">{meta.rating}</span>
+                      <span className="text-[10px] font-semibold text-slate-400">({meta.students})</span>
                     </div>
                   </div>
 
-                  {/* Card Footer */}
-                  <div className="flex items-center justify-between relative z-20 pointer-events-none">
-                    <div className="flex items-center gap-1.5 text-xs font-medium text-slate-500 dark:text-slate-400">
-                      <Clock className="w-4 h-4 text-slate-400" />
-                      <span>{course.duration}</span>
-                    </div>
-                    <div className="font-bold text-lg text-slate-900 dark:text-white">
-                      {meta.price}
-                    </div>
+                  <div className="relative z-20 flex items-center justify-between border-t border-slate-150/60 pt-3 dark:border-slate-850/50">
+                    <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-450"><Clock className="h-4 w-4 shrink-0 text-slate-400" /><span>{course.duration}</span></div>
+                    <div className="text-base font-black text-slate-900 dark:text-white">{meta.price}</div>
                   </div>
                 </div>
               </div>
@@ -216,6 +183,11 @@ export default async function CourseHighlights() {
           })}
         </div>
 
+        <div className="relative z-10 mt-12 text-center">
+          <Link href="/trainings" className="btn-primary inline-flex items-center gap-2 rounded-full px-8 py-3.5 font-bold shadow-lg group">
+            <BookOpen className="h-4.5 w-4.5 shrink-0 text-[#fbbf24]" />
+            <span>View All Courses</span>
+            <ArrowRight className="h-4.5 w-4.5 transition-transform group-hover:translate-x-1" />
         {/* View All Button */}
         <div className="text-center mt-12 relative z-10">
           <Link
