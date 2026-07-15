@@ -7,7 +7,10 @@ import NextAuth from "next-auth";
 import { authConfig } from "@/lib/auth.config";
 import { NextResponse } from "next/server";
 
-const { auth } = NextAuth(authConfig);
+const { auth } = NextAuth({
+  ...authConfig,
+  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || "techglaz-labs-super-secret-key-32-chars-fallback-value",
+});
 
 export default auth((req) => {
   const { pathname } = req.nextUrl;
