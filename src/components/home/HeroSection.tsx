@@ -4,8 +4,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, Play, ShieldCheck, Cpu, Rocket } from "lucide-react";
-import { ArrowRight, Sparkles, ArrowUpRight } from "lucide-react";
+import { ArrowRight, Sparkles, Play, ShieldCheck, Cpu, Rocket, ArrowUpRight } from "lucide-react";
 
 export default function HeroSection() {
   const containerVariants = {
@@ -152,8 +151,7 @@ export default function HeroSection() {
             </div>
           </motion.div>
         </div>
-      </div>
-    </section>
-  );
-}
+      </section>
+    );
+  }
 

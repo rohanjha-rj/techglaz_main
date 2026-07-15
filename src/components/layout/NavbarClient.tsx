@@ -50,6 +50,9 @@ export default function NavbarClient({ session }: NavbarClientProps) {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 24);
     };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
 
   useEffect(() => {
