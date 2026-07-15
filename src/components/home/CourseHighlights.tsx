@@ -102,7 +102,7 @@ export default async function CourseHighlights() {
   courses = courses.slice(0, 6);
 
   return (
-    <section className="py-20 bg-slate-50 dark:bg-slate-900/50">
+    <section className="py-20 bg-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading
           title="Featured Training Tracks"
@@ -220,7 +220,7 @@ export default async function CourseHighlights() {
         <div className="text-center mt-12 relative z-10">
           <Link
             href="/trainings"
-            className="inline-flex items-center gap-2 bg-[#0c1524] hover:bg-[#132035] text-white font-bold px-8 py-3.5 rounded-full transition-colors shadow-lg group"
+            className="inline-flex items-center gap-2 bg-slate-950 hover:bg-slate-900 dark:bg-slate-800 dark:hover:bg-slate-700 text-white font-bold px-8 py-3.5 rounded-full transition-colors shadow-lg group"
           >
             <BookOpen className="w-5 h-5 shrink-0 text-[#fbbf24]" />
             View All Courses

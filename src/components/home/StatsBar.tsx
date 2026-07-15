@@ -34,7 +34,7 @@ export default function StatsBar() {
   ];
 
   return (
-    <section className="relative z-20 w-full bg-[#132035] py-8 border-y border-brand-blue-deep/50 shadow-2xl">
+    <section className="relative z-20 w-full bg-transparent py-8 border-y border-slate-200/60 dark:border-slate-800/80 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {stats.map((stat, idx) => (
@@ -42,14 +42,14 @@ export default function StatsBar() {
               key={idx}
               className="flex items-center gap-4 py-2"
             >
-              <div className="feature-icon-box shadow-md shadow-black/20 text-[#fbbf24]">
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-white dark:bg-slate-800 text-brand-blue-steel dark:text-[#fbbf24] shrink-0 shadow-sm border border-slate-100 dark:border-slate-700">
                 {stat.icon}
               </div>
               <div className="space-y-0.5">
-                <p className="text-xl font-black text-white leading-none">
+                <p className="text-xl font-black text-slate-900 dark:text-white leading-none">
                   <AnimatedCounter end={stat.value} suffix={stat.suffix} />
                 </p>
-                <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wide">
+                <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
                   {stat.label}
                 </p>
               </div>

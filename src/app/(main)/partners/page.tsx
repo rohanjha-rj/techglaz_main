@@ -115,7 +115,7 @@ export default async function PartnersPage() {
       </section>
 
       {/* Corporate & Research Partners Section */}
-      <section className="py-20 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-100 dark:border-slate-800/40">
+      <section className="py-20 bg-transparent border-t border-slate-100 dark:border-slate-800/40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
             title="Industry & Research Partners"

@@ -15,7 +15,6 @@ interface NavbarClientProps {
 
 export default function NavbarClient({ session }: NavbarClientProps) {
   const pathname = usePathname();
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
@@ -45,19 +44,7 @@ export default function NavbarClient({ session }: NavbarClientProps) {
     };
   }, []);
 
-  // Monitor scroll for glassmorphism styling
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-    };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   // Close dropdowns on route changes
   useEffect(() => {
@@ -68,21 +55,17 @@ export default function NavbarClient({ session }: NavbarClientProps) {
   return (
     <>
       <header
-        className={`sticky top-0 z-40 w-full transition-all duration-300 ${
-          isScrolled
-            ? "bg-slate-800/95 backdrop-blur-lg py-3 shadow-2xl border-b border-white/10"
-            : "bg-transparent py-5"
-        }`}
+        className="sticky top-0 z-40 w-full bg-[#030712]/90 backdrop-blur-md py-3.5 border-b border-white/10 shadow-sm"
       >
         <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-20">
           <div className="flex items-center justify-between w-full">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3 group">
               <div className="w-12 h-12 flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
-                <Image src="/logo.png" alt="Techglaz Labs" width={48} height={48} className="object-contain" style={{ width: 'auto', height: 'auto' }} />
+                <Image src="/images/tz-logo.png" alt="Techglaz Labs" width={48} height={48} className="object-contain" style={{ width: 'auto', height: 'auto' }} />
               </div>
               <div className="flex flex-col justify-center">
-                <span className="text-[20px] font-black text-white tracking-widest leading-none uppercase drop-shadow-md">
+                <span className="text-[20px] font-black text-white tracking-widest leading-none uppercase">
                   Techglaz
                 </span>
                 <span className="text-[12px] font-bold text-brand-blue-steel tracking-[0.25em] mt-1">
@@ -108,8 +91,8 @@ export default function NavbarClient({ session }: NavbarClientProps) {
                       <button
                         className={`flex items-center gap-1.5 text-[15px] font-bold transition-colors cursor-pointer ${
                           isActive
-                            ? "text-[#fbbf24] drop-shadow-sm"
-                            : "text-slate-200 hover:text-[#fbbf24]"
+                            ? "text-[#fbbf24]"
+                            : "text-slate-300 hover:text-white"
                         }`}
                         aria-expanded={activeDropdown === link.label}
                       >
@@ -153,12 +136,12 @@ export default function NavbarClient({ session }: NavbarClientProps) {
                     className={`text-[15px] font-bold transition-colors relative pb-1 ${
                       isActive
                         ? "text-[#fbbf24]"
-                        : "text-slate-200 hover:text-[#fbbf24]"
+                        : "text-slate-300 hover:text-white"
                     }`}
                   >
                     {link.label}
                     {isActive && (
-                      <span className="absolute -bottom-1.5 left-0 w-full h-0.5 bg-[#fbbf24] rounded-full shadow-[0_0_8px_rgba(251,191,36,0.8)]" />
+                      <span className="absolute -bottom-1.5 left-0 w-full h-0.5 bg-[#fbbf24] rounded-full shadow-[0_0_8px_rgba(251,191,36,0.3)]" />
                     )}
                   </Link>
                 );
@@ -231,13 +214,13 @@ export default function NavbarClient({ session }: NavbarClientProps) {
                 <div className="flex items-center gap-4">
                   <Link
                     href="/login"
-                    className="text-[15px] font-bold text-slate-200 hover:text-[#fbbf24] transition-colors px-2 py-1.5"
+                    className="text-[15px] font-bold text-slate-300 hover:text-white transition-colors px-2 py-1.5"
                   >
                     Login
                   </Link>
                   <Link
                     href="/signup"
-                    className="bg-[#0c1524] hover:bg-[#132035] border border-slate-700/50 text-white py-2.5 px-6 text-[15px] font-bold rounded-full transition-colors shadow-sm"
+                    className="bg-white hover:bg-slate-100 text-slate-950 py-2.5 px-6 text-[15px] font-bold rounded-full transition-colors shadow-sm"
                   >
                     Sign Up
                   </Link>
@@ -263,7 +246,7 @@ export default function NavbarClient({ session }: NavbarClientProps) {
               </Link>
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
-                className="p-2 text-slate-200 hover:text-white rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
+                className="p-2 text-slate-300 hover:text-white rounded-lg hover:bg-white/5 transition-colors cursor-pointer"
                 aria-label="Open menu"
               >
                 <Menu className="w-6 h-6" />

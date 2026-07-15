@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, Play, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Sparkles, ArrowUpRight } from "lucide-react";
 
 export default function HeroSection() {
   const containerVariants = {
@@ -32,153 +32,141 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden py-24 bg-[#0c1524]">
-      {/* Background Animated Gradient Fluid Overlay - Enhanced navy theme */}
-      <div className="absolute inset-0 bg-[#0c1524] z-0" />
-      <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-brand-accent/5 blur-[120px] animate-pulse-slow" />
-      <div className="absolute top-1/2 left-0 w-[500px] h-[500px] rounded-full bg-brand-blue-steel/10 blur-[100px]" style={{ animationDelay: "2s" }} />
-      
-      {/* Background Dot Pattern */}
-      <div className="absolute inset-0 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:24px_24px] opacity-20" />
+    <section className="relative min-h-screen flex flex-col justify-center items-center overflow-hidden pt-36 pb-24 bg-[#030712]">
+      {/* Background Image stretched to fit full screen */}
+      <div className="absolute inset-0 z-0 select-none pointer-events-none opacity-40">
+        <Image
+          src="/images/hero-liquid-orb.png"
+          alt="Techglaz Hero Background"
+          fill
+          className="object-cover"
+          priority
+        />
+        {/* Darkening gradient overlays to keep textual contrast crisp */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#030712] via-[#030712]/45 to-[#030712]/80" />
+      </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full pt-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center">
+      {/* Background radial soft glow matching the target image */}
+      <div className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-blue-500/10 blur-[130px] z-0 pointer-events-none animate-pulse-slow" />
+      <div className="absolute top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-amber-500/5 blur-[120px] z-0 pointer-events-none" style={{ animationDelay: "2s" }} />
+
+      {/* Subtle Starry/Dot pattern background */}
+      <div className="absolute inset-0 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:32px_32px] opacity-25 z-0 pointer-events-none" />
+
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full text-center flex flex-col items-center">
+        {/* Animated Main Content Wrapper */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="space-y-8 flex flex-col items-center"
+        >
+          {/* Branded Badge */}
+          <motion.div
+            variants={itemVariants}
+            className="inline-flex items-center gap-2 px-4.5 py-1.5 rounded-full bg-white/5 backdrop-blur-md text-slate-350 font-semibold text-xs tracking-wider uppercase border border-white/10"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-brand-accent animate-spin-slow" />
+            <span>Bridging Academic Curricula & Industry Engineering</span>
+          </motion.div>
+
+          {/* Centered Premium Headline */}
+          <motion.h1
+            variants={itemVariants}
+            className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.1] max-w-4xl"
+          >
+            Elevate Your <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-amber-300">
+              Engineering Career
+            </span>
+          </motion.h1>
+
+          {/* Centered Description */}
+          <motion.p
+            variants={itemVariants}
+            className="text-base sm:text-lg text-slate-400 max-w-2xl leading-relaxed font-medium"
+          >
+            Join Techglaz Labs for high-end professional development, corporate internship tracks, and specialized courses in CSE, IT, VLSI, IoT, Embedded Systems, and Mechanical Engineering.
+          </motion.p>
+
+          {/* Centered Buttons */}
+          <motion.div
+            variants={itemVariants}
+            className="flex flex-col sm:flex-row gap-4 pt-2"
+          >
+            <Link
+              href="/trainings"
+              className="group bg-white hover:bg-slate-100 text-slate-950 font-bold px-8 py-3.5 rounded-full flex items-center justify-center gap-2 transition-all duration-300 shadow-xl shadow-white/5 hover:scale-105"
+            >
+              Explore Courses
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform text-slate-950" />
+            </Link>
+            
+            <Link
+              href="/career-path-finder"
+              className="group bg-white/5 hover:bg-white/10 text-white font-bold px-8 py-3.5 rounded-full border border-white/10 flex items-center justify-center gap-2 backdrop-blur-md transition-all duration-300 hover:scale-105"
+            >
+              Career Path Finder
+              <Sparkles className="w-4 h-4 text-brand-accent group-hover:animate-pulse" />
+            </Link>
+          </motion.div>
+        </motion.div>
+
+        {/* Central visual rising orb container */}
+        <motion.div
+          initial={{ opacity: 0, y: 100 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2, ease: "easeOut", delay: 0.3 }}
+          className="relative w-full max-w-xl sm:max-w-2xl aspect-[1.1] mx-auto mt-16 sm:mt-24 select-none pointer-events-none flex justify-center items-end"
+        >
+          <div className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-blue-500/10 rounded-full blur-[90px] -z-10 animate-pulse-slow" />
           
-          {/* Left Column - Copy & CTAs */}
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="flex flex-col items-start text-left space-y-8"
-          >
-            {/* Branded Badge */}
-            <motion.div
-              variants={itemVariants}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-md text-white font-bold text-xs tracking-wider uppercase border border-white/10"
-            >
-              <Sparkles className="w-4 h-4 text-brand-accent animate-spin-slow" />
-              <span>Bridging Academic Curricula & Industry Engineering</span>
-            </motion.div>
+          <Image
+            src="/images/hero-liquid-orb.png"
+            alt="Techglaz Labs Liquid Orb"
+            width={650}
+            height={650}
+            className="object-contain animate-float drop-shadow-3xl transform translate-y-10 sm:translate-y-16"
+            priority
+          />
 
-            {/* Headline */}
-            <motion.h1
-              variants={itemVariants}
-              className="text-4xl sm:text-5xl lg:text-[4rem] font-extrabold tracking-tight text-white leading-[1.05]"
-            >
-              Build Real-World{" "}
-              <br className="hidden lg:block" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#fbbf24] to-[#f59e0b] animate-shimmer" style={{ backgroundSize: "200% auto" }}>
-                Engineering Expertise.
-              </span>
-            </motion.h1>
-
-            {/* Description */}
-            <motion.p
-              variants={itemVariants}
-              className="text-base sm:text-lg text-slate-300 max-w-xl leading-relaxed"
-            >
-              Join Techglaz Labs for high-end professional development, corporate internship tracks, and specialized courses in CSE, IT, VLSI, IoT, Embedded Systems, and Mechanical Engineering.
-            </motion.p>
-
-            {/* CTA Buttons */}
-            <motion.div
-              variants={itemVariants}
-              className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto pt-2"
-            >
-              <Link
-                href="/trainings"
-                className="btn-hero-primary group"
-              >
-                Explore Courses
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+          {/* Left Floating Card: VLSI/Placements - glassmorphic matching the target page */}
+          <div className="absolute left-[-2%] sm:left-[-12%] bottom-[25%] sm:bottom-[35%] bg-slate-950/45 backdrop-blur-xl border border-white/10 p-5 rounded-2xl shadow-2xl w-48 sm:w-56 text-left pointer-events-auto hover:-translate-y-1 transition-transform duration-300">
+            <div className="flex justify-between items-start gap-4">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">Specialization</span>
+              <Link href="/trainings" className="w-6 h-6 rounded-full bg-white/10 hover:bg-white text-white hover:text-slate-950 flex items-center justify-center transition-colors cursor-pointer shrink-0">
+                <ArrowUpRight className="w-3.5 h-3.5" />
               </Link>
-              
-              <Link
-                href="/apply"
-                className="btn-hero-secondary"
-              >
-                How It Works <Play className="w-4 h-4 ml-1" />
+            </div>
+            <h4 className="text-sm sm:text-base font-extrabold text-white mt-3 leading-snug">
+              VLSI & Embedded Systems
+            </h4>
+            <p className="text-[10px] sm:text-xs text-slate-400 font-semibold mt-2.5 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+              Industry-Grade IC Design
+            </p>
+          </div>
+
+          {/* Right Floating Card: Placement metrics - matching target style */}
+          <div className="absolute right-[-2%] sm:right-[-12%] bottom-[12%] sm:bottom-[20%] bg-slate-950/45 backdrop-blur-xl border border-white/10 p-5 rounded-2xl shadow-2xl w-52 sm:w-60 text-left pointer-events-auto hover:-translate-y-1 transition-transform duration-300">
+            <div className="flex justify-between items-start gap-4">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">Placement Records</span>
+              <Link href="/placements" className="w-6 h-6 rounded-full bg-white/10 hover:bg-white text-white hover:text-slate-950 flex items-center justify-center transition-colors cursor-pointer shrink-0">
+                <ArrowUpRight className="w-3.5 h-3.5" />
               </Link>
-            </motion.div>
-
-            {/* Bottom Trust/Students Row */}
-            <motion.div
-              variants={itemVariants}
-              className="flex items-center gap-4 pt-6"
-            >
-              <div className="flex -space-x-3">
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="w-10 h-10 rounded-full border-2 border-[#0c1524] bg-slate-800 flex items-center justify-center overflow-hidden relative">
-                    <Image 
-                      src={`https://i.pravatar.cc/100?img=${i + 10}`} 
-                      alt="Student" 
-                      fill 
-                      sizes="40px"
-                      className="object-cover" 
-                    />
-                  </div>
-                ))}
-                <div className="w-10 h-10 rounded-full border-2 border-[#0c1524] bg-[#fbbf24] flex items-center justify-center text-[#090d14] font-bold text-[10px] z-10 shadow-lg leading-none">
-                  500+
-                </div>
-              </div>
-              <p className="text-xs font-medium text-slate-400 max-w-[200px] leading-tight">
-                Students are already learning and growing with Techglaz.
-              </p>
-            </motion.div>
-          </motion.div>
-
-          {/* Right Column - Illustration & Floating Cards */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative lg:h-[600px] flex items-center justify-center"
-          >
-            {/* Main Image */}
-            <div className="relative w-full max-w-lg aspect-square lg:aspect-auto lg:w-[90%] lg:h-[90%] mx-auto z-10 animate-float">
-               <Image 
-                 src="/images/hero-student.png" 
-                 alt="Techglaz Labs Student" 
-                 fill 
-                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
-                 className="object-contain drop-shadow-2xl" 
-                 priority 
-               />
             </div>
-
-            {/* Decor Glow behind Image */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-brand-blue-steel/20 rounded-full blur-[80px] -z-10" />
-
-            {/* Floating Card 1: Progress */}
-            <div className="absolute top-[20%] -right-4 sm:right-0 lg:-right-8 bg-slate-900/90 backdrop-blur-xl border border-slate-700/50 p-4 rounded-2xl shadow-2xl z-20 w-56 animate-slide-up" style={{ animationDelay: '0.6s' }}>
-              <div className="flex justify-between items-end mb-2">
-                <span className="text-xs font-bold text-white">Your Progress</span>
-                <span className="text-sm font-black text-[#fbbf24]">78%</span>
-              </div>
-              <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden mb-2">
-                <div className="h-full bg-gradient-to-r from-brand-accent to-[#fbbf24] w-[78%] rounded-full relative">
-                  <div className="absolute right-0 top-0 bottom-0 w-2 bg-white/30 rounded-full animate-pulse-slow" />
-                </div>
-              </div>
-              <p className="text-[10px] text-slate-400 font-medium">Keep going! You're doing great.</p>
+            <div className="mt-3 flex items-baseline gap-1">
+              <h4 className="text-2xl sm:text-3xl font-black text-white leading-none">
+                95%
+              </h4>
+              <span className="text-[10px] sm:text-xs font-bold text-brand-accent">Success Rate</span>
             </div>
-
-            {/* Floating Card 2: Current Lesson */}
-            <div className="absolute bottom-[20%] -left-4 sm:left-0 lg:-left-8 bg-slate-900/90 backdrop-blur-xl border border-slate-700/50 p-4 rounded-2xl shadow-2xl z-20 w-64 animate-slide-up flex items-center gap-3" style={{ animationDelay: '0.8s' }}>
-              <div className="w-12 h-12 rounded-full bg-brand-blue-deep/50 flex items-center justify-center shrink-0 border border-brand-blue-steel/30">
-                <div className="w-8 h-8 rounded-full bg-[#fbbf24] flex items-center justify-center pl-0.5">
-                  <Play className="w-4 h-4 text-slate-900 fill-slate-900" />
-                </div>
-              </div>
-              <div>
-                <p className="text-[10px] font-semibold text-slate-400 mb-0.5 uppercase tracking-wider">Current Lesson</p>
-                <p className="text-sm font-bold text-white leading-tight">VLSI Design Basics</p>
-                <p className="text-[10px] text-slate-500 mt-1 font-medium">Lesson 4 of 12 &bull; 50 min left</p>
-              </div>
+            {/* Simple progress bar matching target style */}
+            <div className="w-full h-1 bg-white/10 rounded-full mt-3 overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-blue-400 to-[#fbbf24] w-[95%] rounded-full" />
             </div>
-          </motion.div>
-        </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );

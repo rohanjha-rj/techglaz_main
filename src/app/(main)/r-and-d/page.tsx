@@ -134,7 +134,7 @@ export default async function RnDPage({ searchParams }: PageProps) {
       </section>
 
       {/* R&D Activities Grid */}
-      <section className="py-16 bg-slate-50 dark:bg-slate-900/50">
+      <section className="py-16 bg-transparent">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {filteredRnD.length === 0 && (
             <div className="text-center py-16 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-8 max-w-xl mx-auto space-y-4">

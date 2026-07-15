@@ -50,7 +50,7 @@ export default async function DashboardPage() {
         subtitle="Manage your profile, monitor enrollment applications, and track certification statuses."
       />
 
-      <section className="py-16 bg-slate-50 dark:bg-slate-900/50">
+      <section className="py-16 bg-transparent">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
             

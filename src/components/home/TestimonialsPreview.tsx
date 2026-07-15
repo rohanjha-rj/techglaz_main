@@ -79,11 +79,11 @@ export default function TestimonialsPreview() {
   if (testimonials.length === 0) return null;
 
   return (
-    <section className="py-20 bg-[#0c1524] text-white relative overflow-hidden border-t border-white/5">
+    <section className="py-20 bg-transparent text-slate-900 dark:text-white relative overflow-hidden border-t border-slate-100 dark:border-slate-800">
       {/* Background patterns */}
-      <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:24px_24px]" />
-      <div className="absolute top-1/2 left-0 w-80 h-80 rounded-full bg-brand-blue-deep/20 blur-3xl" />
-      <div className="absolute bottom-0 right-0 w-80 h-80 rounded-full bg-brand-blue-steel/10 blur-3xl" />
+      <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:24px_24px] dark:opacity-10" />
+      <div className="absolute top-1/2 left-0 w-80 h-80 rounded-full bg-brand-blue-steel/5 dark:bg-brand-blue-deep/10 blur-3xl" />
+      <div className="absolute bottom-0 right-0 w-80 h-80 rounded-full bg-brand-blue-steel/5 dark:bg-brand-blue-steel/10 blur-3xl" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <SectionHeading
@@ -104,7 +104,7 @@ export default function TestimonialsPreview() {
                   key={testimonial._id}
                   className="flex-[0_0_100%] min-w-0 px-4"
                 >
-                  <div className="bg-slate-800/40 backdrop-blur-md border border-slate-700/50 p-8 sm:p-12 rounded-3xl relative text-center flex flex-col items-center shadow-xl hover:bg-slate-800/60 transition-colors">
+                  <div className="bg-white dark:bg-slate-900/65 backdrop-blur-md border border-slate-200/80 dark:border-slate-800 p-8 sm:p-12 rounded-3xl relative text-center flex flex-col items-center shadow-md dark:shadow-xl hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">
                     {/* Quotes Graphic */}
                     <Quote className="w-12 h-12 text-brand-blue-steel opacity-30 absolute top-6 left-6" />
                     
@@ -123,20 +123,20 @@ export default function TestimonialsPreview() {
                     </div>
 
                     {/* Testimonial body */}
-                    <p className="text-base sm:text-lg lg:text-xl font-medium leading-relaxed text-slate-200 mb-8 max-w-2xl italic">
+                    <p className="text-base sm:text-lg lg:text-xl font-medium leading-relaxed text-slate-700 dark:text-slate-200 mb-8 max-w-2xl italic">
                       "{testimonial.quote}"
                     </p>
 
                     {/* Trainee profile */}
                     <div className="flex items-center justify-center gap-3">
-                      <div className="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center border border-slate-700">
-                        <User className="w-6 h-6 text-slate-400" />
+                      <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center border border-slate-200 dark:border-slate-700">
+                        <User className="w-6 h-6 text-slate-500 dark:text-slate-400" />
                       </div>
                       <div className="text-left">
-                        <h4 className="font-bold text-white leading-tight">
+                        <h4 className="font-bold text-slate-900 dark:text-white leading-tight">
                           {testimonial.studentName}
                         </h4>
-                        <p className="text-xs text-slate-400 font-semibold mt-0.5">
+                        <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold mt-0.5">
                           {testimonial.course} ({testimonial.year})
                         </p>
                       </div>
@@ -150,7 +150,7 @@ export default function TestimonialsPreview() {
           {/* Navigation Controls */}
           <button
             onClick={scrollPrev}
-            className="absolute left-[-20px] sm:left-[-50px] top-1/2 -translate-y-1/2 w-10 h-10 rounded-full border border-slate-750 hover:bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer hidden sm:flex"
+            className="absolute left-[-20px] sm:left-[-50px] top-1/2 -translate-y-1/2 w-10 h-10 rounded-full border border-slate-200 dark:border-slate-750 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center justify-center transition-colors cursor-pointer hidden sm:flex bg-white dark:bg-slate-900 shadow-sm"
             aria-label="Previous slide"
           >
             <ChevronLeft className="w-6 h-6" />
@@ -158,7 +158,7 @@ export default function TestimonialsPreview() {
           
           <button
             onClick={scrollNext}
-            className="absolute right-[-20px] sm:right-[-50px] top-1/2 -translate-y-1/2 w-10 h-10 rounded-full border border-slate-750 hover:bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer hidden sm:flex"
+            className="absolute right-[-20px] sm:right-[-50px] top-1/2 -translate-y-1/2 w-10 h-10 rounded-full border border-slate-200 dark:border-slate-750 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center justify-center transition-colors cursor-pointer hidden sm:flex bg-white dark:bg-slate-900 shadow-sm"
             aria-label="Next slide"
           >
             <ChevronRight className="w-6 h-6" />

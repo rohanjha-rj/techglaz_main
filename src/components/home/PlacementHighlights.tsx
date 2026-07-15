@@ -34,7 +34,7 @@ export default function PlacementHighlights() {
   ];
 
   return (
-    <section className="py-20 bg-white dark:bg-slate-900">
+    <section className="py-20 bg-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading
           title="Industry Placement Records"
@@ -94,7 +94,7 @@ export default function PlacementHighlights() {
         </div>
 
         {/* Start Your Learning Journey CTA */}
-        <div className="bg-[#0c1524] rounded-[2.5rem] p-10 md:p-14 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)]">
+        <div className="bg-slate-950 dark:bg-slate-950 border border-slate-800/80 rounded-[2.5rem] p-10 md:p-14 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)]">
           {/* Background graphics */}
           <div className="absolute top-0 right-1/4 w-96 h-96 bg-brand-blue-steel/10 rounded-full blur-[100px]" />
           <div className="absolute bottom-[-10%] right-[-5%] w-64 h-64 bg-brand-accent/10 rounded-full blur-[80px]" />

@@ -14,16 +14,31 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Column 1: About & Branding */}
           <div className="space-y-6">
-            <Link href="/" className="block max-w-[240px] hover:scale-105 transition-transform origin-left">
-              <Image 
-                src="/logo_name.png" 
-                alt="Techglaz Labs - Let's Create Your own Future" 
-                width={240} 
-                height={80} 
-                className="w-full object-contain"
-                style={{ height: 'auto' }}
-              />
-            </Link>
+            <div className="flex flex-col gap-2.5">
+              <Link href="/" className="flex items-center gap-3 hover:scale-105 transition-transform origin-left group">
+                <div className="w-12 h-12 flex items-center justify-center shrink-0">
+                  <Image 
+                    src="/images/tz-logo.png" 
+                    alt="Techglaz Labs" 
+                    width={48} 
+                    height={48} 
+                    className="object-contain" 
+                    style={{ width: 'auto', height: 'auto' }} 
+                  />
+                </div>
+                <div className="flex flex-col justify-center">
+                  <span className="text-[20px] font-black text-white tracking-widest leading-none uppercase">
+                    Techglaz
+                  </span>
+                  <span className="text-[12px] font-bold text-brand-blue-steel tracking-[0.25em] mt-1">
+                    LABS
+                  </span>
+                </div>
+              </Link>
+              <span className="text-[11px] font-semibold text-slate-400 tracking-wider pl-1">
+                Let's Create Your own Future
+              </span>
+            </div>
             <p className="text-sm text-slate-400 leading-relaxed">
               Empowering students and faculty through high-end professional development, bridging academic curricula and state-of-the-art industry engineering domains.
             </p>
