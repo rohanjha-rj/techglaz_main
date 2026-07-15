@@ -38,8 +38,16 @@ function writeDb(data: LocalDbSchema) {
   }
 }
 
+let fallbackModeEnabled = !process.env.MONGODB_URI;
+
 export const dbFallback = {
-  isFallback: !process.env.MONGODB_URI,
+  get isFallback() {
+    return fallbackModeEnabled;
+  },
+
+  setFallbackMode(enabled: boolean) {
+    fallbackModeEnabled = enabled;
+  },
 
   async findUserByEmail(email: string) {
     const db = readDb();

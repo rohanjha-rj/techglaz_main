@@ -1,5 +1,17 @@
 {
-  "users": [],
+  "users": [
+    {
+      "_id": "ex3lzfe",
+      "id": "ex3lzfe",
+      "fullName": "Test User",
+      "email": "testuser@example.com",
+      "phone": "9876543210",
+      "password": "$2b$12$XU.XWkGLuDcWPsYZxzGddO40KYYKM18qq.AcIoEjJ21D0mxc/xjES",
+      "role": "student",
+      "createdAt": "2026-07-15T12:32:53.181Z",
+      "updatedAt": "2026-07-15T12:32:53.181Z"
+    }
+  ],
   "applications": [
     {
       "_id": "kwfc9aq",

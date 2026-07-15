@@ -41,10 +41,10 @@ export async function POST(request: Request) {
     const { fullName, email, phone, password, role } = result.data;
 
     let existingUser = null;
-    if (dbFallback.isFallback) {
+    const db = await dbConnect();
+    if (!db || dbFallback.isFallback) {
       existingUser = await dbFallback.findUserByEmail(email);
     } else {
-      await dbConnect();
       existingUser = await User.findOne({ email: email.toLowerCase() });
     }
 
@@ -60,7 +60,7 @@ export async function POST(request: Request) {
 
     // Create user
     let user: any = null;
-    if (dbFallback.isFallback) {
+    if (!db || dbFallback.isFallback) {
       user = await dbFallback.createUser({
         fullName,
         email: email.toLowerCase(),

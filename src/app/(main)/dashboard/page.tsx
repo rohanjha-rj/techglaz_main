@@ -32,13 +32,17 @@ export default async function DashboardPage() {
     if (dbFallback.isFallback) {
       applications = await dbFallback.findApplications(session.user.id || "", session.user.email || "");
     } else {
-      await dbConnect();
-      applications = await Application.find({
-        $or: [
-          { userId: session.user.id },
-          { email: session.user.email?.toLowerCase() }
-        ]
-      }).sort({ createdAt: -1 });
+      const db = await dbConnect();
+      if (!db) {
+        applications = await dbFallback.findApplications(session.user.id || "", session.user.email || "");
+      } else {
+        applications = await Application.find({
+          $or: [
+            { userId: session.user.id },
+            { email: session.user.email?.toLowerCase() }
+          ]
+        }).sort({ createdAt: -1 });
+      }
     }
   } catch (error) {
     console.error("Dashboard DB fetch error:", error);

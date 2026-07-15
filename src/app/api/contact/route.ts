@@ -33,7 +33,8 @@ export async function POST(req: Request) {
     const { name, email, phone, subject, message } = parsed.data;
 
     let contact = null;
-    if (dbFallback.isFallback) {
+    const db = await dbConnect();
+    if (!db || dbFallback.isFallback) {
       contact = await dbFallback.createContact({
         name,
         email: email.toLowerCase(),
@@ -42,10 +43,7 @@ export async function POST(req: Request) {
         message,
       });
     } else {
-      // 2. Connect to Database
-      await dbConnect();
-
-      // 3. Create document in MongoDB
+      // Create document in MongoDB
       contact = await ContactSubmission.create({
         name,
         email: email.toLowerCase(),

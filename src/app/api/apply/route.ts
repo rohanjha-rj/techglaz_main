@@ -67,7 +67,8 @@ export async function POST(req: Request) {
     const referenceNumber = generateRefNumber();
 
     let application = null;
-    if (dbFallback.isFallback) {
+    const db = await dbConnect();
+    if (!db || dbFallback.isFallback) {
       application = await dbFallback.createApplication({
         userId: userId || undefined,
         fullName,
@@ -84,9 +85,6 @@ export async function POST(req: Request) {
         referenceNumber,
       });
     } else {
-      // Connect to Database
-      await dbConnect();
-
       // Create application document in MongoDB
       application = await Application.create({
         userId: userId || undefined,

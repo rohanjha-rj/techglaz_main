@@ -5,6 +5,7 @@
 // on every serverless function invocation (important for Vercel)
 
 import mongoose from "mongoose";
+import { dbFallback } from "./dbFallback";
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
@@ -37,8 +38,9 @@ if (!global.mongooseCache) {
 async function dbConnect(): Promise<typeof mongoose | null> {
   if (!MONGODB_URI) {
     console.warn(
-      "MONGODB_URI environment variable is not defined inside .env.local. Falling back to local JSON database."
+      "[DB] MONGODB_URI is not defined. Using local JSON fallback."
     );
+    dbFallback.setFallbackMode(true);
     return null;
   }
 
@@ -49,18 +51,25 @@ async function dbConnect(): Promise<typeof mongoose | null> {
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
+      serverSelectionTimeoutMS: 5000, // 5s timeout to avoid long hangs
+      connectTimeoutMS: 5000,
     };
 
     cached.promise = mongoose.connect(MONGODB_URI!, opts).then((mongooseInstance) => {
+      console.log("[DB] Successfully connected to MongoDB Atlas.");
       return mongooseInstance;
     });
   }
 
   try {
     cached.conn = await cached.promise;
-  } catch (e) {
+  } catch (e: any) {
     cached.promise = null;
-    throw e;
+    console.error(
+      `[DB] MongoDB connection failed: ${e.message || e}. Falling back to local JSON database.`
+    );
+    dbFallback.setFallbackMode(true);
+    return null;
   }
 
   return cached.conn;

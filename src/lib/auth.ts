@@ -34,10 +34,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         let user: any = null;
 
-        if (dbFallback.isFallback) {
+        // Attempt MongoDB first; dbConnect will set fallback mode if it fails
+        const db = await dbConnect();
+        if (!db || dbFallback.isFallback) {
           user = await dbFallback.findUserByEmail(credentials.email as string);
         } else {
-          await dbConnect();
           user = await User.findOne({
             email: (credentials.email as string).toLowerCase(),
           }).select("+password");
@@ -79,7 +80,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       // For OAuth sign-ins, create/update user in DB
       if (account?.provider === "google" && user) {
-        if (dbFallback.isFallback) {
+        const db = await dbConnect();
+        if (!db || dbFallback.isFallback) {
           const existingUser = await dbFallback.findUserByEmail(user.email || "");
           if (!existingUser) {
             const newUser = await dbFallback.createUser({
@@ -100,7 +102,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             }
           }
         } else {
-          await dbConnect();
           const existingUser = await User.findOne({ email: user.email });
 
           if (!existingUser) {
