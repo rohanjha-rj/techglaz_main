@@ -73,7 +73,7 @@ export default function MobileMenu({ isOpen, onClose, session }: MobileMenuProps
         </div>
 
         <div className="mt-8 space-y-3.5 border-t border-slate-850 pt-5">
-          {session ? (
+          {session?.user ? (
             <>
               <div className="flex items-center gap-3 px-1">
                 {session.user?.image ? (

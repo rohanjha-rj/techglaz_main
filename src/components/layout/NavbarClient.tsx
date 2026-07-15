@@ -201,7 +201,7 @@ export default function NavbarClient({ session }: NavbarClientProps) {
 
 
 
-              {session ? (
+              {session?.user ? (
                 <div className="relative">
                   <button
                     onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
