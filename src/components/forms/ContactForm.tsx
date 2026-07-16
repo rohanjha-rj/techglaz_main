@@ -45,16 +45,19 @@ export default function ContactForm() {
     setSubmitSuccess(false);
 
     try {
-      const response = await fetch("/api/contact", {
+      const response = await fetch("https://formspree.io/f/xlgqgaee", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
         body: JSON.stringify(data),
       });
 
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.message || "Failed to send message");
+        throw new Error(result.error || "Failed to send message");
       }
 
       setSubmitSuccess(true);

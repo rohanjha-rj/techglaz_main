@@ -12,9 +12,9 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
-  const address = process.env.NEXT_PUBLIC_INSTITUTE_ADDRESS || "Techglaz Labs, Tech Park, City Center, Pune, Maharashtra, India";
-  const email = "info@techglazlabs.com";
-  const phone = "+91 99999 99999";
+  const address = process.env.NEXT_PUBLIC_INSTITUTE_ADDRESS || "ANK Villa, Near Manorama ITI, Sabour, Bhagalpur, Bihar";
+  const email = "manager@techglaz.com";
+  const phone = "+91 91378 66957";
 
   const breadcrumbs = [{ label: "Contact Us" }];
 
@@ -45,7 +45,9 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <p className="font-bold text-slate-900 dark:text-slate-350">Our Location</p>
-                      <p className="mt-1 leading-relaxed">{address}</p>
+                      <a href="https://maps.app.goo.gl/uTjyMKr1nnwbb4sY6" target="_blank" rel="noopener noreferrer" className="hover:text-brand-blue-steel transition-colors block mt-1 leading-relaxed">
+                        {address}
+                      </a>
                     </div>
                   </li>
 

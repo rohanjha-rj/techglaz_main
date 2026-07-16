@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
+import type { Map } from "leaflet";
 // Import leaflet styles
 import "leaflet/dist/leaflet.css";
 
 export default function LeafletMap() {
   const mapContainerRef = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<any>(null);
+  const mapRef = useRef<Map | null>(null);
 
   useEffect(() => {
     const container = mapContainerRef.current;
@@ -14,9 +15,9 @@ export default function LeafletMap() {
 
     // Load leaflet dynamically to prevent SSR issue
     import("leaflet").then((L) => {
-      // Default coordinates (e.g. Pune, India)
-      const lat = parseFloat(process.env.NEXT_PUBLIC_INSTITUTE_LAT || "18.5204");
-      const lng = parseFloat(process.env.NEXT_PUBLIC_INSTITUTE_LNG || "73.8567");
+      // Default coordinates (ANK Villa, Sabour, Bhagalpur, Bihar)
+      const lat = parseFloat(process.env.NEXT_PUBLIC_INSTITUTE_LAT || "25.2505593");
+      const lng = parseFloat(process.env.NEXT_PUBLIC_INSTITUTE_LNG || "87.0370938");
       const zoom = 14;
 
       // Clean up previous map instance if any
@@ -35,7 +36,7 @@ export default function LeafletMap() {
 
       // Add marker
       const marker = L.marker([lat, lng]).addTo(map);
-      marker.bindPopup("<b>Techglaz Labs Private Limited</b><br>Engineering Excellence Center").openPopup();
+      marker.bindPopup("<b>Techglaz</b><br>ANK Villa, Sabour, Bhagalpur, Bihar").openPopup();
     });
 
     return () => {

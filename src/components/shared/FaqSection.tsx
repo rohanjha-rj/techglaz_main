@@ -28,7 +28,7 @@ const FAQS: FAQItem[] = [
   },
   {
     question: "How can my institution sign an MoU with Techglaz Labs?",
-    answer: "Colleges and universities looking to enrich their curricula can initiate MoUs for faculty development programs or student workshop tracks. Please contact us via info@techglazlabs.com or fill out the contact form.",
+    answer: "Colleges and universities looking to enrich their curricula can initiate MoUs for faculty development programs or student workshop tracks. Please contact us via manager@techglaz.com or fill out the contact form.",
   },
 ];
 

@@ -70,15 +70,15 @@ export default function Footer() {
                 <ul className="space-y-4 text-sm font-semibold text-slate-400">
                   <li className="flex items-start gap-3">
                     <MapPin className="mt-0.5 h-4.5 w-4.5 shrink-0 text-brand-blue-steel" />
-                    <span className="leading-relaxed">{process.env.NEXT_PUBLIC_INSTITUTE_ADDRESS || "Techglaz Labs, Tech Park, City Center, Pune, India"}</span>
+                    <a href="https://maps.app.goo.gl/uTjyMKr1nnwbb4sY6" target="_blank" rel="noopener noreferrer" className="leading-relaxed hover:text-[#fbbf24] transition-colors">{process.env.NEXT_PUBLIC_INSTITUTE_ADDRESS || "ANK Villa, Near Manorama ITI, Sabour, Bhagalpur, Bihar"}</a>
                   </li>
                   <li className="flex items-center gap-3">
                     <Phone className="h-4.5 w-4.5 shrink-0 text-brand-blue-steel" />
-                    <a href="tel:+919999999999" className="transition-colors hover:text-[#fbbf24]">+91 99999 99999</a>
+                    <a href="tel:+919137866957" className="transition-colors hover:text-[#fbbf24]">+91 91378 66957</a>
                   </li>
                   <li className="flex items-center gap-3">
                     <Mail className="h-4.5 w-4.5 shrink-0 text-brand-blue-steel" />
-                    <a href="mailto:info@techglazlabs.com" className="break-all transition-colors hover:text-[#fbbf24]">info@techglazlabs.com</a>
+                    <a href="mailto:manager@techglaz.com" className="break-all transition-colors hover:text-[#fbbf24]">manager@techglaz.com</a>
                   </li>
                 </ul>
               </div>

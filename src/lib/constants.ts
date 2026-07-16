@@ -196,12 +196,12 @@ export type InstitutionTag = (typeof INSTITUTION_TAGS)[number];
 export const RND_AUDIENCES = ["Students", "Teachers", "Industry"] as const;
 export type RnDAudience = (typeof RND_AUDIENCES)[number];
 
-// Social Media Links (placeholders — replace with real URLs)
+// Social Media Links
 export const SOCIAL_LINKS = {
-  linkedin: "https://linkedin.com/company/techglazlabs",
-  instagram: "https://instagram.com/techglazlabs",
+  linkedin: "https://www.linkedin.com/company/techglaz/",
+  instagram: "https://www.instagram.com/techglaz/",
   youtube: "https://youtube.com/@techglazlabs",
-  whatsapp: `https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919999999999"}`,
+  whatsapp: `https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "9137866957"}`,
 };
 
 // Navigation Links
