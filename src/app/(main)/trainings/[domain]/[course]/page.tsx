@@ -49,8 +49,8 @@ const DETAILED_MOCKS: Record<string, Partial<Course>> = {
     ],
     trainer: {
       _id: "t-1",
-      name: "Dr. J. P. Haran",
-      slug: { _type: "slug", current: "dr-haran" },
+      name: "Nishant Kumar",
+      slug: { _type: "slug", current: "nishant-kumar" },
       specialization: ["Full-Stack Dev", "Cybersecurity"],
       institutionTag: "Industry",
     },

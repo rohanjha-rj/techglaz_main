@@ -12,8 +12,8 @@ import { User, Shield, GraduationCap, Building2, Tag, Layers, ArrowRight } from 
 const MOCK_TRAINERS: Trainer[] = [
   {
     _id: "trainer-1",
-    name: "Dr. J. P. Haran",
-    slug: { _type: "slug", current: "dr-j-p-haran" },
+    name: "Nishant Kumar",
+    slug: { _type: "slug", current: "nishant-kumar" },
     specialization: ["Full-Stack Web Dev", "Cybersecurity", "Agentic AI"],
     institutionTag: "Industry",
   },

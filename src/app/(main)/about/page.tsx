@@ -9,8 +9,8 @@ import { FounderMessage } from "@/types";
 // Mock data fallback if Sanity is empty
 const MOCK_FOUNDER_MESSAGE: FounderMessage = {
   _id: "founder-mock",
-  founderName: "Dr. J. P. Haran",
-  designation: "Founder & Managing Director",
+  founderName: "Nishant Kumar",
+  designation: "Founder & CEO",
   messageBody: "Welcome to Techglaz Labs Private Limited. Our mission is to bridge the widening gap between traditional academic curricula and the rapid evolutions in the global engineering industry. By offering structured, high-end professional development, we empower both student engineers and teaching faculty to acquire state-of-the-art industry competence. Collaborations with prestigious research organizations, IIT hubs, Cyber Cells, and CDAC mentors ensure our curriculum matches real-world standards. We invite you to explore our advanced engineering training tracks and join us in shaping the future of industrial engineering.",
 };
 

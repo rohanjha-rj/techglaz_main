@@ -7,8 +7,8 @@ import { User, Award, BookOpen, ExternalLink, Calendar, ChevronRight } from "luc
 import Link from "next/link";
 
 const DETAILED_TRAINERS: Record<string, Partial<Trainer>> = {
-  "dr-j-p-haran": {
-    bio: "Dr. J. P. Haran is the Founder & Managing Director of Techglaz Labs Private Limited. He holds a Ph.D. in Computer Science with a research specialization in Security Architectures. Over the last 15 years, he has consulted for global semiconductor companies, automotive systems providers, and state intelligence cells on full-stack code validation, secure application developments, and AI automation models.",
+  "nishant-kumar": {
+    bio: "Nishant Kumar is the Founder & CEO of Techglaz Labs Private Limited. He holds a Ph.D. in Computer Science with a research specialization in Security Architectures. Over the last 15 years, he has consulted for global semiconductor companies, automotive systems providers, and state intelligence cells on full-stack code validation, secure application developments, and AI automation models.",
     courses: [
       { _id: "cse-1", title: "Full-Stack Web Development", slug: { _type: "slug", current: "full-stack-web-development" }, branch: "CSE_IT", domain: "Web Engineering", duration: "12 Weeks" },
       { _id: "cse-3", title: "Cybersecurity & Digital Forensics", slug: { _type: "slug", current: "cybersecurity" }, branch: "CSE_IT", domain: "Security Engineering", duration: "14 Weeks" },
@@ -52,7 +52,7 @@ export default async function TrainerDetailPage({ params }: PageProps) {
       _id: `mock-${slug}`,
       name: formattedName,
       slug: { _type: "slug", current: slug },
-      institutionTag: slug.includes("j-p-haran") ? "Industry" : "IIT",
+      institutionTag: (slug.includes("nishant-kumar") || slug.includes("j-p-haran")) ? "Industry" : "IIT",
       specialization: ["Engineering Science", "Corporate Mentorship"],
       bio: specificMock.bio || `${formattedName} is a senior training consultant at Techglaz Labs. They design course syllabus modules, mentor candidate projects, and manage collaborative workshops.`,
       courses: specificMock.courses || [],
