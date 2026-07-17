@@ -7,6 +7,8 @@ import { allTrainersQuery } from "../../../../sanity/lib/queries";
 import { Trainer } from "@/types";
 import { INSTITUTION_TAGS, InstitutionTag } from "@/lib/constants";
 import { User, Shield, GraduationCap, Building2, Tag, Layers, ArrowRight } from "lucide-react";
+import Image from "next/image";
+import { urlForImage } from "../../../../sanity/lib/image";
 
 // Mock trainers fallback list
 const MOCK_TRAINERS: Trainer[] = [
@@ -168,9 +170,27 @@ export default async function TrainersPage({ searchParams }: PageProps) {
                       </span>
                     </div>
 
-                    {/* Placeholder photo */}
-                    <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-brand-blue-light/50 to-indigo-100/30 flex items-center justify-center mb-5 border border-brand-blue-deep/5">
-                      <User className="w-10 h-10 text-slate-400 group-hover:scale-105 transition-transform" />
+                    {/* Photo */}
+                    <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-brand-blue-light/50 to-indigo-100/30 flex items-center justify-center mb-5 border border-brand-blue-deep/5 overflow-hidden relative">
+                      {trainer.photo ? (
+                        <Image
+                          src={urlForImage(trainer.photo).url()}
+                          alt={trainer.name}
+                          fill
+                          className="object-cover"
+                          sizes="80px"
+                        />
+                      ) : trainer.slug.current === "nishant-kumar" ? (
+                        <Image
+                          src="/images/nishant-kumar.jpg"
+                          alt={trainer.name}
+                          fill
+                          className="object-cover"
+                          sizes="80px"
+                        />
+                      ) : (
+                        <User className="w-10 h-10 text-slate-400 group-hover:scale-105 transition-transform" />
+                      )}
                     </div>
 
                     {/* Name */}

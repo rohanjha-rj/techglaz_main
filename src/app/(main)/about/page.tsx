@@ -5,6 +5,8 @@ import { User, Award, Shield, Target, Compass, Milestone } from "lucide-react";
 import { client } from "../../../../sanity/lib/client";
 import { founderMessageQuery } from "../../../../sanity/lib/queries";
 import { FounderMessage } from "@/types";
+import Image from "next/image";
+import { urlForImage } from "../../../../sanity/lib/image";
 
 // Mock data fallback if Sanity is empty
 const MOCK_FOUNDER_MESSAGE: FounderMessage = {
@@ -70,6 +72,8 @@ export default async function AboutPage() {
   }
 
   const breadcrumbs = [{ label: "About Us" }];
+
+  const imageUrl = founderMsg.photo ? urlForImage(founderMsg.photo).url() : "/images/nishant-kumar.jpg";
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -143,8 +147,18 @@ export default async function AboutPage() {
               
               {/* Photo */}
               <div className="md:col-span-1 flex flex-col items-center">
-                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-gradient-to-tr from-brand-blue-deep to-brand-blue-steel flex items-center justify-center shadow-md">
-                  <User className="w-12 h-12 text-white" />
+                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-gradient-to-tr from-brand-blue-deep to-brand-blue-steel flex items-center justify-center shadow-md overflow-hidden relative">
+                  {imageUrl ? (
+                    <Image
+                      src={imageUrl}
+                      alt={founderMsg.founderName}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 640px) 96px, 112px"
+                    />
+                  ) : (
+                    <User className="w-12 h-12 text-white" />
+                  )}
                 </div>
                 <h4 className="font-bold text-slate-900 dark:text-white mt-4 text-center">
                   {founderMsg.founderName}

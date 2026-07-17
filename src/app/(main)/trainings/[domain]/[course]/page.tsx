@@ -11,6 +11,8 @@ import { BRANCHES, BranchKey, BRANCH_SLUGS, BRANCH_KEYS_TO_SLUGS } from "@/lib/c
 import { Calendar, Clock, GraduationCap, CheckCircle, ArrowRight, User } from "lucide-react";
 import { DETAILED_COURSES_DATA } from "@/lib/detailedCoursesData";
 import CourseDetailClient from "@/components/courses/CourseDetailClient";
+import Image from "next/image";
+import { urlForImage } from "../../../../../../sanity/lib/image";
 
 // In-memory detailed course mocks for direct matching
 const DETAILED_MOCKS: Record<string, Partial<Course>> = {
@@ -278,8 +280,26 @@ export default async function CourseDetailPage({ params }: PageProps) {
                     Course Instructor
                   </h4>
                   <div className="flex items-center gap-3.5">
-                    <div className="w-12 h-12 rounded-xl bg-brand-blue-light dark:bg-slate-850 text-brand-blue-deep flex items-center justify-center shrink-0">
-                      <User className="w-6 h-6" />
+                    <div className="w-12 h-12 rounded-xl bg-brand-blue-light dark:bg-slate-850 text-brand-blue-deep flex items-center justify-center shrink-0 overflow-hidden relative">
+                      {course.trainer.photo ? (
+                        <Image
+                          src={urlForImage(course.trainer.photo).url()}
+                          alt={course.trainer.name}
+                          fill
+                          className="object-cover"
+                          sizes="48px"
+                        />
+                      ) : course.trainer.slug.current === "nishant-kumar" ? (
+                        <Image
+                          src="/images/nishant-kumar.jpg"
+                          alt={course.trainer.name}
+                          fill
+                          className="object-cover"
+                          sizes="48px"
+                        />
+                      ) : (
+                        <User className="w-6 h-6" />
+                      )}
                     </div>
                     <div>
                       <h5 className="font-extrabold text-slate-850 dark:text-white">

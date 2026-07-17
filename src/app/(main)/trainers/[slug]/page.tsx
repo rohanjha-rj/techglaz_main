@@ -5,6 +5,8 @@ import { trainerBySlugQuery } from "../../../../../sanity/lib/queries";
 import { Trainer } from "@/types";
 import { User, Award, BookOpen, ExternalLink, Calendar, ChevronRight } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
+import { urlForImage } from "../../../../../sanity/lib/image";
 
 const DETAILED_TRAINERS: Record<string, Partial<Trainer>> = {
   "nishant-kumar": {
@@ -79,8 +81,26 @@ export default async function TrainerDetailPage({ params }: PageProps) {
             
             {/* Left Column: Photo & Details */}
             <div className="lg:col-span-1 space-y-6 text-center lg:text-left bg-slate-50 dark:bg-slate-850/30 p-8 rounded-3xl border border-slate-100 dark:border-slate-800/40">
-              <div className="w-32 h-32 rounded-3xl bg-gradient-to-tr from-brand-blue-deep to-brand-blue-steel flex items-center justify-center mx-auto lg:mx-0 shadow-md">
-                <User className="w-16 h-16 text-white" />
+              <div className="w-32 h-32 rounded-3xl bg-gradient-to-tr from-brand-blue-deep to-brand-blue-steel flex items-center justify-center mx-auto lg:mx-0 shadow-md overflow-hidden relative">
+                {trainer.photo ? (
+                  <Image
+                    src={urlForImage(trainer.photo).url()}
+                    alt={trainer.name}
+                    fill
+                    className="object-cover"
+                    sizes="128px"
+                  />
+                ) : trainer.slug.current === "nishant-kumar" ? (
+                  <Image
+                    src="/images/nishant-kumar.jpg"
+                    alt={trainer.name}
+                    fill
+                    className="object-cover"
+                    sizes="128px"
+                  />
+                ) : (
+                  <User className="w-16 h-16 text-white" />
+                )}
               </div>
               
               <div className="space-y-1">
