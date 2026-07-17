@@ -9,6 +9,8 @@ import { courseBySlugQuery } from "../../../../../../sanity/lib/queries";
 import { Course } from "@/types";
 import { BRANCHES, BranchKey, BRANCH_SLUGS, BRANCH_KEYS_TO_SLUGS } from "@/lib/constants";
 import { Calendar, Clock, GraduationCap, CheckCircle, ArrowRight, User } from "lucide-react";
+import { DETAILED_COURSES_DATA } from "@/lib/detailedCoursesData";
+import CourseDetailClient from "@/components/courses/CourseDetailClient";
 
 // In-memory detailed course mocks for direct matching
 const DETAILED_MOCKS: Record<string, Partial<Course>> = {
@@ -171,6 +173,37 @@ export default async function CourseDetailPage({ params }: PageProps) {
         institutionTag: "Industry",
       },
     };
+  }
+
+  const detailedCourse = DETAILED_COURSES_DATA[courseSlug];
+
+  if (detailedCourse) {
+    if (course._id.startsWith("mock-")) {
+      course.title = detailedCourse.title;
+      course.branch = detailedCourse.branch;
+      course.domain = detailedCourse.domain;
+    }
+    const branchLabel = BRANCHES[course.branch] || course.branch;
+    const branchSlug = BRANCH_KEYS_TO_SLUGS[course.branch] || course.branch.toLowerCase().replace(/_/g, "-");
+    const breadcrumbs = [
+      { label: "Trainings", href: "/trainings" },
+      { label: branchLabel, href: `/trainings/${branchSlug}` },
+      { label: course.title },
+    ];
+    return (
+      <div className="flex flex-col min-h-screen">
+        <PageHero
+          title={course.title}
+          breadcrumbs={breadcrumbs}
+          subtitle={`${branchLabel} — Specialized Engineering Curriculum`}
+        />
+        <CourseDetailClient 
+          course={course} 
+          detailedData={detailedCourse} 
+          branchLabel={branchLabel} 
+        />
+      </div>
+    );
   }
 
   const branchLabel = BRANCHES[course.branch] || course.branch;

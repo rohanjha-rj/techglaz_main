@@ -135,16 +135,54 @@ export type TrainingTrack = (typeof TRAINING_TRACKS)[number];
 // Course-to-Branch Mapping
 export const COURSES_BY_BRANCH: Record<BranchKey, string[]> = {
   CSE_IT: ["Full-Stack Web Development", "AI/ML Engineering", "Cybersecurity & Digital Forensics", "Agentic AI Architectures"],
-  CIVIL: ["AutoCAD Architectural Drafting", "STAAD.Pro Structural Analysis", "Revit BIM for Civil Engineers", "Primavera P6 Project Management"],
-  ME: ["CATIA V5 Mechanical Design", "SolidWorks CAD & Simulation", "ANSYS Finite Element Analysis", "CNC Programming & Manufacturing"],
-  EE: ["VLSI Design & Verification", "Power System Analysis with ETAP", "PLC & SCADA Automation", "Solar PV System Design"],
+  CIVIL: [
+    "Building Information Modeling (BIM) Lifecycle Coordination",
+    "Computational Structural Engineering & Finite Element Analysis (FEA)",
+    "Infrastructure Project Control & Cost Engineering",
+    "Geo-Spatial Infrastructure Engineering & Smart City Planning"
+  ],
+  ME: [
+    "Advanced Automotive Powertrain & Electric Vehicle (EV) Drivetrain Simulation",
+    "Mechanical Product Design, Geometric Dimensioning & Tolerancing (GD&T) & DFM",
+    "Computational Fluid Dynamics (CFD) & Thermal Systems Simulation",
+    "Structural Integrity, FEA & Durability Analyst"
+  ],
+  EE: [
+    "Smart Grid Infrastructure & Power Systems Analysis",
+    "Industrial Automation, Programmable Logic Controllers (PLC) & SCADA Systems"
+  ],
   ECE: ["IoT & Embedded Systems", "ASIC/FPGA Digital Design", "PCB Design with Altium Designer", "5G RF & Wireless Systems"],
   CSE: ["Data Structures & Algorithms Mastery", "Cloud Architecture with AWS", "DevOps & CI/CD Pipeline Engineering", "Mobile App Development (Flutter)"],
-  IT: ["Database Administration (MySQL & PostgreSQL)", "Software Testing & QA Automation", "IT Service Management (ITIL v4)", "Enterprise Networking (CCNA Track)"],
-  CHEM_LEATHER: ["Tanning Chemistry & Process Control", "Effluent Treatment Plant Design", "Footwear CAD & Manufacturing", "Leather Quality Testing & Standards"],
-  BIOMED_ROBOTIC: ["Medical Device Design & Prototyping", "Robotic Surgery Systems", "Biomedical Signal Processing", "3D Bioprinting & Tissue Engineering"],
-  EEE: ["Electric Vehicle Drivetrain Design", "MATLAB/Simulink for Power Electronics", "Industrial Motor Drives & Control", "Smart Grid & Microgrid Systems"],
-  CIVIL_COMP: ["GIS & Remote Sensing for Civil Engineers", "Python for Civil Engineering Computations", "BIM Coordination with Navisworks", "Smart Infrastructure & IoT Monitoring"],
+  IT: [
+    "High-Performance Enterprise Backend Engineering",
+    "Scalable Cloud Architecture & Declarative Infrastructure",
+    "Large-Scale Streaming Data Pipeline Infrastructure",
+    "Cloud-Native Container Orchestration & Edge Defense Systems"
+  ],
+  CHEM_LEATHER: [
+    "Advanced Beamhouse Chemistry & Macromolecular Processing",
+    "Sustainable Mineral-Free Tanning Matrix Engineering",
+    "Performance Dyeing, Fatliquoring & Surface Finishing Kinetics",
+    "Greenfield Leather Manufacturing Plant & Effluent Treatment Synthesis"
+  ],
+  BIOMED_ROBOTIC: [
+    "Biosignal Acquisition & High-Precision Analog Front-Ends",
+    "Robotic Kinematics, Dynamics & Spatial Trajectory Tracking",
+    "Implantable Medical Device Development & Biocompatible FEA",
+    "Autonomous Surgical Robotics & Intelligent Computer Vision Infrastructure"
+  ],
+  EEE: [
+    "Power System Transient Stability & Grid Physics Optimization",
+    "High-Efficiency Industrial Power Converters & Thermal Design",
+    "Closed-Loop Electric Drive Tuning & Field Oriented Vector Control",
+    "Substation Automation, Protective Relaying & Smart Microgrid Systems"
+  ],
+  CIVIL_COMP: [
+    "Finite Element Formulations & Computational Matrix Structural Analysis",
+    "Applied Geotechnical Modeling & Soil-Structure Interaction",
+    "Geometric Corridor Optimization & Automated Pavement Sizing",
+    "5D BIM Automation, Virtual Coordination & Urban Digital Twins"
+  ],
   CSE_AI: ["Deep Learning & Neural Networks", "Computer Vision & Image Processing", "Natural Language Processing", "Reinforcement Learning for Robotics"],
   FIRE_SAFETY: ["Fire Prevention & Risk Assessment", "Fire Alarm & Detection System Design", "Industrial Safety & HAZOP Analysis", "Fire Sprinkler & Suppression Systems"],
   CSE_CYBER: ["Ethical Hacking & Penetration Testing", "SOC Analyst & Threat Intelligence", "Network Security & Firewall Administration", "Digital Forensics & Malware Analysis"],
