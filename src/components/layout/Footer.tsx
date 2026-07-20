@@ -13,8 +13,10 @@ export default function Footer() {
         <div className="rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-[0_24px_60px_-30px_rgba(2,8,23,0.7)] backdrop-blur-xl sm:p-8 lg:p-10">
           <div className="grid gap-12 lg:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr] lg:gap-8">
             <div className="space-y-6">
-              <Link href="/" className="block max-w-[220px] origin-left transition-transform hover:scale-[1.02]">
-                <Image src="/logo_name.png" alt="Techglaz Labs - Let's Create Your own Future" width={1090} height={214} className="object-contain brightness-0 invert" style={{ width: "auto", height: "auto" }} />
+              <Link href="/" className="block origin-left transition-transform hover:scale-[1.02]">
+                <span className="text-3xl sm:text-4xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white to-amber-400 uppercase">
+                  Techglaz Labs
+                </span>
               </Link>
               <p className="max-w-md text-sm leading-relaxed font-medium text-slate-400">
                 Empowering students and faculty through high-end professional development, bridging academic curricula and state-of-the-art industry engineering domains.

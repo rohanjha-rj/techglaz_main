@@ -125,7 +125,7 @@ export default async function CourseDetailPage({ params }: PageProps) {
       slug: courseSlug,
     });
   } catch (error) {
-    console.warn("Failed to fetch course details from Sanity, checking mocks:", error);
+    console.warn(`Failed to fetch course details from Sanity for ${courseSlug}. Using mock data fallback.`);
   }
 
   // Fallback generation logic if Sanity record doesn't exist

@@ -18,7 +18,7 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="relative min-h-screen flex flex-col justify-center items-center overflow-hidden pt-36 pb-24 bg-[#030712]">
+    <section className="relative min-h-screen flex flex-col justify-start sm:justify-center items-center overflow-hidden pt-[5px] sm:pt-36 pb-24 bg-[#030712]">
       {/* ===== FULL-SCREEN 3D GRADIENT MERGED IMAGE BACKGROUND ===== */}
       <div className="absolute inset-0 z-0 select-none pointer-events-none">
         <Image
@@ -104,12 +104,12 @@ export default function HeroSection() {
           </motion.div>
         </motion.div>
 
-        {/* Floating UI cards over the 3D gradient background */}
+        {/* Floating UI cards over the 3D gradient background - Hidden on mobile */}
         <motion.div
           initial={{ opacity: 0, y: 100 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, ease: "easeOut", delay: 0.3 }}
-          className="relative w-full max-w-xl sm:max-w-2xl aspect-[1.1] mx-auto mt-16 sm:mt-24 select-none pointer-events-none flex justify-center items-end"
+          className="relative w-full max-w-xl sm:max-w-2xl aspect-[1.1] mx-auto mt-16 sm:mt-24 select-none pointer-events-none hidden sm:flex justify-center items-end"
         >
           {/* Glow behind cards */}
           <div className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-blue-500/10 rounded-full blur-[90px] -z-10 animate-pulse-slow" />
@@ -150,6 +150,24 @@ export default function HeroSection() {
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white"><Rocket className="h-5 w-5" /></div>
             </div>
           </motion.div>
+
+          {/* Marquee showing on both mobile and desktop */}
+          <div className="w-full mt-16 overflow-hidden relative shadow-2xl shadow-blue-500/10 -mx-4 w-[100vw]">
+            <motion.div 
+              className="flex w-max whitespace-nowrap bg-brand-accent text-slate-950 font-black uppercase tracking-widest text-[12px] items-center border-y-[3px] border-black/80 py-3 shadow-[0_0_15px_rgba(245,184,79,0.3)]"
+              animate={{ x: ["0%", "-50%"] }}
+              transition={{ ease: "linear", duration: 9, repeat: Infinity }}
+            >
+              {[...Array(6)].map((_, i) => (
+                <React.Fragment key={i}>
+                  <span className="mx-3 text-[14px] drop-shadow-sm">🚀</span> 
+                  <span className="drop-shadow-sm">HACKATHON COMING SOON</span> 
+                  <span className="mx-3 text-[14px] drop-shadow-sm">🔥</span> 
+                  <span className="drop-shadow-sm">TECHGLAZ LABS</span>
+                </React.Fragment>
+              ))}
+            </motion.div>
+          </div>
         </div>
       </section>
     );

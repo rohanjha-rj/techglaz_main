@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from "react";
 import { Search, ChevronRight, BookOpen, Layers } from "lucide-react";
 import Link from "next/link";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { Course } from "@/types";
 import CourseCard from "./CourseCard";
 import { BranchKey } from "@/lib/constants";
@@ -31,13 +32,26 @@ export default function BranchFilterGrid({
     return activeBranchKeys[0] || "";
   }, [activeBranchKeys]);
 
-  const [selectedBranch, setSelectedBranch] = useState<string>(defaultBranch);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const urlBranch = searchParams.get("branch");
+
+  const initialBranch = (urlBranch && activeBranchKeys.includes(urlBranch)) ? urlBranch : defaultBranch;
+  const [selectedBranch, setSelectedBranch] = useState<string>(initialBranch);
   const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSelectBranch = (key: string) => {
+    setSelectedBranch(key);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("branch", key);
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  };
 
   // Sync selected branch if the list of active branches changes and current selection is no longer active
   React.useEffect(() => {
     if (activeBranchKeys.length > 0 && !activeBranchKeys.includes(selectedBranch)) {
-      setSelectedBranch(defaultBranch);
+      handleSelectBranch(defaultBranch);
     }
   }, [activeBranchKeys, selectedBranch, defaultBranch]);
 
@@ -103,7 +117,7 @@ export default function BranchFilterGrid({
               return (
                 <button
                   key={key}
-                  onClick={() => setSelectedBranch(key)}
+                  onClick={() => handleSelectBranch(key)}
                   className={`px-4 py-3 rounded-2xl text-left text-xs font-bold transition-all border flex flex-col justify-between gap-2 cursor-pointer ${
                     isSelected
                       ? "bg-brand-blue-deep text-white border-brand-blue-deep shadow-md scale-[1.02]"

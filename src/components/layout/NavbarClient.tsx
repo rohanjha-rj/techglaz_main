@@ -86,11 +86,11 @@ export default function NavbarClient({ session }: NavbarClientProps) {
             <Link href="/" className="flex shrink-0 items-center gap-3 group">
               <div className="flex h-10 w-10 items-center justify-center rounded-full transition-transform duration-300 group-hover:scale-105 overflow-hidden">
                 <Image
-                  src="/logo.png"
+                  src="/images/tz-logo.png"
                   alt="Techglaz Labs Logo"
                   width={187}
                   height={221}
-                  className="object-contain invert"
+                  className="object-contain"
                   style={{ width: "auto", height: "100%" }}
                 />
               </div>

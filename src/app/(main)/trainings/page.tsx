@@ -244,7 +244,7 @@ export default async function TrainingsPage({ searchParams }: PageProps) {
   try {
     rawCourses = await client.fetch<Course[]>(allCoursesQuery);
   } catch (error) {
-    console.warn("Failed to fetch courses, utilizing mocks:", error);
+    console.warn("Failed to fetch courses from Sanity. Utilizing local mock data fallback.");
   }
 
   if (!rawCourses || rawCourses.length === 0) {
