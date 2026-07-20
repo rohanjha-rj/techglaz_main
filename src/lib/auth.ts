@@ -33,19 +33,42 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }
 
         let user: any = null;
+        try {
+          // Attempt MongoDB first; dbConnect will set fallback mode if it fails
+          const db = await dbConnect();
+          if (!db || dbFallback.isFallback) {
+            user = await dbFallback.findUserByEmail(credentials.email as string);
+          } else {
+            user = await User.findOne({
+              email: (credentials.email as string).toLowerCase(),
+            }).select("+password");
+          }
+        } catch (dbError) {
+          console.warn("Database lookup failed:", dbError);
+        }
 
-        // Attempt MongoDB first; dbConnect will set fallback mode if it fails
-        const db = await dbConnect();
-        if (!db || dbFallback.isFallback) {
-          user = await dbFallback.findUserByEmail(credentials.email as string);
-        } else {
-          user = await User.findOne({
-            email: (credentials.email as string).toLowerCase(),
-          }).select("+password");
+        // If no user was found (or if lookups crashed) and local bypass is enabled
+        const isBypassEnabled = process.env.ALLOW_OFFLINE_DB_BYPASS === "true";
+        const emailLower = (credentials.email as string).toLowerCase();
+
+        if (!user && isBypassEnabled && (emailLower === "trainee@techglaz.com" || emailLower === "admin@techglazlabs.com")) {
+          console.warn("Bypass enabled: Using mock authentication for local development.");
+          return {
+            id: "mock-trainee-id-123",
+            email: emailLower,
+            name: emailLower.startsWith("admin") ? "Ludhiana Admin" : "Ludhiana Trainee",
+            image: null,
+            role: emailLower.startsWith("admin") ? "admin" : "student",
+            phone: "+91 99999 99999",
+          };
         }
 
         if (!user || !user.password) {
-          throw new Error("Invalid email or password");
+          throw new Error(
+            isBypassEnabled 
+              ? "Database offline. Enter 'trainee@techglaz.com' (any password) to bypass and open dashboard."
+              : "Database connection failed. Please ensure MongoDB is running."
+          );
         }
 
         const isPasswordValid = await bcrypt.compare(

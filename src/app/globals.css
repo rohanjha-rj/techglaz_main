@@ -240,3 +240,51 @@ body {
   color: #2e75b6;
 }
 
+.feature-icon-box {
+  @apply w-12 h-12 rounded-xl flex items-center justify-center bg-slate-800/50 text-brand-blue-steel shrink-0 shadow-inner;
+}
+
+/* ==========================================================================
+   Trainee Dashboard Futuristic Network SVG & Audio Waveform Keyframe Animations
+   ========================================================================== */
+
+@keyframes flow_paths_dash_612 {
+  to {
+    stroke-dashoffset: -200;
+  }
+}
+
+@keyframes barGrow {
+  0% { transform: scaleY(0.3); }
+  100% { transform: scaleY(1); }
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(46, 117, 182, 0.2);
+  border-radius: 2px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgba(46, 117, 182, 0.4);
+}
+
+/* Premium micro-animations for dashboard transitions */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.995) translateY(4px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(15px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
