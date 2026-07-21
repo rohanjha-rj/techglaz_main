@@ -29,9 +29,14 @@ import {
   BookMarked,
   Briefcase,
   Check,
-  Trash2
+  Trash2,
+  Settings
 } from "lucide-react";
 import Link from "next/link";
+import ProgressRing from "./ProgressRing";
+import LearningHeatmap from "./LearningHeatmap";
+import WeeklyInsights from "./WeeklyInsights";
+import SmartWarnings from "./SmartWarnings";
 
 const MOTIVATIONAL_QUOTES = [
   { text: "The only limit to our realization of tomorrow is our doubts of today.", author: "Franklin D. Roosevelt" },
@@ -131,18 +136,43 @@ interface TraineeDashboardProps {
   initialApplications: any[];
 }
 
+export type TaskPriority = "P1" | "P2" | "P3";
+
 interface TaskItem {
   id: string;
   text: string;
   completed: boolean;
+  priority: TaskPriority;
 }
+
+const PRIORITY_ORDER: Record<TaskPriority, number> = { P1: 1, P2: 2, P3: 3 };
+
+const sortTasks = (taskList: TaskItem[]): TaskItem[] => {
+  return [...taskList].sort((a, b) => PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority]);
+};
+
+const getPriorityBorderClass = (priority: TaskPriority) => {
+  switch (priority) {
+    case "P1": return "border-l-4 border-l-red-500";
+    case "P2": return "border-l-4 border-l-amber-400";
+    case "P3": return "border-l-4 border-l-emerald-500";
+    default: return "border-l-4 border-l-amber-400";
+  }
+};
+
+const getPriorityBadgeClass = (priority: TaskPriority) => {
+  switch (priority) {
+    case "P1": return "bg-red-500/15 border-red-500/30 text-red-400";
+    case "P2": return "bg-amber-500/15 border-amber-500/30 text-amber-400";
+    case "P3": return "bg-emerald-500/15 border-emerald-500/30 text-emerald-400";
+    default: return "bg-amber-500/15 border-amber-500/30 text-amber-400";
+  }
+};
 
 export default function TraineeDashboard({ session, initialApplications }: TraineeDashboardProps) {
   const [greeting, setGreeting] = useState("Namaste");
   const [quote, setQuote] = useState<{ text: string; author: string }>({ text: "", author: "" });
   const [streak, setStreak] = useState(5);
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const [isMounted, setIsMounted] = useState(false);
 
   // Interactive Node state
   const [activeCategory, setActiveCategory] = useState<string | null>(null); // 'active' | 'completed' | 'pending' | 'explore' | 'timetable' | 'tasks' | null
@@ -156,17 +186,30 @@ export default function TraineeDashboard({ session, initialApplications }: Train
   // Task Planner State
   const [tasks, setTasks] = useState<TaskItem[]>([]);
   const [newTaskInput, setNewTaskInput] = useState("");
+  const [newTaskPriority, setNewTaskPriority] = useState<TaskPriority>("P2");
 
-  // Stopwatch & Pomodoro State
+  // Stopwatch & Countdown & Pomodoro State
   const [stopwatchSeconds, setStopwatchSeconds] = useState(0);
+  const [timerMode, setTimerMode] = useState<"stopwatch" | "countdown">("stopwatch");
+  const [countdownTargetMinutes, setCountdownTargetMinutes] = useState(30);
+  const [countdownSecondsLeft, setCountdownSecondsLeft] = useState(30 * 60);
+  const [isCountdownComplete, setIsCountdownComplete] = useState(false);
   const [isStopwatchRunning, setIsStopwatchRunning] = useState(false);
   const [isPomodoroMode, setIsPomodoroMode] = useState(false);
   const [pomodoroSecondsLeft, setPomodoroSecondsLeft] = useState(25 * 60);
   const [pomodoroSession, setPomodoroSession] = useState<"study" | "break">("study");
 
-  // Weekly hours progress state
+  // Customizable Pomodoro Durations State (study: 5-60m, break: 1-30m)
+  const [customStudyMinutes, setCustomStudyMinutes] = useState(25);
+  const [customBreakMinutes, setCustomBreakMinutes] = useState(5);
+  const [isPomoSettingsOpen, setIsPomoSettingsOpen] = useState(false);
+
+  // Study hours progress state, toggle mode & ring hover tooltip state
+  const [studyHoursMode, setStudyHoursMode] = useState<"daily" | "weekly">("daily");
+  const [isRingHovered, setIsRingHovered] = useState(false);
+  const dailyTargetHours = 3.0;
   const [weeklyHoursCompleted, setWeeklyHoursCompleted] = useState(4.5);
-  const weeklyHoursGoal = 10;
+  const weeklyHoursGoal = 10.0;
 
   // Mock Placement readiness interview booking
   const [isMockInterviewBooked, setIsMockInterviewBooked] = useState(false);
@@ -353,7 +396,7 @@ export default function TraineeDashboard({ session, initialApplications }: Train
                   osc.start();
                   osc.stop(ctx.currentTime + 0.5);
                 } catch(e) {}
-                return 5 * 60; // 5 minute break
+                return customBreakMinutes * 60; // custom break duration
               } else {
                 setPomodoroSession("study");
                 // Play low beep
@@ -371,8 +414,30 @@ export default function TraineeDashboard({ session, initialApplications }: Train
                 } catch(e) {}
                 // Trigger auto lofi Focus soundscape
                 playFocusSynth();
-                return 25 * 60; // 25 minute study
+                return customStudyMinutes * 60; // custom study duration
               }
+            }
+            return prev - 1;
+          });
+        } else if (timerMode === "countdown") {
+          setCountdownSecondsLeft(prev => {
+            if (prev <= 1) {
+              setIsStopwatchRunning(false);
+              setIsCountdownComplete(true);
+              // Play double completion beep
+              try {
+                const ctx = getAudioContext();
+                const osc = ctx.createOscillator();
+                const g = ctx.createGain();
+                osc.connect(g);
+                g.connect(ctx.destination);
+                osc.frequency.value = 660;
+                g.gain.setValueAtTime(0.2, ctx.currentTime);
+                g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.5);
+              } catch(e) {}
+              return 0;
             }
             return prev - 1;
           });
@@ -387,7 +452,7 @@ export default function TraineeDashboard({ session, initialApplications }: Train
     return () => {
       if (intervalId) clearInterval(intervalId);
     };
-  }, [isStopwatchRunning, isPomodoroMode, pomodoroSession]);
+  }, [isStopwatchRunning, isPomodoroMode, timerMode, pomodoroSession, customStudyMinutes, customBreakMinutes]);
 
   // Trigger soundscape automatically when Pomodoro study block begins
   useEffect(() => {
@@ -400,7 +465,6 @@ export default function TraineeDashboard({ session, initialApplications }: Train
 
   // Initialize data and triggers
   useEffect(() => {
-    setIsMounted(true);
     // Determine Greeting
     const hour = new Date().getHours();
     if (hour < 12) setGreeting("Good Morning");
@@ -428,16 +492,26 @@ export default function TraineeDashboard({ session, initialApplications }: Train
 
     // Retrieve Task checklist from localStorage or populate default
     const savedTasks = localStorage.getItem("tg_student_tasks");
+    const defaultTasks: TaskItem[] = [
+      { id: "t1", text: "Complete Next.js Auth module setup", completed: true, priority: "P1" },
+      { id: "t2", text: "Practice 3D blueprint drafting in AutoCAD", completed: false, priority: "P2" },
+      { id: "t3", text: "Watch AI/ML lecture on neural networks", completed: false, priority: "P3" }
+    ];
+
     if (savedTasks) {
-      setTasks(JSON.parse(savedTasks));
+      try {
+        const parsed = JSON.parse(savedTasks);
+        const migrated = parsed.map((t: any) => ({
+          ...t,
+          priority: (t.priority && ["P1", "P2", "P3"].includes(t.priority)) ? (t.priority as TaskPriority) : "P2"
+        }));
+        setTasks(sortTasks(migrated));
+      } catch (e) {
+        setTasks(sortTasks(defaultTasks));
+      }
     } else {
-      const defaultTasks: TaskItem[] = [
-        { id: "t1", text: "Complete Next.js Auth module setup", completed: true },
-        { id: "t2", text: "Practice 3D blueprint drafting in AutoCAD", completed: false },
-        { id: "t3", text: "Watch AI/ML lecture on neural networks", completed: false }
-      ];
-      setTasks(defaultTasks);
-      localStorage.setItem("tg_student_tasks", JSON.stringify(defaultTasks));
+      setTasks(sortTasks(defaultTasks));
+      localStorage.setItem("tg_student_tasks", JSON.stringify(sortTasks(defaultTasks)));
     }
 
     // Set registered courses based on Next.js initial server applications
@@ -491,16 +565,14 @@ export default function TraineeDashboard({ session, initialApplications }: Train
       }
     }
 
-    const clockTimer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-
     return () => {
-      clearInterval(clockTimer);
       stopAllSounds();
-      if (audioCtxRef.current) {
-        audioCtxRef.current.close();
+      if (audioCtxRef.current && audioCtxRef.current.state !== "closed") {
+        audioCtxRef.current.close().catch(() => {
+          // ignore - context may already be closing/closed
+        });
       }
+      audioCtxRef.current = null;
     };
   }, [initialApplications]);
 
@@ -626,13 +698,15 @@ export default function TraineeDashboard({ session, initialApplications }: Train
     const newTaskItem: TaskItem = {
       id: Date.now().toString(),
       text: newTaskInput.trim(),
-      completed: false
+      completed: false,
+      priority: newTaskPriority
     };
 
-    const updated = [...tasks, newTaskItem];
+    const updated = sortTasks([...tasks, newTaskItem]);
     setTasks(updated);
     localStorage.setItem("tg_student_tasks", JSON.stringify(updated));
     setNewTaskInput("");
+    setNewTaskPriority("P2");
   };
 
   // Toggle Task Completion
@@ -787,9 +861,9 @@ export default function TraineeDashboard({ session, initialApplications }: Train
   const activeCount = registeredCourses.filter(rc => rc.status === "active").length;
   const completedCount = registeredCourses.filter(rc => rc.status === "completed").length;
 
-  // Render SVG connections (Updated for 6 nodes)
+  // Render SVG connections (Clean direct cubic bezier paths for 6 branch nodes)
   const renderSVGPaths = () => {
-    const catYs = [50, 134, 218, 302, 386, 470]; // 6 nodes spaced by 84 pixels
+    const catYs = [65, 151, 237, 323, 409, 495]; // 6 branch nodes centered vertically
     const categoryKeys = ["active", "completed", "pending", "explore", "timetable", "tasks"];
     const activeCatIndex = activeCategory ? categoryKeys.indexOf(activeCategory) : -1;
 
@@ -819,17 +893,17 @@ export default function TraineeDashboard({ session, initialApplications }: Train
             <g key={`tg-branch-${idx}`}>
               {isPathActive && (
                 <path 
-                  className="fill-none stroke-emerald-500/20 stroke-[4px] blur-[3px]"
-                  d={`M 105,280 C 170,280 170,${cy} 240,${cy}`}
+                  className="fill-none stroke-emerald-500/25 stroke-[4px] blur-[3px]"
+                  d={`M 88,280 C 160,280 160,${cy} 235,${cy}`}
                 />
               )}
               <path 
                 className={`fill-none stroke-[2px] transition-all duration-300 cursor-pointer pointer-events-auto ${
                   isPathActive 
                     ? "stroke-[url(#glow-path-gradient)] [stroke-dasharray:5] [animation:flow_paths_dash_612_4s_linear_infinite]" 
-                    : "stroke-slate-200/5 dark:stroke-slate-800/80 hover:stroke-emerald-500/30"
+                    : "stroke-slate-800/80 hover:stroke-emerald-500/40"
                 }`}
-                d={`M 105,280 C 170,280 170,${cy} 240,${cy}`}
+                d={`M 88,280 C 160,280 160,${cy} 235,${cy}`}
                 onMouseEnter={() => setHoveredPath(pathDescriptions[idx])}
                 onMouseLeave={() => setHoveredPath(null)}
               />
@@ -859,39 +933,28 @@ export default function TraineeDashboard({ session, initialApplications }: Train
     );
   };
 
-  const isPomodoroFocusRunning = isPomodoroMode && isStopwatchRunning && pomodoroSession === "study";
+  const isAnyTimerRunning = isStopwatchRunning;
 
   return (
     <div className="flex flex-col gap-8 pb-16 animate-fade-in text-slate-100 relative">
       
-      {/* Dim Overlay Backdrop for Pomodoro focus block */}
-      {isPomodoroFocusRunning && (
+      {/* Dim Overlay Backdrop when any timer is running (Stopwatch, Countdown, Pomodoro) */}
+      {isAnyTimerRunning && (
         <div className="absolute inset-x-0 -top-8 -bottom-16 bg-slate-950/85 backdrop-blur-[2px] z-[99] rounded-3xl pointer-events-none transition-all duration-700 select-none animate-fade-in" />
       )}
 
       {/* Top Banner Dashboard Metrics & Interactive Task Planner */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch relative z-[100]">
         
-        {/* Left Side: 2x2 Grid of Key Study Metrics */}
-        <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Clock Card */}
-          <div className={`bg-slate-900/60 border border-slate-800/80 rounded-3xl p-5 flex flex-col justify-center items-center text-center shadow-md backdrop-blur-md transition-opacity duration-500 ${isPomodoroFocusRunning ? "opacity-20 hover:opacity-100 pointer-events-auto" : ""}`}>
-            <span className="text-[10px] text-emerald-450 uppercase tracking-widest font-extrabold mb-1.5">Live Local Time</span>
-            <div className="text-2xl font-black text-white tracking-tight leading-none">
-              {isMounted ? currentTime.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit", second: "2-digit" }) : "--:--:--"}
-            </div>
-            <div className="text-[10px] text-slate-400 mt-2 font-bold uppercase tracking-wider">
-              {isMounted ? currentTime.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric", year: "numeric" }) : "Loading..."}
-            </div>
-          </div>
-
+        {/* Left Side: 3 Grid Cards of Key Study Metrics */}
+        <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Streak Check-In Card */}
           <div 
             className={`bg-slate-900/60 border rounded-3xl p-5 flex items-center justify-center gap-4 transition-all duration-300 shadow-md backdrop-blur-md ${
               hasCheckedInToday 
                 ? "border-emerald-500/30 bg-emerald-500/5 cursor-default" 
                 : "border-slate-800/80 cursor-pointer hover:bg-emerald-500/5 hover:border-emerald-500/30"
-            } ${isPomodoroFocusRunning ? "opacity-20 hover:opacity-100 pointer-events-auto" : ""}`}
+            } ${isAnyTimerRunning ? "opacity-20 hover:opacity-100 pointer-events-auto" : ""}`}
             onClick={incrementStreak}
           >
             <div className={`w-11 h-11 rounded-full flex items-center justify-center border ${
@@ -907,85 +970,332 @@ export default function TraineeDashboard({ session, initialApplications }: Train
             </div>
           </div>
 
-          {/* Weekly Progress Tracker Card */}
-          <div className={`bg-slate-900/60 border border-slate-800/80 rounded-3xl p-5 flex flex-col justify-center shadow-md backdrop-blur-md transition-opacity duration-500 ${isPomodoroFocusRunning ? "opacity-20 hover:opacity-100 pointer-events-auto" : ""}`}>
-            <div className="flex justify-between items-center">
-              <span className="text-[10px] text-emerald-450 uppercase tracking-widest font-extrabold flex items-center gap-1.5">
+          {/* Study Progress Rings Card with Daily/Weekly Toggle & Tooltip */}
+          <div className={`bg-slate-900/60 border border-slate-800/80 rounded-3xl p-5 flex flex-col justify-between shadow-md backdrop-blur-md relative overflow-visible transition-opacity duration-500 ${isAnyTimerRunning ? "opacity-20 hover:opacity-100 pointer-events-auto" : ""}`}>
+            <div className="flex justify-between items-center mb-1">
+              <span className="text-[10px] text-emerald-400 uppercase tracking-widest font-extrabold flex items-center gap-1.5">
                 <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Weekly Study Target</span>
+                <span>Study Hours</span>
               </span>
-              <span className="text-[9px] text-emerald-300 font-extrabold uppercase bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded">
-                Target: {weeklyHoursGoal}h
-              </span>
+
+              {/* Daily / Weekly Tab Toggle */}
+              <div className="flex items-center gap-1 bg-slate-950 p-0.5 rounded-xl border border-slate-800">
+                <button
+                  onClick={() => setStudyHoursMode("daily")}
+                  className={`px-2.5 py-0.5 rounded-lg text-[9px] font-black transition cursor-pointer ${
+                    studyHoursMode === "daily"
+                      ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                      : "text-slate-400 hover:text-slate-200"
+                  }`}
+                >
+                  Daily
+                </button>
+                <button
+                  onClick={() => setStudyHoursMode("weekly")}
+                  className={`px-2.5 py-0.5 rounded-lg text-[9px] font-black transition cursor-pointer ${
+                    studyHoursMode === "weekly"
+                      ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                      : "text-slate-400 hover:text-slate-200"
+                  }`}
+                >
+                  Weekly
+                </button>
+              </div>
             </div>
-            <div className="text-2xl font-black text-white tracking-tight leading-none mt-2 text-left">
-              {weeklyHoursCompleted.toFixed(1)}h / {weeklyHoursGoal}h
-            </div>
-            {/* Horizontal progress bar */}
-            <div className="w-full bg-slate-950 h-2 rounded-full overflow-hidden mt-3 relative">
+
+            {/* Larger Ring Container (110px) with Hover/Tap Tooltip */}
+            <div className="relative flex items-center justify-center py-2">
               <div 
-                className="bg-gradient-to-r from-emerald-500 to-cyan-400 h-full rounded-full transition-all duration-500" 
-                style={{ width: `${Math.min((weeklyHoursCompleted / weeklyHoursGoal) * 100, 100)}%` }} 
-              />
+                className="cursor-pointer transition-transform hover:scale-105"
+                onMouseEnter={() => setIsRingHovered(true)}
+                onMouseLeave={() => setIsRingHovered(false)}
+                onClick={() => setIsRingHovered(!isRingHovered)}
+              >
+                {studyHoursMode === "daily" ? (
+                  /* MOCK DATA: Daily study target (2.2h / 3.0h) until daily tracking backend is connected */
+                  <ProgressRing
+                    value={2.2}
+                    max={dailyTargetHours}
+                    label="Today"
+                    unit="h"
+                    size={110}
+                    strokeWidth={8}
+                    gradientFrom="#06b6d4"
+                    gradientTo="#10b981"
+                    gradientId="ring-gradient-today"
+                  />
+                ) : (
+                  <ProgressRing
+                    value={weeklyHoursCompleted}
+                    max={weeklyHoursGoal}
+                    label="Week"
+                    unit="h"
+                    size={110}
+                    strokeWidth={8}
+                    gradientFrom="#10b981"
+                    gradientTo="#34d399"
+                    gradientId="ring-gradient-week"
+                  />
+                )}
+              </div>
+
+              {/* Ring Hover/Tap Tooltip Popover (z-[100] to float above cards) */}
+              {isRingHovered && (
+                <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 z-[100] bg-slate-950/95 border border-emerald-500/30 p-3.5 rounded-2xl shadow-2xl backdrop-blur-md w-52 text-left animate-fade-in pointer-events-none">
+                  {studyHoursMode === "daily" ? (
+                    /* MOCK DATA — Daily activity breakdown */
+                    <div>
+                      <div className="text-[11px] font-black text-white flex items-center justify-between border-b border-slate-850 pb-1.5">
+                        <span>Today • Jul 21</span>
+                        <span className="text-[9px] text-emerald-400 font-extrabold">2.2h / 3.0h</span>
+                      </div>
+                      <div className="text-[10px] text-slate-300 font-medium mt-1.5 space-y-1">
+                        <div className="flex justify-between">
+                          <span className="text-slate-400">Sessions:</span>
+                          <span className="font-bold text-white">3 study sessions</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-400">Tasks Done:</span>
+                          <span className="font-bold text-emerald-400">4 completed</span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    /* MOCK DATA — Weekly activity breakdown */
+                    <div>
+                      <div className="text-[11px] font-black text-white flex items-center justify-between border-b border-slate-850 pb-1.5">
+                        <span>Jul 15 – Jul 21</span>
+                        <span className="text-[9px] text-emerald-400 font-extrabold">4.5h / 10h</span>
+                      </div>
+                      <div className="text-[10px] text-slate-300 font-medium mt-1.5 space-y-1">
+                        <div className="flex justify-between">
+                          <span className="text-slate-400">Sessions:</span>
+                          <span className="font-bold text-white">9 study sessions</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-400">Tasks Done:</span>
+                          <span className="font-bold text-emerald-400">12 completed</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-400">Days Active:</span>
+                          <span className="font-bold text-teal-300">5 days active</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
-            <span className="text-[9px] text-slate-450 mt-1.5 font-bold block text-right">
-              {Math.min((weeklyHoursCompleted / weeklyHoursGoal) * 100, 100).toFixed(0)}% weekly milestone completed
-            </span>
           </div>
 
-          {/* Study Session Stopwatch & Pomodoro Mode Card */}
-          <div className="bg-slate-900/60 border border-slate-800/80 rounded-3xl p-5 flex flex-col justify-center items-center text-center shadow-lg shadow-emerald-500/5 backdrop-blur-md relative overflow-hidden group">
-            <div className="absolute top-2.5 right-3 flex items-center gap-1.5 z-10">
-              <span className="text-[8px] text-slate-400 font-bold uppercase">Pomo</span>
-              <input 
-                type="checkbox" 
-                className="w-3 h-3 accent-emerald-500 rounded border-slate-800 cursor-pointer"
-                checked={isPomodoroMode}
-                onChange={(e) => {
-                  setIsStopwatchRunning(false);
-                  setIsPomodoroMode(e.target.checked);
-                  setPomodoroSecondsLeft(25 * 60);
-                  setStopwatchSeconds(0);
-                }}
-              />
+          {/* Study Session Stopwatch & Pomodoro Mode Card (z-[105] stays active when running) */}
+          <div className="bg-slate-900/60 border border-slate-800/80 rounded-3xl p-5 flex flex-col justify-center items-center text-center shadow-lg shadow-emerald-500/5 backdrop-blur-md relative overflow-visible group z-[105]">
+            {/* Header Controls: Mode Switcher & Pomodoro Toggle */}
+            <div className="absolute top-2.5 right-3 flex items-center gap-2 z-20">
+              {!isPomodoroMode && (
+                <div className="flex items-center gap-1 bg-slate-950 p-0.5 rounded-xl border border-slate-800">
+                  <button
+                    onClick={() => {
+                      setIsStopwatchRunning(false);
+                      setTimerMode("stopwatch");
+                    }}
+                    className={`px-2 py-0.5 rounded-lg text-[8px] font-black transition cursor-pointer ${
+                      timerMode === "stopwatch"
+                        ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                        : "text-slate-400 hover:text-slate-200"
+                    }`}
+                  >
+                    Stopwatch
+                  </button>
+                  <button
+                    onClick={() => {
+                      setIsStopwatchRunning(false);
+                      setTimerMode("countdown");
+                      setCountdownSecondsLeft(countdownTargetMinutes * 60);
+                      setIsCountdownComplete(false);
+                    }}
+                    className={`px-2 py-0.5 rounded-lg text-[8px] font-black transition cursor-pointer ${
+                      timerMode === "countdown"
+                        ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                        : "text-slate-400 hover:text-slate-200"
+                    }`}
+                  >
+                    Countdown
+                  </button>
+                </div>
+              )}
+
+              {isPomodoroMode && (
+                <button
+                  onClick={() => setIsPomoSettingsOpen(!isPomoSettingsOpen)}
+                  className="text-slate-400 hover:text-emerald-400 transition cursor-pointer p-0.5"
+                  title="Configure Pomodoro Durations"
+                >
+                  <Settings className="w-3.5 h-3.5" />
+                </button>
+              )}
+
+              <div className="flex items-center gap-1.5">
+                <span className="text-[8px] text-slate-400 font-bold uppercase">Pomo</span>
+                <input 
+                  type="checkbox" 
+                  className="w-3 h-3 accent-emerald-500 rounded border-slate-800 cursor-pointer"
+                  checked={isPomodoroMode}
+                  onChange={(e) => {
+                    setIsStopwatchRunning(false);
+                    setIsPomodoroMode(e.target.checked);
+                    setPomodoroSecondsLeft(customStudyMinutes * 60);
+                    setStopwatchSeconds(0);
+                  }}
+                />
+              </div>
             </div>
 
-            <span className="text-[10px] text-emerald-455 uppercase tracking-widest font-extrabold mb-1.5 flex items-center gap-1.5">
+            {/* Pomodoro Duration Settings Modal Popover */}
+            {isPomoSettingsOpen && (
+              <div className="absolute top-10 right-3 z-30 bg-slate-950 border border-emerald-500/30 p-3 rounded-2xl shadow-2xl text-left w-44 animate-fade-in">
+                <div className="text-[10px] font-black text-emerald-400 uppercase tracking-wider mb-2 border-b border-slate-850 pb-1 flex justify-between items-center">
+                  <span>Pomo Settings</span>
+                  <button 
+                    onClick={() => setIsPomoSettingsOpen(false)}
+                    className="text-slate-400 hover:text-white"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+                <div className="flex flex-col gap-2 text-[10px]">
+                  <div>
+                    <label className="text-slate-400 block font-bold mb-0.5">Study Duration (min):</label>
+                    <input
+                      type="number"
+                      min={5}
+                      max={60}
+                      value={customStudyMinutes}
+                      onChange={(e) => {
+                        const val = Math.min(60, Math.max(5, parseInt(e.target.value, 10) || 5));
+                        setCustomStudyMinutes(val);
+                        if (!isStopwatchRunning && pomodoroSession === "study") {
+                          setPomodoroSecondsLeft(val * 60);
+                        }
+                      }}
+                      className="w-full bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 text-white font-extrabold outline-none focus:border-emerald-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-slate-400 block font-bold mb-0.5">Break Duration (min):</label>
+                    <input
+                      type="number"
+                      min={1}
+                      max={30}
+                      value={customBreakMinutes}
+                      onChange={(e) => {
+                        const val = Math.min(30, Math.max(1, parseInt(e.target.value, 10) || 1));
+                        setCustomBreakMinutes(val);
+                        if (!isStopwatchRunning && pomodoroSession === "break") {
+                          setPomodoroSecondsLeft(val * 60);
+                        }
+                      }}
+                      className="w-full bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 text-white font-extrabold outline-none focus:border-emerald-500"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <span className="text-[10px] text-emerald-400 uppercase tracking-widest font-extrabold mb-1 flex items-center gap-1.5">
               <Timer className="w-3.5 h-3.5 text-emerald-400" />
-              <span>{isPomodoroMode ? `Pomodoro: ${pomodoroSession.toUpperCase()}` : "Study Session Tracker"}</span>
+              <span>{isPomodoroMode ? `Pomodoro: ${pomodoroSession.toUpperCase()}` : timerMode === "countdown" ? "Countdown Timer" : "Session Stopwatch"}</span>
             </span>
-            <div className="text-2xl font-black text-white tracking-tight leading-none flex items-center gap-2">
-              <span>{isPomodoroMode ? formatStopwatch(pomodoroSecondsLeft) : formatStopwatch(stopwatchSeconds)}</span>
-              <span className={`w-2 h-2 rounded-full transition-all duration-300 ${isStopwatchRunning ? "bg-emerald-500 animate-pulse shadow-[0_0_10px_#10b981]" : "bg-slate-700"}`}></span>
+
+            {/* Restyled Dark-Themed Countdown Duration Stepper (- / +) */}
+            {!isPomodoroMode && timerMode === "countdown" && (
+              <div className="flex items-center gap-2 text-[10px] text-slate-400 font-bold mb-1">
+                <span>Target:</span>
+                <div className="flex items-center gap-1 bg-slate-950 border border-slate-800 rounded-xl px-2 py-0.5">
+                  <button
+                    onClick={() => {
+                      const next = Math.max(5, countdownTargetMinutes - 5);
+                      setCountdownTargetMinutes(next);
+                      if (!isStopwatchRunning) {
+                        setCountdownSecondsLeft(next * 60);
+                        setIsCountdownComplete(false);
+                      }
+                    }}
+                    className="w-5 h-5 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-bold hover:bg-emerald-500/20 active:scale-95 transition flex items-center justify-center cursor-pointer select-none"
+                    title="Decrease by 5 minutes"
+                  >
+                    -
+                  </button>
+                  <span className="font-extrabold text-white text-xs px-1 min-w-[32px] text-center">
+                    {countdownTargetMinutes}m
+                  </span>
+                  <button
+                    onClick={() => {
+                      const next = Math.min(180, countdownTargetMinutes + 5);
+                      setCountdownTargetMinutes(next);
+                      if (!isStopwatchRunning) {
+                        setCountdownSecondsLeft(next * 60);
+                        setIsCountdownComplete(false);
+                      }
+                    }}
+                    className="w-5 h-5 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-bold hover:bg-emerald-500/20 active:scale-95 transition flex items-center justify-center cursor-pointer select-none"
+                    title="Increase by 5 minutes"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Enlarged Digital Timer Display */}
+            <div className="text-3xl sm:text-4xl font-black font-mono text-white tracking-tight leading-none my-2 flex items-center gap-2 select-none">
+              <span>
+                {isPomodoroMode 
+                  ? formatStopwatch(pomodoroSecondsLeft) 
+                  : timerMode === "countdown" 
+                  ? formatStopwatch(countdownSecondsLeft) 
+                  : formatStopwatch(stopwatchSeconds)}
+              </span>
+              <span className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${isStopwatchRunning ? "bg-emerald-500 animate-pulse shadow-[0_0_10px_#10b981]" : "bg-slate-700"}`}></span>
             </div>
+
+            {/* Completion Badge */}
+            {!isPomodoroMode && timerMode === "countdown" && isCountdownComplete && (
+              <div className="text-[9px] font-black text-emerald-400 uppercase bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded-full mb-1 animate-pulse">
+                Session Complete! 🎉
+              </div>
+            )}
+
             <div className="flex gap-4 mt-2">
               <button 
-                className={`w-7.5 h-7.5 rounded-full border flex items-center justify-center transition cursor-pointer ${
+                className={`w-8 h-8 rounded-full border flex items-center justify-center transition cursor-pointer ${
                   isStopwatchRunning 
-                    ? "bg-amber-500/10 border-amber-500/35 text-amber-450 hover:bg-amber-500/20" 
+                    ? "bg-amber-500/10 border-amber-500/35 text-amber-400 hover:bg-amber-500/20" 
                     : "bg-emerald-500/10 border-emerald-500/35 text-emerald-400 hover:bg-emerald-500/20"
                 }`}
                 onClick={() => setIsStopwatchRunning(!isStopwatchRunning)}
               >
-                {isStopwatchRunning ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 fill-emerald-400/20" />}
+                {isStopwatchRunning ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 fill-emerald-400/20" />}
               </button>
               <button 
-                className="w-7.5 h-7.5 rounded-full bg-slate-800 border border-slate-700 text-slate-355 hover:bg-slate-750 flex items-center justify-center transition cursor-pointer"
+                className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 text-slate-300 hover:bg-slate-700 flex items-center justify-center transition cursor-pointer"
                 onClick={() => {
                   setIsStopwatchRunning(false);
                   setStopwatchSeconds(0);
-                  setPomodoroSecondsLeft(25 * 60);
+                  setCountdownSecondsLeft(countdownTargetMinutes * 60);
+                  setIsCountdownComplete(false);
+                  setPomodoroSecondsLeft(customStudyMinutes * 60);
                   setPomodoroSession("study");
                 }}
               >
-                <RotateCcw className="w-3.5 h-3.5" />
+                <RotateCcw className="w-4 h-4" />
               </button>
             </div>
           </div>
         </div>
 
         {/* Right Side: Quick Task Planner Todo Card */}
-        <div className={`bg-slate-900/60 border border-slate-800/80 rounded-3xl p-5 flex flex-col justify-between shadow-md backdrop-blur-md relative z-[100] transition-opacity duration-500 ${isPomodoroFocusRunning ? "opacity-20 hover:opacity-100 pointer-events-auto" : ""}`}>
+        <div className={`bg-slate-900/60 border border-slate-800/80 rounded-3xl p-5 flex flex-col justify-between shadow-md backdrop-blur-md relative z-[100] transition-opacity duration-500 ${isAnyTimerRunning ? "opacity-20 hover:opacity-100 pointer-events-auto" : ""}`}>
           <div>
             <div className="flex justify-between items-center mb-2">
               <span className="text-[10px] text-emerald-455 uppercase tracking-widest font-extrabold flex items-center gap-1.5">
@@ -1003,7 +1313,10 @@ export default function TraineeDashboard({ session, initialApplications }: Train
                 <div className="text-slate-505 text-[10px] py-6 text-center">No active tasks. Add one below!</div>
               ) : (
                 tasks.map(task => (
-                  <div key={task.id} className="flex items-center gap-2.5 text-xs py-1 border-b border-slate-850/40 last:border-b-0">
+                  <div 
+                    key={task.id} 
+                    className={`flex items-center gap-2 text-xs py-1 px-2 rounded-lg border-b border-slate-850/40 last:border-b-0 ${getPriorityBorderClass(task.priority)} bg-slate-950/40`}
+                  >
                     <button 
                       className={`w-3.5 h-3.5 rounded border flex items-center justify-center shrink-0 transition ${
                         task.completed ? "bg-emerald-500 border-emerald-400 text-slate-950" : "border-slate-700 hover:border-emerald-500"
@@ -1014,6 +1327,9 @@ export default function TraineeDashboard({ session, initialApplications }: Train
                     </button>
                     <span className={`flex-grow truncate text-left text-[11px] ${task.completed ? "text-slate-500 line-through" : "text-white"}`}>
                       {task.text}
+                    </span>
+                    <span className={`text-[9px] font-black uppercase px-1.5 py-0.5 rounded border shrink-0 ${getPriorityBadgeClass(task.priority)}`}>
+                      {task.priority}
                     </span>
                     <button 
                       className="text-slate-500 hover:text-red-500 shrink-0 p-0.5 transition"
@@ -1027,7 +1343,7 @@ export default function TraineeDashboard({ session, initialApplications }: Train
             </div>
           </div>
 
-          <form onSubmit={handleAddTask} className="flex gap-2 mt-2 pt-2 border-t border-slate-850">
+          <form onSubmit={handleAddTask} className="flex gap-1.5 mt-2 pt-2 border-t border-slate-850">
             <input 
               type="text" 
               className="flex-grow bg-slate-950 border border-slate-850 rounded-xl text-[11px] py-1.5 px-3 text-slate-100 outline-none focus:border-emerald-500/50"
@@ -1035,6 +1351,15 @@ export default function TraineeDashboard({ session, initialApplications }: Train
               value={newTaskInput}
               onChange={(e) => setNewTaskInput(e.target.value)}
             />
+            <select
+              value={newTaskPriority}
+              onChange={(e) => setNewTaskPriority(e.target.value as TaskPriority)}
+              className="bg-slate-950 border border-slate-850 rounded-xl text-[10px] font-bold text-emerald-400 py-1.5 px-1.5 outline-none cursor-pointer focus:border-emerald-500/50"
+            >
+              <option value="P1" className="bg-slate-900 text-red-400">P1</option>
+              <option value="P2" className="bg-slate-900 text-amber-400">P2</option>
+              <option value="P3" className="bg-slate-900 text-emerald-400">P3</option>
+            </select>
             <button type="submit" className="w-7 h-7 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center shrink-0 transition cursor-pointer">
               <Plus className="w-4 h-4" />
             </button>
@@ -1042,8 +1367,13 @@ export default function TraineeDashboard({ session, initialApplications }: Train
         </div>
       </div>
 
+      {/* Full Width Learning Heatmap Section */}
+      <div className={`relative z-10 transition-opacity duration-500 ${isAnyTimerRunning ? "opacity-15 pointer-events-none hover:opacity-100 pointer-events-auto" : ""}`}>
+        <LearningHeatmap />
+      </div>
+
       {/* Main Node Network grid */}
-      <div className={`grid grid-cols-1 xl:grid-cols-3 gap-6 items-start relative z-10 transition-opacity duration-500 ${isPomodoroFocusRunning ? "opacity-15 pointer-events-none hover:opacity-100 pointer-events-auto" : ""}`}>
+      <div className={`grid grid-cols-1 xl:grid-cols-3 gap-6 items-start relative z-10 transition-opacity duration-500 ${isAnyTimerRunning ? "opacity-15 pointer-events-none hover:opacity-100 pointer-events-auto" : ""}`}>
         {/* Left Side: SVG Network Visualization and Quote container (Spans 2 columns) */}
         <div className="xl:col-span-2 flex flex-col gap-6">
           <div className="relative min-h-[580px] w-full bg-slate-950/40 border border-slate-900 rounded-3xl p-6 overflow-hidden flex justify-between items-center shadow-inner select-none">
@@ -1233,7 +1563,16 @@ export default function TraineeDashboard({ session, initialApplications }: Train
                     value={newTaskInput}
                     onChange={(e) => setNewTaskInput(e.target.value)}
                   />
-                  <button type="submit" className="w-8 h-8 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center shrink-0 transition">
+                  <select
+                    value={newTaskPriority}
+                    onChange={(e) => setNewTaskPriority(e.target.value as TaskPriority)}
+                    className="bg-slate-900 border border-slate-800 rounded-xl text-xs font-bold text-emerald-400 py-2 px-2 outline-none cursor-pointer focus:border-emerald-500/50"
+                  >
+                    <option value="P1" className="bg-slate-900 text-red-400">P1</option>
+                    <option value="P2" className="bg-slate-900 text-amber-400">P2</option>
+                    <option value="P3" className="bg-slate-900 text-emerald-400">P3</option>
+                  </select>
+                  <button type="submit" className="w-8 h-8 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center shrink-0 transition cursor-pointer">
                     <Plus className="w-4 h-4" />
                   </button>
                 </form>
@@ -1244,7 +1583,7 @@ export default function TraineeDashboard({ session, initialApplications }: Train
                   tasks.map((task) => (
                     <div 
                       key={task.id}
-                      className="bg-slate-900/80 border border-slate-800/80 rounded-xl p-3.5 flex items-center justify-between gap-2 shadow-sm transition hover:border-slate-700"
+                      className={`bg-slate-900/80 border border-slate-800/80 ${getPriorityBorderClass(task.priority)} rounded-xl p-3.5 flex items-center justify-between gap-2.5 shadow-sm transition hover:border-slate-700`}
                     >
                       <button 
                         className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition ${
@@ -1256,6 +1595,9 @@ export default function TraineeDashboard({ session, initialApplications }: Train
                       </button>
                       <span className={`flex-grow text-xs text-left leading-tight ${task.completed ? "text-slate-500 line-through" : "text-white"}`}>
                         {task.text}
+                      </span>
+                      <span className={`text-[9px] font-black uppercase px-2 py-0.5 rounded border shrink-0 ${getPriorityBadgeClass(task.priority)}`}>
+                        {task.priority}
                       </span>
                       <button 
                         className="text-slate-500 hover:text-red-500 shrink-0 p-0.5 transition"
@@ -1372,18 +1714,8 @@ export default function TraineeDashboard({ session, initialApplications }: Train
           </div>
         </div>
 
-        {/* Daily Quote Card below the whole interactive network panel */}
-        {quote.text && (
-          <div className="bg-slate-900/60 border border-slate-800/80 rounded-3xl p-5 flex flex-col justify-center items-center text-center shadow-md backdrop-blur-md">
-            <span className="text-[10px] text-emerald-450 uppercase tracking-widest font-extrabold mb-1">Quote of the Day</span>
-            <p className="text-sm font-semibold text-white italic leading-relaxed">
-              "{quote.text}"
-            </p>
-            <span className="text-xs text-slate-400 mt-1 font-bold">
-              — {quote.author}
-            </span>
-          </div>
-        )}
+        {/* Performance Insights Card directly below the Trainee Hub card */}
+        <WeeklyInsights />
       </div>
 
       {/* Right Side: Details Panel matching reference screenshot */}
@@ -1638,6 +1970,11 @@ export default function TraineeDashboard({ session, initialApplications }: Train
                 </div>
               </div>
 
+              {/* Smart Assistant Warnings & Contextual Alerts */}
+              <div className="border-t border-slate-850 pt-4">
+                <SmartWarnings />
+              </div>
+
               {/* Lofi Soundscape controls inside Hub details */}
               <div className="border-t border-slate-850 pt-4 flex flex-col gap-2.5">
                 <div className="flex items-center gap-1.5 text-xs text-slate-450 font-bold">
@@ -1648,7 +1985,7 @@ export default function TraineeDashboard({ session, initialApplications }: Train
                 <div className="flex flex-col gap-2">
                   <div 
                     className={`flex items-center justify-between p-2 rounded-xl border cursor-pointer transition text-xs ${
-                      activeSound === "rain" ? "border-emerald-500 bg-emerald-500/5 text-emerald-450 font-extrabold" : "border-slate-850 hover:bg-slate-850"
+                      activeSound === "rain" ? "border-emerald-500 bg-emerald-500/5 text-emerald-450 font-extrabold" : "border-slate-855 hover:bg-slate-850"
                     }`}
                     onClick={() => handleSoundToggle("rain")}
                   >
@@ -1681,6 +2018,19 @@ export default function TraineeDashboard({ session, initialApplications }: Train
           )}
         </div>
       </div>
+
+      {/* Full Width Quote of the Day Section at page bottom above footer */}
+      {quote.text && (
+        <div className={`relative z-10 bg-slate-900/60 border border-slate-800/80 rounded-3xl p-5 flex flex-col justify-center items-center text-center shadow-md backdrop-blur-md transition-opacity duration-500 ${isAnyTimerRunning ? "opacity-15 pointer-events-none hover:opacity-100 pointer-events-auto" : ""}`}>
+          <span className="text-[10px] text-emerald-455 uppercase tracking-widest font-extrabold mb-1">Quote of the Day</span>
+          <p className="text-sm font-semibold text-white italic leading-relaxed">
+            "{quote.text}"
+          </p>
+          <span className="text-xs text-slate-400 mt-1 font-bold">
+            — {quote.author}
+          </span>
+        </div>
+      )}
 
       {/* Floating ask agent and Chat Widget at the bottom right */}
       <div className="fixed bottom-6 right-6 z-[1050] flex flex-col items-end gap-4 max-w-[calc(100vw-32px)]">

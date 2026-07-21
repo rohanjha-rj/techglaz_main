@@ -42,6 +42,25 @@
       "status": "pending",
       "createdAt": "2026-07-15T12:13:46.955Z",
       "updatedAt": "2026-07-15T12:13:46.955Z"
+    },
+    {
+      "_id": "bhbas9q",
+      "id": "bhbas9q",
+      "userId": "mock-trainee-id-123",
+      "fullName": "Ludhiana Trainee",
+      "email": "trainee@techglaz.com",
+      "phone": "7541095522",
+      "branch": "CSE_IT",
+      "course": "Full-Stack Web Development",
+      "trainingTrack": "Student (College)",
+      "duration": "12 Weeks",
+      "institution": "Bhagalpur College of Engineering",
+      "yearOrExperience": "2nd",
+      "referralSource": "Friend / Family",
+      "referenceNumber": "TGL-20260721-7N4IG",
+      "status": "pending",
+      "createdAt": "2026-07-21T04:40:47.525Z",
+      "updatedAt": "2026-07-21T04:40:47.525Z"
     }
   ]
 }
